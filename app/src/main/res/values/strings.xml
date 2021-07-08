@@ -1,0 +1,31 @@
+<resources>
+    <string name="app_name">Note App</string>
+
+    <!--Login layout-->
+    <string name="login_title">LOGIN</string>
+    <string name="create_account"><u>Create an account</u></string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="forgotPass">Forgot password?</string>
+    <string name="forgotPassTitle">Forgot\nPassword</string>
+    <string name="resetPass">Reset Password</string>
+    <string name="signInGoogle">Sign In with Google</string>
+    <string name="loginFacebook">Login with Facebook</string>
+    <string name="no_account">No account? Register here</string>
+    <string name="login">Login</string>
+    <string name="login_with">Login with</string>
+    <string name="register">Register</string>
+    <string name="or">OR</string>
+    <string name="re_password">Re-enter Password</string>
+    <string name="one_three">1/3</string>
+    <string name="two_three">2/3</string>
+    <string name="three_three">3/3</string>
+    <string name="next">Next</string>
+    <string name="full_name">Fullname</string>
+    <string name="birthdate">Birthdate</string>
+    <string name="address">Address</string>
+    <string name="enterEmail">Enter your email</string>
+    <string name="submit">Submit</string>
+    <string name="sample_forgot_password_success">We have sent to kelvinpham@gmail.com an email to reset password.\n\nPlease check your inbox
+and follow the instructions in the email.</string>
+</resources>

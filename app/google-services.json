@@ -1,0 +1,76 @@
+{
+  "project_info": {
+    "project_number": "846550110689",
+    "project_id": "note-project-3d7a3",
+    "storage_bucket": "note-project-3d7a3.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:846550110689:android:dd510c6ffce41aee4382a0",
+        "android_client_info": {
+          "package_name": "com.group6.noteapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "846550110689-u0vp40r6rg81vf2vb5dj4tijafrgqmgu.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBOjbZD4_PzkB_lo_BmDap5n0Q30-5e6U0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "846550110689-u0vp40r6rg81vf2vb5dj4tijafrgqmgu.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:846550110689:android:547bc9a002f98e794382a0",
+        "android_client_info": {
+          "package_name": "com.group6.noteproject"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "846550110689-17772e1aq5qa3787n91rt7j9cld3191f.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.group6.noteproject",
+            "certificate_hash": "df30fb339db98ce07a859c377fcabb0e7a7dc35f"
+          }
+        },
+        {
+          "client_id": "846550110689-u0vp40r6rg81vf2vb5dj4tijafrgqmgu.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBOjbZD4_PzkB_lo_BmDap5n0Q30-5e6U0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "846550110689-u0vp40r6rg81vf2vb5dj4tijafrgqmgu.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

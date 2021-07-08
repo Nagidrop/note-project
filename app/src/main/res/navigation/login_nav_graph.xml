@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/login_nav_graph"
+    app:startDestination="@id/loginFragment">
+    <fragment
+        android:id="@+id/loginFragment"
+        android:name="com.group6.noteapp.controller.LoginFragment"
+        android:label="fragment_login"
+        tools:layout="@layout/fragment_login" >
+        <action
+            android:id="@+id/action_loginFragment_to_registerFragment01"
+            app:destination="@id/registerFragment01" />
+        <action
+            android:id="@+id/action_loginFragment_to_forgotPasswordFragment01"
+            app:destination="@id/forgotPasswordFragment01" />
+    </fragment>
+    <fragment
+        android:id="@+id/registerFragment01"
+        android:name="com.group6.noteapp.controller.RegisterFragment01"
+        android:label="fragment_register01"
+        tools:layout="@layout/fragment_register01" >
+        <action
+            android:id="@+id/action_registerFragment01_to_registerFragment02"
+            app:destination="@id/registerFragment02" />
+    </fragment>
+    <fragment
+        android:id="@+id/registerFragment02"
+        android:name="com.group6.noteapp.controller.RegisterFragment02"
+        android:label="fragment_register02"
+        tools:layout="@layout/fragment_register02" />
+    <fragment
+        android:id="@+id/forgotPasswordFragment01"
+        android:name="com.group6.noteapp.controller.ForgotPasswordFragment01"
+        android:label="fragment_forgot_password01"
+        tools:layout="@layout/fragment_forgot_password01" >
+        <action
+            android:id="@+id/action_forgotPasswordFragment01_to_registerFragment03"
+            app:destination="@id/registerFragment03" />
+    </fragment>
+    <fragment
+        android:id="@+id/registerFragment03"
+        android:name="com.group6.noteapp.controller.RegisterFragment03"
+        android:label="fragment_register03"
+        tools:layout="@layout/fragment_register03" />
+</navigation>
