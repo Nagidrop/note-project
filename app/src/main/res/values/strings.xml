@@ -1,7 +1,0 @@
-<resources>
-    <string name="app_name">Note Project</string>
-
-    <!--Login layout-->
-    <string name="login_title">LOG IN</string>
-    <string name="create_account"><u>Create an account</u></string>
-</resources>
