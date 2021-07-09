@@ -13,6 +13,7 @@ import com.group6.noteapp.R;
 
 
 public class LoginActivity extends AppCompatActivity {
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <resources>
     <string name="address">Address</string>
+    <string name="all_notes">All Notes</string>
     <string name="app_name">Note App</string>
     <string name="birthdate">Birthdate</string>
     <string name="create_account">
@@ -17,8 +18,11 @@
 <!--    <string name="login_facebook">Login with Facebook</string>-->
     <string name="login_title">LOGIN</string>
     <string name="login_with">Login with</string>
+    <string name="logout">Logout</string>
     <string name="next">Next</string>
     <string name="no_account">No account? Register here</string>
+    <string name="note">Note</string>
+    <string name="notebooks">Notebooks</string>
     <string name="or">OR</string>
     <string name="password">Password</string>
     <string name="re_password">Re-enter Password</string>
@@ -30,5 +34,6 @@ and follow the instructions in the email.</string>
     <string name="step_one_of_two">1/2</string>
     <string name="step_two_of_two">2/2</string>
     <string name="submit">Submit</string>
-    <string name="logout">Logout</string>
+    <string name="system">System</string>
+    <string name="trash">Trash</string>
 </resources>
