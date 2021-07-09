@@ -1,5 +1,6 @@
 package com.group6.noteapp.controller;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -7,7 +8,10 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
+import com.google.android.material.button.MaterialButton;
+import com.google.firebase.auth.FirebaseAuth;
 import com.group6.noteapp.R;
 
 /**
@@ -16,6 +20,8 @@ import com.group6.noteapp.R;
  * create an instance of this fragment.
  */
 public class HomeFragment extends Fragment {
+    private FirebaseAuth firebaseAuth;
+    View inflatedView;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -55,12 +61,30 @@ public class HomeFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+        firebaseAuth= FirebaseAuth.getInstance();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_home, container, false);
+        inflatedView = inflater.inflate(R.layout.fragment_home, container, false);
+
+        // Get register button
+        MaterialButton btnLogout = inflatedView.findViewById(R.id.btnLogout);
+        btnLogout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                signOut();
+            }
+        });
+        return inflatedView;
+    }
+    //sign out method
+    public void signOut() {
+        firebaseAuth.signOut();
+        Intent intent = new Intent(getActivity(),LoginActivity.class);
+        intent.setFlags(intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
     }
 }

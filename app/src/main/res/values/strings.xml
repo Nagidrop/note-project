@@ -28,4 +28,5 @@ and follow the instructions in the email.</string>
     <string name="step_one_of_two">1/2</string>
     <string name="step_two_of_two">2/2</string>
     <string name="submit">Submit</string>
+    <string name="logout">Logout</string>
 </resources>
