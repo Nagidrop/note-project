@@ -3,6 +3,7 @@ package com.group6.noteapp.controller;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,16 +14,21 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
 
+import com.facebook.AccessToken;
+import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
 import com.facebook.FacebookSdk;
+import com.facebook.login.Login;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputLayout;
+import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.group6.noteapp.R;
@@ -41,8 +47,8 @@ public class LoginFragment extends Fragment {
     private Button btnLogin;
     private TextInputLayout inputEmail, inputPassword;
     private FirebaseAuth firebaseAuth;
-    private
-
+    private LoginButton loginButton;
+    private CallbackManager callbackManager;
     ProgressDialog progressDialog;
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -114,6 +120,13 @@ public class LoginFragment extends Fragment {
             }
         });
 
+        MaterialButton btnLoginFacebook = inflatedView.findViewById(R.id.btnLoginFacebook);
+        btnLoginFacebook.setOnClickListener(new View.OnClickListener() {
+            @Override public void onClick(View v) {
+                loginButton.performClick();
+            }
+        });
+
         //get TextInputlayout
         inputEmail = inflatedView.findViewById(R.id.textInputLoginEmail);
         inputPassword = inflatedView.findViewById(R.id.textInputLoginPassword);
@@ -126,29 +139,32 @@ public class LoginFragment extends Fragment {
             }
         });
 
-//        progressDialog = new ProgressDialog(getActivity());
-//
-//        loginButton = (LoginButton) findViewById(R.id.login_button);
-//        loginButton.setReadPermissions("email");
-//        // If using in a fragment,loginButton.setFragment(this);
-//
-//        // Callback registration
-//        loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
-//            @Override
-//            public void onSuccess(LoginResult loginResult) {
-////                Toast.makeText(LoginFragment.this,"login successful!", Toast.LENGTH_LONG).show();
-//            }
-//
-//            @Override
-//            public void onCancel() {
-////                Toast.makeText(MainActivity.this,"login cancel!", Toast.LENGTH_LONG).show();
-//            }
-//
-//            @Override
-//            public void onError(FacebookException exception) {
-////                Toast.makeText(MainActivity.this,"Error"+exception.getMessage(), Toast.LENGTH_LONG).show();
-//            }
-//        });
+        progressDialog = new ProgressDialog(getActivity());
+
+        callbackManager = CallbackManager.Factory.create();
+
+        loginButton = (LoginButton) inflatedView.findViewById(R.id.login_button);
+        loginButton.setReadPermissions("email");
+        loginButton.setFragment(this);
+
+         // Callback registration
+        loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
+            @Override
+            public void onSuccess(LoginResult loginResult) {
+//                Toast.makeText(LoginFragment.this,"login successful!", Toast.LENGTH_LONG).show();
+                handleFacebookAccessToken(loginResult.getAccessToken());
+            }
+
+            @Override
+            public void onCancel() {
+                Toast.makeText(getActivity(),"Cancel !", Toast.LENGTH_LONG).show();
+            }
+
+            @Override
+            public void onError(FacebookException exception) {
+                Toast.makeText(getActivity(),"Error"+exception.getMessage(), Toast.LENGTH_LONG).show();
+            }
+        });
 
         return inflatedView;
     }
@@ -211,10 +227,37 @@ public class LoginFragment extends Fragment {
     }
     // [END on_start_check_user]
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        callbackManager.onActivityResult(requestCode, resultCode, data);
+    }
+
     private void reload() {
         Intent intent = new Intent(getActivity(), MainActivity.class);
         intent.setFlags(intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
     }
+
+    private void handleFacebookAccessToken(AccessToken token) {
+
+        AuthCredential credential = FacebookAuthProvider.getCredential(token.getToken());
+        firebaseAuth.signInWithCredential(credential)
+                .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            // Sign in success, update UI with the signed-in user's information
+                            FirebaseUser user = firebaseAuth.getCurrentUser();
+                            reload();
+                        } else {
+                            // If sign in fails, display a message to the user.
+                            Toast.makeText(getActivity(), "Authentication failed.",
+                                    Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+    }
+
 
 }
