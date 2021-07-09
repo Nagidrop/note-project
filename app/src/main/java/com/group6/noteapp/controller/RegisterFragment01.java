@@ -30,7 +30,6 @@ import com.google.firebase.auth.FirebaseUser;
 import com.group6.noteapp.R;
 
 import static android.content.ContentValues.TAG;
-import static com.google.firebase.FirebaseError.ERROR_ACCOUNT_EXISTS_WITH_DIFFERENT_CREDENTIAL;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -129,8 +128,7 @@ public class RegisterFragment01 extends Fragment {
                                     progressDialog.dismiss();
                                     FirebaseAuthUserCollisionException exception =
                                             (FirebaseAuthUserCollisionException) task.getException();
-                                    if (Integer.parseInt(exception.getErrorCode()) ==
-                                            ERROR_ACCOUNT_EXISTS_WITH_DIFFERENT_CREDENTIAL) {
+                                    if (exception.getErrorCode().equalsIgnoreCase("ERROR_ACCOUNT_EXISTS_WITH_DIFFERENT_CREDENTIAL")) {
 
                                     }
 
