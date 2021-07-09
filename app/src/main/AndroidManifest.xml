@@ -9,6 +9,7 @@
         android:roundIcon="@mipmap/ic_note_app_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.MyApp">
+        <activity android:name=".controller.MainActivity"/>
         <activity android:name=".controller.LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

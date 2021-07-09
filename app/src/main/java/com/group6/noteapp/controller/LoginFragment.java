@@ -1,16 +1,27 @@
 package com.group6.noteapp.controller;
 
+import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.button.MaterialButton;
+import com.google.android.material.textfield.TextInputLayout;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
 import com.group6.noteapp.R;
+
+import org.jetbrains.annotations.NotNull;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -20,7 +31,11 @@ import com.group6.noteapp.R;
 public class LoginFragment extends Fragment {
 
     View inflatedView;
+    private Button btnLogin;
+    private TextInputLayout inputEmail, inputPassword;
+    private FirebaseAuth firebaseAuth;
 
+    ProgressDialog progressDialog;
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -61,6 +76,9 @@ public class LoginFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+
+
+
     }
 
     @Override
@@ -84,7 +102,53 @@ public class LoginFragment extends Fragment {
                 NavHostFragment.findNavController(LoginFragment.this).navigate(R.id.action_loginFragment_to_forgotPasswordFragment01);
             }
         });
+
+        //get TextInputlayout
+        inputEmail=(TextInputLayout) inflatedView.findViewById(R.id.textInputLoginEmail);
+        inputPassword=(TextInputLayout)inflatedView.findViewById(R.id.textInputLoginPassword);
+        //Get login button
+        btnLogin=inflatedView.findViewById(R.id.btnLogin);
+        btnLogin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                checkCrededentials();
+            }
+        });
+        firebaseAuth= FirebaseAuth.getInstance();
+        progressDialog = new ProgressDialog(getActivity());
+
         return inflatedView;
     }
+
+    private void checkCrededentials(){
+        String email= inputEmail.getEditText().getText().toString();
+        String password=inputPassword.getEditText().getText().toString();
+
+        if (email.isEmpty()||!email.contains("@")){
+            showError(inputEmail,"Email is not vail");
+        }else if(password.isEmpty()){
+            showError(inputPassword,"Password .....");
+        }else {
+            progressDialog.setTitle("Login");
+            progressDialog.setMessage("Please wait while check your credentials");
+            progressDialog.setCanceledOnTouchOutside(false);
+            progressDialog.show();
+
+            firebaseAuth.signInWithEmailAndPassword(email,password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                @Override
+                public void onComplete(@NonNull @NotNull Task<AuthResult> task) {
+                    if(task.isSuccessful()){
+                        progressDialog.dismiss();
+                        Intent intent = new Intent(getActivity(),MainActivity.class);
+                        intent.setFlags(intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
+                        startActivity(intent);
+                    }
+                }
+            });
+        }
+    }
+    private void showError(TextInputLayout input, String s){
+        input.setError(s);
+        input.requestFocus();   }
 
 }
