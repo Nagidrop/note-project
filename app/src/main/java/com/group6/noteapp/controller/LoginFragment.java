@@ -142,6 +142,7 @@ public class LoginFragment extends Fragment {
                         Intent intent = new Intent(getActivity(),MainActivity.class);
                         intent.setFlags(intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
                         startActivity(intent);
+
                     }
                 }
             });
