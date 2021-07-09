@@ -13,6 +13,11 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
 
+import com.facebook.FacebookCallback;
+import com.facebook.FacebookException;
+import com.facebook.FacebookSdk;
+import com.facebook.login.LoginResult;
+import com.facebook.login.widget.LoginButton;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.button.MaterialButton;
@@ -36,6 +41,7 @@ public class LoginFragment extends Fragment {
     private Button btnLogin;
     private TextInputLayout inputEmail, inputPassword;
     private FirebaseAuth firebaseAuth;
+    private
 
     ProgressDialog progressDialog;
     // TODO: Rename parameter arguments, choose names that match
@@ -99,6 +105,7 @@ public class LoginFragment extends Fragment {
             }
         });
 
+        // To forgot password fragment
         MaterialButton btnForgotPassword = inflatedView.findViewById(R.id.btnForgotPassword);
         btnForgotPassword.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -119,7 +126,29 @@ public class LoginFragment extends Fragment {
             }
         });
 
-        progressDialog = new ProgressDialog(getActivity());
+//        progressDialog = new ProgressDialog(getActivity());
+//
+//        loginButton = (LoginButton) findViewById(R.id.login_button);
+//        loginButton.setReadPermissions("email");
+//        // If using in a fragment,loginButton.setFragment(this);
+//
+//        // Callback registration
+//        loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
+//            @Override
+//            public void onSuccess(LoginResult loginResult) {
+////                Toast.makeText(LoginFragment.this,"login successful!", Toast.LENGTH_LONG).show();
+//            }
+//
+//            @Override
+//            public void onCancel() {
+////                Toast.makeText(MainActivity.this,"login cancel!", Toast.LENGTH_LONG).show();
+//            }
+//
+//            @Override
+//            public void onError(FacebookException exception) {
+////                Toast.makeText(MainActivity.this,"Error"+exception.getMessage(), Toast.LENGTH_LONG).show();
+//            }
+//        });
 
         return inflatedView;
     }
