@@ -116,7 +116,7 @@ public class RegisterFragment01 extends Fragment {
                 progressDialog.show();
 
                 mAuth.createUserWithEmailAndPassword(regEmail, regPassword)
-                        .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                        .addOnCompleteListener( new OnCompleteListener<AuthResult>() {
                             @Override
                             public void onComplete(@NonNull Task<AuthResult> task) {
                                 if (task.isSuccessful()) {
@@ -125,7 +125,8 @@ public class RegisterFragment01 extends Fragment {
                                     Log.d(TAG, "createUserWithEmail:success");
                                     FirebaseUser user = mAuth.getCurrentUser();
                                     NavHostFragment.findNavController(RegisterFragment01.this).navigate(R.id.action_registerFragment01_to_registerFragment02);
-                                } else if (task.getException() instanceof FirebaseAuthUserCollisionException.class){
+                                } else if (task.getException() instanceof FirebaseAuthUserCollisionException){
+                                    progressDialog.dismiss();
                                     FirebaseAuthUserCollisionException exception =
                                             (FirebaseAuthUserCollisionException) task.getException();
                                     if (Integer.parseInt(exception.getErrorCode()) ==
