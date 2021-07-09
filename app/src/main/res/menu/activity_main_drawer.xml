@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <group
+        android:id="@+id/menu_group"
+        android:checkableBehavior="single">
+        <item
+            android:id="@+id/subtitle_note"
+            android:title="Note">
+            <menu>
+                <item
+                    android:id="@+id/menu_all_notes"
+                    android:title="All Notes" />
+                <item
+                    android:id="@+id/menu_notebooks"
+                    android:title="All Notes" />
+                <item
+                    android:id="@+id/menu_trash"
+                    android:title="All Notes" />
+            </menu>
+        </item>
+    </group>
+</menu>
