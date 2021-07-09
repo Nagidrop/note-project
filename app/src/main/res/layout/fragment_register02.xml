@@ -61,7 +61,7 @@
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/textInputRegPassword"
+        android:id="@+id/textInputRegBirthday"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="0dp"
         android:layout_height="60dp"
@@ -93,7 +93,7 @@
         app:boxStrokeColor="?android:colorPrimary"
         app:layout_constraintEnd_toStartOf="@+id/guideline11"
         app:layout_constraintStart_toStartOf="@+id/guideline6"
-        app:layout_constraintTop_toBottomOf="@+id/textInputRegPassword"
+        app:layout_constraintTop_toBottomOf="@+id/textInputRegBirthday"
         app:startIconDrawable="@drawable/ic_baseline_house_24">
 
         <com.google.android.material.textfield.TextInputEditText
