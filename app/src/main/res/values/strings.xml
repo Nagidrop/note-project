@@ -8,6 +8,8 @@
     </string>
     <string name="email">Email</string>
     <string name="enter_email">Enter your email</string>
+    <string name="facebook_app_id">506452847140505</string>
+<!--    <string name="facebook_client_token">506452847140505</string>-->
     <string name="forgot_pass">Forgot password?</string>
     <string name="forgot_pass_title">Forgot\nPassword</string>
     <string name="full_name">Fullname</string>
