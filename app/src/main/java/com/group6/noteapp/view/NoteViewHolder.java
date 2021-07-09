@@ -9,6 +9,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.group6.noteapp.R;
+
 /**
  * Class represents each Recycler View's item in note list
  */
@@ -23,8 +25,8 @@ public class NoteViewHolder extends RecyclerView.ViewHolder {
      */
     public NoteViewHolder(@NonNull View itemView) {
         super(itemView);
-//        txtTitle = itemView.findViewById(R.id.tv_note_item_title);
-//        txtContent = itemView.findViewById(R.id.tv_note_item_content);
+        txtTitle = itemView.findViewById(R.id.tv_note_item_title);
+        txtContent = itemView.findViewById(R.id.tv_note_item_content);
     }
 
     /* Getters and Setters */
