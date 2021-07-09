@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <resources>
-
     <string name="address">Address</string>
     <string name="all_notes">All Notes</string>
     <string name="app_name">Note App</string>
