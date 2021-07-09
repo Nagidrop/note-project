@@ -17,7 +17,8 @@
                     android:icon="@drawable/ic_notebook_24"/>
                 <item
                     android:id="@+id/menu_trash"
-                    android:title="@string/trash" />
+                    android:title="@string/trash"
+                    android:icon="@drawable/ic_trash_can_24"/>
             </menu>
         </item>
     </group>
@@ -30,7 +31,8 @@
             <menu>
                 <item
                     android:id="@+id/menu_logout"
-                    android:title="@string/logout" />
+                    android:title="@string/logout"
+                    android:icon="@drawable/ic_logout_24"/>
             </menu>
         </item>
     </group>
