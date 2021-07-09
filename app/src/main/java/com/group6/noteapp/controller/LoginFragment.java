@@ -128,18 +128,24 @@ public class LoginFragment extends Fragment {
         String email = inputEmail.getEditText().getText().toString();
         String password = inputPassword.getEditText().getText().toString();
 
+        inputEmail.setErrorEnabled(false);
+        inputPassword.setErrorEnabled(false);
+
+        inputEmail.setErrorEnabled(true);
+        inputPassword.setErrorEnabled(true);
+
         boolean isInputValid = true;
         int emailValidateResult = ValidationUtils.validateEmail(email);
         int passwordValidateResult = ValidationUtils.validatePasswordLog(password);
 
         if (emailValidateResult == 1) {
             isInputValid = false;
-            inputEmail.setError("oh no");
+            inputEmail.setError("Email must not be empty!");
         }
 
         if (passwordValidateResult == 1) {
             isInputValid = false;
-            inputPassword.setError("oh no 2");
+            inputPassword.setError("Password must not be empty!");
         }
 
         if (isInputValid) {
