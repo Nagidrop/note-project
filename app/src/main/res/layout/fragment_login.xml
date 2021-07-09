@@ -79,7 +79,7 @@
         android:id="@+id/btnLogin"
         android:layout_width="0dp"
         android:layout_height="40dp"
-        android:layout_marginTop="55dp"
+        android:layout_marginTop="65dp"
         android:insetTop="0dp"
         android:insetBottom="0dp"
         android:text="@string/login"
@@ -92,27 +92,14 @@
         style="@style/Widget.MaterialComponents.Button.TextButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:minWidth="0dp"
         android:minHeight="0dp"
+        android:minWidth="0dp"
         android:text="@string/forgot_pass"
         android:textAllCaps="false"
         android:textSize="13sp"
         app:iconPadding="0dp"
         app:layout_constraintEnd_toStartOf="@+id/guideline3"
         app:layout_constraintTop_toBottomOf="@+id/txtInputLoginPassword" />
-
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/btnRegister"
-        style="@style/Widget.MaterialComponents.Button.TextButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:minWidth="0dp"
-        android:text="@string/no_account"
-        android:textAllCaps="false"
-        app:layout_constraintEnd_toStartOf="@+id/guideline5"
-        app:layout_constraintStart_toStartOf="@+id/guideline4"
-        app:layout_constraintTop_toBottomOf="@+id/btnLoginGoogle" />
 
     <TextView
         android:id="@+id/txtOr"
@@ -167,6 +154,20 @@
         app:layout_constraintStart_toStartOf="@+id/guideline6"
         app:layout_constraintTop_toBottomOf="@+id/btnLogin" />
 
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnRegister"
+        style="@style/Widget.MaterialComponents.Button.TextButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="@string/no_account"
+        android:textAllCaps="false"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/guideline5"
+        app:layout_constraintStart_toStartOf="@+id/guideline4"
+        app:layout_constraintTop_toBottomOf="@+id/btnLoginGoogle" />
+
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline2"
         android:layout_width="wrap_content"
@@ -203,7 +204,7 @@
         app:layout_constraintGuide_percent="0.50" />
 
     <com.facebook.login.widget.LoginButton
-        android:id="@+id/btnLoginFacebookHidden"
+        android:id="@+id/login_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"

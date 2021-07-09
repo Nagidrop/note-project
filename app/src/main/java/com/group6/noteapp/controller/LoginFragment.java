@@ -123,7 +123,7 @@ public class LoginFragment extends Fragment {
 
 //        progressDialog = new ProgressDialog(getActivity());
 //
-//        loginButton = (LoginButton) findViewById(R.id.btnLoginFacebookHidden);
+//        loginButton = (LoginButton) findViewById(R.id.login_button);
 //        loginButton.setReadPermissions("email");
 //        // If using in a fragment,loginButton.setFragment(this);
 //
