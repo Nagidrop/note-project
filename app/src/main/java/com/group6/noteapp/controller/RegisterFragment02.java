@@ -73,24 +73,24 @@ public class RegisterFragment02 extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        inflatedView = inflater.inflate(R.layout.fragment_register02, container, false);
-        MaterialButton btnNext = inflatedView.findViewById(R.id.btnNext01);
-        btnNext.setOnClickListener(new View.OnClickListener() {
-            @Override public void onClick(View v) {
-                /* Get EditText Views */
+//        inflatedView = inflater.inflate(R.layout.fragment_register02, container, false);
+//        MaterialButton btnNext = inflatedView.findViewById(R.id.btnNext01);
+//        btnNext.setOnClickListener(new View.OnClickListener() {
+//            @Override public void onClick(View v) {
+//                /* Get EditText Views */
+//
+//                TextInputLayout etFullname = inflatedView.findViewById(R.id.textInputRegFullname);
+//                TextInputLayout etBirthday = inflatedView.findViewById(R.id.textInputRegBirthday);
+//                TextInputLayout etAddress = inflatedView.findViewById(R.id.textInputRegAddress);
+//
+//                /* Create local variables to store the EditText Views' current values */
+//
+//                String regFullname = etFullname.getEditText().getText().toString();
+//                String regBirthday = etBirthday.getEditText().getText().toString();
+//                String regAddress = etAddress.getEditText().getText().toString();
+//            }
+//        });
 
-                TextInputLayout etFullname = inflatedView.findViewById(R.id.textInputRegFullname);
-                TextInputLayout etBirthday = inflatedView.findViewById(R.id.textInputRegBirthday);
-                TextInputLayout etAddress = inflatedView.findViewById(R.id.textInputRegAddress);
-
-                /* Create local variables to store the EditText Views' current values */
-
-                String regFullname = etFullname.getEditText().getText().toString();
-                String regBirthday = etBirthday.getEditText().getText().toString();
-                String regAddress = etAddress.getEditText().getText().toString();
-            }
-        });
-
-        return inflatedView;
+        return inflater.inflate(R.layout.fragment_register02, container, false);
     }
 }
