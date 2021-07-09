@@ -10,7 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 /**
- * Class represents each recycler view's item view in note list
+ * Class represents each Recycler View's item in note list
  */
 public class NoteViewHolder extends RecyclerView.ViewHolder {
     private TextView txtTitle;      // note title
