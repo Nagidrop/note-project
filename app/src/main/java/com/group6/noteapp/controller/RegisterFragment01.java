@@ -100,44 +100,45 @@ public class RegisterFragment01 extends Fragment {
         progressDialog = new ProgressDialog(getActivity());
         MaterialButton btnNext = inflatedView.findViewById(R.id.btnNext01);
 
-//        btnNext.setOnClickListener(new View.OnClickListener() {
-//            @Override public void onClick(View v) {
-//
-//                /* Create local variables to store the EditText Views' current values */
-//
-//                String regEmail = etEmail.getEditText().getText().toString().trim();
-//                String regPassword = etPassword.getEditText().getText().toString().trim();
-//                String regConfirmPassword = etConfirmPassword.getEditText().getText().toString().trim();
-//
-//                /* show progress dialog*/
-//                progressDialog.setTitle("Login");
-//                progressDialog.setMessage("Please wait while check your credentials");
-//                progressDialog.setCanceledOnTouchOutside(false);
-//                progressDialog.show();
-//
-//                mAuth.createUserWithEmailAndPassword(regEmail, regPassword)
-//                        .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-//                            @Override
-//                            public void onComplete(@NonNull Task<AuthResult> task) {
-//                                if (task.isSuccessful()) {
-//                                    progressDialog.dismiss();
-//                                    // Sign in success, update UI with the signed-in user's information
-//                                    Log.d(TAG, "createUserWithEmail:success");
-//                                    FirebaseUser user = mAuth.getCurrentUser();
-//                                    NavHostFragment.findNavController(RegisterFragment01.this).navigate(R.id.action_registerFragment01_to_registerFragment02);
-//                                } else if (task.getException() instanceof FirebaseAuthUserCollisionException.class){
-//                                    FirebaseAuthUserCollisionException exception =
-//                                            (FirebaseAuthUserCollisionException) task.getException();
-//                                    if (Integer.parseInt(exception.getErrorCode()) ==
-//                                            ERROR_ACCOUNT_EXISTS_WITH_DIFFERENT_CREDENTIAL) {
-//
-//                                    }
-//
-//                                }
-//                            }
-//                        });
-//            }
-//        });
+        btnNext.setOnClickListener(new View.OnClickListener() {
+            @Override public void onClick(View v) {
+
+                /* Create local variables to store the EditText Views' current values */
+
+                String regEmail = etEmail.getEditText().getText().toString().trim();
+                String regPassword = etPassword.getEditText().getText().toString().trim();
+                String regConfirmPassword = etConfirmPassword.getEditText().getText().toString().trim();
+
+                /* show progress dialog*/
+                progressDialog.setTitle("Login");
+                progressDialog.setMessage("Please wait while check your credentials");
+                progressDialog.setCanceledOnTouchOutside(false);
+                progressDialog.show();
+
+                mAuth.createUserWithEmailAndPassword(regEmail, regPassword)
+                        .addOnCompleteListener( new OnCompleteListener<AuthResult>() {
+                            @Override
+                            public void onComplete(@NonNull Task<AuthResult> task) {
+                                if (task.isSuccessful()) {
+                                    progressDialog.dismiss();
+                                    // Sign in success, update UI with the signed-in user's information
+                                    Log.d(TAG, "createUserWithEmail:success");
+                                    FirebaseUser user = mAuth.getCurrentUser();
+                                    NavHostFragment.findNavController(RegisterFragment01.this).navigate(R.id.action_registerFragment01_to_registerFragment02);
+                                } else if (task.getException() instanceof FirebaseAuthUserCollisionException){
+                                    progressDialog.dismiss();
+                                    FirebaseAuthUserCollisionException exception =
+                                            (FirebaseAuthUserCollisionException) task.getException();
+                                    if (Integer.parseInt(exception.getErrorCode()) ==
+                                            ERROR_ACCOUNT_EXISTS_WITH_DIFFERENT_CREDENTIAL) {
+
+                                    }
+
+                                }
+                            }
+                        });
+            }
+        });
 
         return inflatedView;
     }
