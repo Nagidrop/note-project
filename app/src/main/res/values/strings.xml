@@ -28,4 +28,5 @@
     <string name="submit">Submit</string>
     <string name="sample_forgot_password_success">We have sent to kelvinpham@gmail.com an email to reset password.\n\nPlease check your inbox
 and follow the instructions in the email.</string>
+    <string name="facebook_app_id">188661489871884</string> <string name="fb_login_protocol_scheme">fb188661489871884</string>
 </resources>
