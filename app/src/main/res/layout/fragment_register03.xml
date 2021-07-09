@@ -50,13 +50,13 @@
         android:id="@+id/imageView"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:src="@drawable/ic_baseline_check_circle_outline_24"
+        android:src="@drawable/ic_check_mark_24"
         app:layout_constraintBottom_toTopOf="@+id/guideline19"
         app:layout_constraintEnd_toStartOf="@+id/guideline17"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/guideline16"
         app:layout_constraintTop_toTopOf="@+id/guideline18"
-        app:tint="?android:colorAccent" />
+        app:tint="?android:colorForeground" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline18"
