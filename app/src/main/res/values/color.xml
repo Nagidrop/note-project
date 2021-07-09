@@ -43,7 +43,7 @@
     <!--Color palette-->
 
     <color name="purple_200">#bb86fc</color> <!--Color primary (dark)-->
-    <color name="purple_500">#6200ee</color> <!--Color primary (light)-->
+    <color name="purple_500">#673ab7</color> <!--Color primary (light)-->
     <color name="purple_600">#4b01d0</color> <!--Color primary variant (dark)-->
     <color name="purple_700">#3700b3</color> <!--Color primary variant (light)-->
 
@@ -56,7 +56,7 @@
 
     <color name="red_200">#cf6679</color> <!--Color error (dark)-->
     <color name="red_600">#b00020</color> <!--Color error (light)-->
-    <color name="mtrl_textinput_default_box_stroke_color">#EA80FC</color>
+    <color name="mtrl_textinput_default_box_stroke_color">@color/purple_500</color> <!-- Old color: EA80FC -->
     <!--Color surface (light), color on error (light), -->
     <!--color on surface (dark), color on surface (dark)-->
     <color name="white_50">#ffffff</color>
