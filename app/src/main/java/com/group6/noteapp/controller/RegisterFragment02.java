@@ -1,30 +1,23 @@
 package com.group6.noteapp.controller;
 
-import android.app.DatePickerDialog;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
-import androidx.navigation.fragment.NavHostFragment;
-
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.DatePicker;
+
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.button.MaterialButton;
-import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.group6.noteapp.R;
 
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -96,10 +89,9 @@ public class RegisterFragment02 extends Fragment {
         TextInputLayout etBirthday = inflatedView.findViewById(R.id.textInputRegBirthday);
         TextInputLayout etAddress = inflatedView.findViewById(R.id.textInputRegAddress);
 
-        MaterialButton btnNext = inflatedView.findViewById(R.id.btnNext01);
-        btnNext.setOnClickListener(new View.OnClickListener() {
+        MaterialButton btnLogin = inflatedView.findViewById(R.id.btnLoginReg);
+        btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override public void onClick(View v) {
-
                 /* Create local variables to store the EditText Views' current values */
 
                 String regFullname = etFullname.getEditText().getText().toString();
