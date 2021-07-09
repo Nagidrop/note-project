@@ -3,16 +3,15 @@ package com.group6.noteapp.controller;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
-import androidx.navigation.fragment.NavHostFragment;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+import androidx.navigation.fragment.NavHostFragment;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -22,6 +21,7 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.group6.noteapp.R;
+import com.group6.noteapp.util.ValidationUtils;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -79,7 +79,7 @@ public class LoginFragment extends Fragment {
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
 
-        firebaseAuth= FirebaseAuth.getInstance();
+        firebaseAuth = FirebaseAuth.getInstance();
 
     }
 
@@ -93,28 +93,29 @@ public class LoginFragment extends Fragment {
         MaterialButton btnRegister = inflatedView.findViewById(R.id.btnRegister);
         // Set navigate to register button
         btnRegister.setOnClickListener(new View.OnClickListener() {
-            @Override public void onClick(View v) {
+            @Override
+            public void onClick(View v) {
                 NavHostFragment.findNavController(LoginFragment.this).navigate(R.id.action_loginFragment_to_registerFragment01);
             }
         });
 
         MaterialButton btnForgotPassword = inflatedView.findViewById(R.id.btnForgotPassword);
         btnForgotPassword.setOnClickListener(new View.OnClickListener() {
-            @Override public void onClick(View v) {
+            @Override
+            public void onClick(View v) {
                 NavHostFragment.findNavController(LoginFragment.this).navigate(R.id.action_loginFragment_to_forgotPasswordFragment01);
             }
         });
 
         //get TextInputlayout
-        inputEmail=(TextInputLayout) inflatedView.findViewById(R.id.textInputLoginEmail);
-        inputPassword=(TextInputLayout)inflatedView.findViewById(R.id.textInputLoginPassword);
+        inputEmail = inflatedView.findViewById(R.id.textInputLoginEmail);
+        inputPassword = inflatedView.findViewById(R.id.textInputLoginPassword);
         //Get login button
-        btnLogin=inflatedView.findViewById(R.id.btnLogin);
+        btnLogin = inflatedView.findViewById(R.id.btnLogin);
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 checkCredentials();
-
             }
         });
 
@@ -123,48 +124,61 @@ public class LoginFragment extends Fragment {
         return inflatedView;
     }
 
-    private void checkCredentials(){
-        String email= inputEmail.getEditText().getText().toString();
-        String password=inputPassword.getEditText().getText().toString();
+    private void checkCredentials() {
+        String email = inputEmail.getEditText().getText().toString();
+        String password = inputPassword.getEditText().getText().toString();
 
-        if (email.isEmpty()||!email.contains("@")||password.isEmpty()){
-            Toast.makeText(getActivity(),"Email or Password is incorrect.",Toast.LENGTH_SHORT).show();
-        }else {
-            progressDialog.setTitle("Login");
-            progressDialog.setMessage("Please wait while check your credentials");
+        boolean isInputValid = true;
+        int emailValidateResult = ValidationUtils.validateEmail(email);
+        int passwordValidateResult = ValidationUtils.validatePasswordLog(password);
+
+        if (emailValidateResult == 1) {
+            isInputValid = false;
+            inputEmail.setError("oh no");
+        }
+
+        if (passwordValidateResult == 1) {
+            isInputValid = false;
+            inputPassword.setError("oh no 2");
+        }
+
+        if (isInputValid) {
+            progressDialog.setTitle("Logging in...");
+            progressDialog.setMessage("Please wait while we connect you to Note App.");
             progressDialog.setCanceledOnTouchOutside(false);
             progressDialog.show();
-            firebaseAuth.signInWithEmailAndPassword(email,password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+            firebaseAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                 @Override
                 public void onComplete(@NonNull @NotNull Task<AuthResult> task) {
-                    if(task.isSuccessful()){
+                    if (task.isSuccessful()) {
                         progressDialog.dismiss();
-                        Intent intent = new Intent(getActivity(),MainActivity.class);
-                        intent.setFlags(intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
+                        Intent intent = new Intent(getActivity(), MainActivity.class);
+                        intent.setFlags(intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                         startActivity(intent);
-                    }else{
-                        Toast.makeText(getActivity(),"Email or Password is incorrect.",Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(getActivity(), "Email or Password is incorrect.", Toast.LENGTH_SHORT).show();
                         progressDialog.dismiss();
                     }
                 }
             });
         }
     }
+
     // [START on_start_check_user]
     @Override
     public void onStart() {
         super.onStart();
         // Check if user is signed in (non-null) and update UI accordingly.
         FirebaseUser currentUser = firebaseAuth.getCurrentUser();
-        if(currentUser != null){
+        if (currentUser != null) {
             reload();
         }
     }
     // [END on_start_check_user]
 
     private void reload() {
-        Intent intent = new Intent(getActivity(),MainActivity.class);
-        intent.setFlags(intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
+        Intent intent = new Intent(getActivity(), MainActivity.class);
+        intent.setFlags(intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
     }
 

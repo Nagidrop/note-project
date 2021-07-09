@@ -1,20 +1,12 @@
 package com.group6.noteapp.controller;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-
-import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkCapabilities;
 import android.os.Build;
 import android.os.Bundle;
 
-import android.widget.Toast;
-
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.group6.noteapp.R;
 
@@ -26,21 +18,21 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        if (!isNetworkAvailable() == true) {
-            new AlertDialog.Builder(this)
-                    .setIcon(android.R.drawable.ic_dialog_alert)
-                    .setTitle("Internet Connection Alert")
-                    .setMessage("Please Check Your Internet Connection")
-                    .setPositiveButton("Close", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
-
-                        }
-                    }).show();
-        } else if (isNetworkAvailable() == true) {
-            Toast.makeText(LoginActivity.this,
-                    "Welcome Note App", Toast.LENGTH_LONG).show();
-        }
+//        if (!isNetworkAvailable() == true) {
+//            new AlertDialog.Builder(this)
+//                    .setIcon(android.R.drawable.ic_dialog_alert)
+//                    .setTitle("Internet Connection Alert")
+//                    .setMessage("Please Check Your Internet Connection")
+//                    .setPositiveButton("Close", new DialogInterface.OnClickListener() {
+//                        @Override
+//                        public void onClick(DialogInterface dialogInterface, int i) {
+//
+//                        }
+//                    }).show();
+//        } else if (isNetworkAvailable() == true) {
+//            Toast.makeText(LoginActivity.this,
+//                    "Welcome Note App", Toast.LENGTH_LONG).show();
+//        }
 
     }
 
