@@ -13,7 +13,6 @@
     <string name="full_name">Fullname</string>
     <string name="login">Login</string>
     <string name="loginFacebook">Login with Facebook</string>
-    <!--Login layout-->
     <string name="login_title">LOGIN</string>
     <string name="login_with">Login with</string>
     <string name="next">Next</string>
