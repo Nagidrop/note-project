@@ -13,11 +13,6 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
 
-import com.facebook.FacebookCallback;
-import com.facebook.FacebookException;
-import com.facebook.FacebookSdk;
-import com.facebook.login.LoginResult;
-import com.facebook.login.widget.LoginButton;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.button.MaterialButton;
@@ -115,8 +110,8 @@ public class LoginFragment extends Fragment {
         });
 
         //get TextInputlayout
-        inputEmail = inflatedView.findViewById(R.id.textInputLoginEmail);
-        inputPassword = inflatedView.findViewById(R.id.textInputLoginPassword);
+        inputEmail = inflatedView.findViewById(R.id.txtInputLoginEmail);
+        inputPassword = inflatedView.findViewById(R.id.txtInputLoginPassword);
         //Get login button
         btnLogin = inflatedView.findViewById(R.id.btnLogin);
         btnLogin.setOnClickListener(new View.OnClickListener() {
@@ -128,7 +123,7 @@ public class LoginFragment extends Fragment {
 
 //        progressDialog = new ProgressDialog(getActivity());
 //
-//        loginButton = (LoginButton) findViewById(R.id.login_button);
+//        loginButton = (LoginButton) findViewById(R.id.btnLoginFacebookHidden);
 //        loginButton.setReadPermissions("email");
 //        // If using in a fragment,loginButton.setFragment(this);
 //
