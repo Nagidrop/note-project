@@ -6,47 +6,44 @@ package com.group6.noteapp.util;
 import android.text.TextUtils;
 
 public final class ValidationUtils {
-    private static final String passwordRegex = "^[A-Za-z\\d$&+,:;=?@#|'<>.^*()%!-]{8,}$";
+    private static final String passwordRegex = "^[A-Za-z\\d$&+,:;=?@#|'<>.^*()%!-]{8,}$";  // minimum 8 characters
     private static final String fullNameRegex = "^([a-zA-Zàáãạảăắằẳẵặâấầẩẫậèéẹẻẽêềếểễệđìíĩỉị" +
             "òóõọỏôốồổỗộơớờởỡợùúũụủưứừửữựỳỵỷỹýÀÁÃẠẢĂẮẰẲẴẶÂẤẦẨẪẬÈÉẸẺẼÊỀẾỂỄỆĐÌÍĨỈỊÒÓÕỌỎÔỐỒỔỖỘƠỚỜỞỠỢ" +
-            "ÙÚŨỤỦƯỨỪỬỮỰỲỴỶỸÝ]{1,})(\\s[a-zA-Zàáãạảăắằẳẵặâấầẩẫậèéẹẻẽêềếểễệđìíĩỉị" +
+            "ÙÚŨỤỦƯỨỪỬỮỰỲỴỶỸÝ]{1,})" +  // match a single Vietnamese word
+            "(\\s[a-zA-Zàáãạảăắằẳẵặâấầẩẫậèéẹẻẽêềếểễệđìíĩỉị" +
             "òóõọỏôốồổỗộơớờởỡợùúũụủưứừửữựỳỵỷỹýÀÁÃẠẢĂẮẰẲẴẶÂẤẦẨẪẬÈÉẸẺẼÊỀẾỂỄỆĐÌÍĨỈỊÒÓÕỌỎÔỐỒỔỖỘƠỚỜỞỠỢ" +
-            "ÙÚŨỤỦƯỨỪỬỮỰỲỴỶỸÝ]{1,})+$";
+            "ÙÚŨỤỦƯỨỪỬỮỰỲỴỶỸÝ]{1,})+$"  // follows by a single Vietnamese word or more
+            ;
     private static final String emailRegex = "^(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*" +
             "|\"(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21\\x23-\\x5b\\x5d-\\x7f]|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])*\")" +
             "@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?" +
             "|\\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:" +
-            "(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21-\\x5a\\x53-\\x7f]|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])+)\\])$";
-    private static final String phoneRegex = "^(0[1-9][0-9]{8})|(\\+84[1-9][0-9]{8})$";    // RFC 5322
-//    private final SimpleDateFormat dateFormatter;                                   // date formatter
+            "(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21-\\x5a\\x53-\\x7f]|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])+)\\])$";   // conform to RFC 5322
+    private static final String addressRegex = "^[a-zA-Zàáãạảăắằẳẵặâấầẩẫậèéẹẻẽêềếểễệđìíĩỉịòóõọỏôốồổỗộơớờởỡợ" +
+            "ùúũụủưứừửữựỳỵỷỹýÀÁÃẠẢĂẮẰẲẴẶÂẤẦẨẪẬÈÉẸẺẼÊỀẾỂỄỆĐÌÍĨỈỊÒÓÕỌỎÔỐỒỔỖỘƠỚỜỞỠỢÙÚŨỤỦƯỨỪỬỮỰỲỴỶỸÝ" +
+            "0-9\\.\\-\\s\\,\\/]*$";   // match a Vietnamese or foreign country's address
 
-//    /**
-//     * Constructor
-//     */
-//    public ValidationUtils(){
-//        this.dateFormatter = new SimpleDateFormat("dd/MM/yyyy");        // instantiate with pattern
-//        dateFormatter.setLenient(false);                                       // set lenient to false
-//    }
+    /**
+     * Validate if email input is valid
+     * @param email email string to validate
+     * @return  0 if valid
+     *          1 if isn't empty
+     *          2 if doesn't match regex
+     */
+    public static int validateEmail(String email){
+        if (TextUtils.isEmpty(email)) {
+            return 1;
+        } else if (!email.matches(emailRegex)){
+            return 2;
+        }
 
-//    /**
-//     * Validate if username input is valid
-//     * @param username username to validate
-//     * @return  0 if valid
-//     *          1 if empty
-//     *          2 if duplicate
-//     */
-//    public static int validateUsername(String username){
-//        if (TextUtils.isEmpty(username)) {
-//            return 1;
-//        }
-//
-//        return 0;
-//    }
+        return 0;
+    }
 
     /**
      * Validate if password input is valid
-     * @param password password to validate
-     * @param confirmPassword confirm password to validate
+     * @param password password string to validate
+     * @param confirmPassword confirm password string to validate
      * @return  0 if valid
      *          1 if password is empty
      *          2 if password doesn't match regex
@@ -66,7 +63,7 @@ public final class ValidationUtils {
 
     /**
      * Validate if password input is valid
-     * @param password password to validate
+     * @param password password string to validate
      * @return  0 if valid
      *          1 if password is empty
      */
@@ -80,7 +77,7 @@ public final class ValidationUtils {
 
     /**
      * Validate if full name input is valid
-     * @param fullName full name to validate
+     * @param fullName full name string to validate
      * @return  0 if valid
      *          1 if empty
      *          2 if doesn't match regex
@@ -96,64 +93,16 @@ public final class ValidationUtils {
     }
 
     /**
-     * Validate if email input is valid
-     * @param email email to validate
+     * Validate if address input is valid
+     * @param address address string to validate
      * @return  0 if valid
-     *          1 if isn't empty
-     *          2 if doesn't match regex
+     *          1 if doesn't match regex
      */
-    public static int validateEmail(String email){
-        if (TextUtils.isEmpty(email)) {
-            return 1;
-        } else if (!email.matches(emailRegex)){
-            return 2;
-        }
-
-        return 0;
-    }
-
-    /**
-     * Validate if phone input is valid
-     * @param phone phone to validate
-     * @return  0 if valid
-     *          1 if isn't empty AND doesn't match regex
-     */
-    public static int validatePhone(String phone){
-        if (!TextUtils.isEmpty(phone) && !phone.matches(phoneRegex)) {
+    public static int validateAddress(String address){
+        if (!address.matches(addressRegex)){
             return 1;
         }
 
         return 0;
     }
-
-//    /**
-//     * Validate if birth date input is valid
-//     * @param birthDate birth date to validate
-//     * @return  0 if valid
-//     *          1 if isn't in dd/MM/yyyy format
-//     *          2 if date is after today
-//     */
-//    public static int validateBirthdate(String birthDate){
-//        // if birth date is empty, mark it as valid
-//        if (TextUtils.isEmpty(birthDate)){
-//            return 0;
-//        }
-//
-//        Date parsedBirthDate;   // the parsed birth date
-//
-//        // try parse the birth date to dd/MM/yyyy format
-//        try{
-//            parsedBirthDate = dateFormatter.parse(birthDate);
-//        } catch (ParseException e){
-//            // if not successful
-//            return 1;
-//        }
-//
-//        // if birth date is after today
-//        if (parsedBirthDate.after(new Date())){
-//            return 2;
-//        }
-//
-//        return 0;
-//    }
 }
