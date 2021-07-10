@@ -10,14 +10,27 @@
         android:layout_height="wrap_content">
 
         <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/topAppBar"
             style="@style/Widget.MaterialComponents.Toolbar.Surface"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             app:navigationIcon="@drawable/ic_baseline_menu_24"
-            app:title="@string/app_name"
+            app:title="@string/all_notes"
             app:titleTextAppearance="@style/TextAppearance.MyTheme.Headline6"/>
     </com.google.android.material.appbar.AppBarLayout>
 
+
+
     <include layout="@layout/content_main" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fabAdd"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        app:srcCompat="@android:drawable/ic_input_add"
+        android:layout_gravity="bottom|right"
+        android:layout_margin="16dp"
+        android:contentDescription="@string/fab_content_desc"/>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

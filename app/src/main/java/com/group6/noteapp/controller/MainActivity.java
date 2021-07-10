@@ -7,24 +7,95 @@ import android.net.ConnectivityManager;
 import android.net.NetworkCapabilities;
 import android.os.Build;
 import android.os.Bundle;
+import android.telecom.Call;
+import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.facebook.CallbackManager;
+import com.facebook.FacebookCallback;
+import com.facebook.FacebookException;
+import com.facebook.login.LoginManager;
+import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
+import com.google.android.material.appbar.MaterialToolbar;
+import com.google.android.material.navigation.NavigationView;
+import com.google.firebase.auth.FirebaseAuth;
 import com.group6.noteapp.R;
+import com.facebook.FacebookSdk;
+import com.facebook.appevents.AppEventsLogger;
+
+import org.jetbrains.annotations.NotNull;
 
 public class MainActivity extends AppCompatActivity {
+
     private BroadcastReceiver MyReceiver = null;
-
-
+    private FirebaseAuth firebaseAuth;
+    private MenuItem previousItem;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        firebaseAuth= FirebaseAuth.getInstance();
         setContentView(R.layout.activity_main);
+
+        MaterialToolbar topAppBar = findViewById(R.id.topAppBar);
+        DrawerLayout drawerLayout = findViewById(R.id.drawerLayout);
+        NavigationView navigationView = findViewById(R.id.navigationView);
+
+
+        // Set navigation icon click event to show navigation drawer
+        topAppBar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override public void onClick(View v) {
+                drawerLayout.open();
+            }
+        });
+
+        previousItem = findViewById(R.id.menu_all_notes);
+        previousItem.setChecked(true);
+
+        // Set navigation item selected
+        navigationView.setNavigationItemSelectedListener(
+                new NavigationView.OnNavigationItemSelectedListener() {
+                    @Override
+                    public boolean onNavigationItemSelected(@NonNull @NotNull MenuItem item) {
+                        drawerLayout.close();
+
+                        if(item.getItemId() == R.id.menu_logout){
+                            signOut();
+                            return false;
+                        }
+
+
+                        // Uncheck previous item if it exists
+//                        Menu navigationViewMenu = navigationView.getMenu();
+//                        if (uncheckedItem != null) {
+//                            Log.d("Check Item", String.valueOf(uncheckedItem.getItemId()));
+//                            uncheckedItem.setChecked(false);
+//                        }
+
+                        // Check selected item
+                        if(previousItem!= null){
+                            previousItem.setChecked(false);
+                        }
+                        item.setChecked(true);
+                        previousItem = item;
+                        topAppBar.setTitle(item.getTitle());
+                        return true;
+                    }
+                });
+
+
+
+
 //        if (!isNetworkAvailable()) {
 //            new AlertDialog.Builder(this)
 //                    .setIcon(android.R.drawable.ic_dialog_alert)
@@ -46,14 +117,9 @@ public class MainActivity extends AppCompatActivity {
                 NetworkCapabilities capabilities = connectivityManager
                         .getNetworkCapabilities(connectivityManager.getActiveNetwork());
                 if (capabilities != null) {
-                    if (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR)) {
-
-                        return true;
-                    } else if (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)) {
-
-                        return true;
-                    } else if (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET)) {
-
+                    if (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) ||
+                            capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) ||
+                            capabilities.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET)) {
                         return true;
                     }
                 }
@@ -65,5 +131,15 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+    /**
+     * Logout method
+     */
+    public void signOut() {
+        firebaseAuth.signOut();
+        LoginManager.getInstance().logOut();
+        Intent intent = new Intent(this,LoginActivity.class);
+        intent.setFlags(intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
+    }
 
 }
