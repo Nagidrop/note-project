@@ -29,7 +29,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/textInputRegFullname"
+        android:id="@+id/textInputRegFullName"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="0dp"
         android:layout_height="60dp"
@@ -61,10 +61,11 @@
         app:boxStrokeColor="?android:colorPrimary"
         app:layout_constraintEnd_toStartOf="@+id/guideline11"
         app:layout_constraintStart_toStartOf="@+id/guideline6"
-        app:layout_constraintTop_toBottomOf="@+id/textInputRegFullname"
+        app:layout_constraintTop_toBottomOf="@+id/textInputRegFullName"
         app:startIconDrawable="@drawable/ic_baseline_calendar_today_24">
 
         <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/textInputRegBirthdateEditText"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:inputType="date" />

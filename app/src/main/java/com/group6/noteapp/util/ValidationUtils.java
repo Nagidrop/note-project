@@ -61,10 +61,6 @@ public final class ValidationUtils {
             return 3;
         }
 
-//        if (TextUtils.isEmpty(password)) {
-//            return 1;
-//        } else if ()
-
         return 0;
     }
 
