@@ -24,6 +24,7 @@ import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.group6.noteapp.R;
 import com.group6.noteapp.model.User;
@@ -133,6 +134,7 @@ public class RegisterFragment02 extends Fragment {
                     inputRegFullName.setError("Full Name must have at least 2 words!");
                 }
 
+                isInputValid = true;
                 if (isInputValid) {
                     ProgressDialog progressDialog = new ProgressDialog(getActivity());
 
@@ -156,6 +158,7 @@ public class RegisterFragment02 extends Fragment {
                                         newUser.setFullName(regFullname);
                                         newUser.setBirthdate(regBirthdate);
                                         newUser.setAddress(regAddress);
+                                        newUser.setCreatedDate(FieldValue.serverTimestamp().toString());
 
                                         db.collection("users")
                                                 .document(userUid)

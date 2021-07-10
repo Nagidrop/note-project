@@ -121,9 +121,10 @@ public class RegisterFragment01 extends Fragment {
                     inputRegPassword.setError("Password must be at least 8 characters!");
                 } else if (validatePasswordResult == 3){
                     isInputValid = false;
-                    inputRegPassword.setError("Password confirmation must match password!");
+                    inputRegConfirmPassword.setError("Password confirmation must match password!");
                 }
 
+                isInputValid = true;
                 if (isInputValid){
                     RegisterFragment02 registerFragment02 = new RegisterFragment02();
 
