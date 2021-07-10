@@ -40,8 +40,17 @@
         android:label="fragment_forgot_password01"
         tools:layout="@layout/fragment_forgot_password01">
         <action
-            android:id="@+id/action_forgotPasswordFragment01_to_registerFragment03"
-            app:destination="@id/registerFragment03" />
+            android:id="@+id/action_forgotPasswordFragment01_to_forgotPasswordFragment02"
+            app:destination="@id/forgotPasswordFragment02" />
+    </fragment>
+    <fragment
+        android:id="@+id/forgotPasswordFragment02"
+        android:name="com.group6.noteapp.controller.ForgotPasswordFragment02"
+        android:label="fragment_forgot_password02"
+        tools:layout="@layout/fragment_forgot_password02">
+        <action
+            android:id="@+id/action_forgotPasswordFragment02_to_loginFragment"
+            app:destination="@id/loginFragment" />
     </fragment>
     <fragment
         android:id="@+id/registerFragment03"
