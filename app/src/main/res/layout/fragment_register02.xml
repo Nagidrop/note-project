@@ -6,28 +6,6 @@
     android:layout_height="match_parent"
     tools:context=".controller.RegisterFragment02">
 
-
-    <Button
-        android:id="@+id/btnLoginReg"
-        android:layout_width="0dp"
-        android:layout_height="50dp"
-        android:layout_marginTop="84dp"
-        android:text="@string/login"
-        app:layout_constraintEnd_toStartOf="@+id/guideline13"
-        app:layout_constraintStart_toStartOf="@+id/guideline12"
-        app:layout_constraintTop_toBottomOf="@+id/textInputRegAddress" />
-
-    <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/txtTwoThree"
-        style="@style/TextAppearance.MyTheme.Headline4"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="100dp"
-        android:text="@string/step_two_of_two"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toStartOf="@+id/guideline11"
-        app:layout_constraintTop_toTopOf="parent" />
-
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/txtRegister2"
         style="@style/TextAppearance.MyTheme.Headline4"
@@ -37,6 +15,17 @@
         android:text="@string/register"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="@+id/guideline6"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/txtTwoTwo"
+        style="@style/TextAppearance.MyTheme.Headline4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="100dp"
+        android:text="@string/step_two_of_two"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toStartOf="@+id/guideline11"
         app:layout_constraintTop_toTopOf="parent" />
 
     <com.google.android.material.textfield.TextInputLayout
@@ -61,7 +50,7 @@
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/textInputRegBirthday"
+        android:id="@+id/textInputRegBirthdate"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="0dp"
         android:layout_height="60dp"
@@ -93,7 +82,7 @@
         app:boxStrokeColor="?android:colorPrimary"
         app:layout_constraintEnd_toStartOf="@+id/guideline11"
         app:layout_constraintStart_toStartOf="@+id/guideline6"
-        app:layout_constraintTop_toBottomOf="@+id/textInputRegBirthday"
+        app:layout_constraintTop_toBottomOf="@+id/textInputRegBirthdate"
         app:startIconDrawable="@drawable/ic_baseline_house_24">
 
         <com.google.android.material.textfield.TextInputEditText
@@ -101,6 +90,16 @@
             android:layout_height="match_parent"
             android:inputType="text"/>
     </com.google.android.material.textfield.TextInputLayout>
+
+    <Button
+        android:id="@+id/btnLoginReg"
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="84dp"
+        android:text="@string/login"
+        app:layout_constraintEnd_toStartOf="@+id/guideline13"
+        app:layout_constraintStart_toStartOf="@+id/guideline12"
+        app:layout_constraintTop_toBottomOf="@+id/textInputRegAddress" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline6"

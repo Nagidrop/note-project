@@ -1,25 +1,30 @@
 package com.group6.noteapp.controller;
 
+import android.app.AlertDialog;
+import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputLayout;
+import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.group6.noteapp.R;
-
-import java.util.HashMap;
-import java.util.Map;
+import com.group6.noteapp.model.User;
+import com.group6.noteapp.util.ValidationUtils;
 
 import static android.content.ContentValues.TAG;
 
@@ -40,8 +45,8 @@ public class RegisterFragment02 extends Fragment {
     private static final String ARG_PARAM2 = "param2";
 
     // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    private String regEmail;
+    private String regPassword;
 
     public RegisterFragment02() {
         // Required empty public constructor
@@ -69,8 +74,8 @@ public class RegisterFragment02 extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+            regEmail = getArguments().getString("regEmail");
+            regPassword = getArguments().getString("regPassword");
         }
     }
 
@@ -82,41 +87,128 @@ public class RegisterFragment02 extends Fragment {
         inflatedView = inflater.inflate(R.layout.fragment_register02, container, false);
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-
+        mAu = FirebaseAuth.getInstance();
         /* Get EditText Views */
 
-        TextInputLayout etFullname = inflatedView.findViewById(R.id.textInputRegFullname);
-        TextInputLayout etBirthday = inflatedView.findViewById(R.id.textInputRegBirthday);
-        TextInputLayout etAddress = inflatedView.findViewById(R.id.textInputRegAddress);
+        TextInputLayout inputRegFullName = inflatedView.findViewById(R.id.textInputRegFullname);
+        TextInputLayout inputRegBirthdate = inflatedView.findViewById(R.id.textInputRegBirthdate);
+        TextInputLayout inputRegAddress = inflatedView.findViewById(R.id.textInputRegAddress);
 
         MaterialButton btnLogin = inflatedView.findViewById(R.id.btnLoginReg);
         btnLogin.setOnClickListener(new View.OnClickListener() {
-            @Override public void onClick(View v) {
+            @Override
+            public void onClick(View v) {
                 /* Create local variables to store the EditText Views' current values */
 
-                String regFullname = etFullname.getEditText().getText().toString();
-                String regBirthday = etBirthday.getEditText().getText().toString();
-                String regAddress = etAddress.getEditText().getText().toString();
+                String regFullname = inputRegFullName.getEditText().getText().toString();
+                String regBirthdate = inputRegBirthdate.getEditText().getText().toString();
+                String regAddress = inputRegAddress.getEditText().getText().toString();
                 // Create a new user with a first and last name
+                inputRegFullName.setErrorEnabled(false);
+                inputRegBirthdate.setErrorEnabled(false);
+                inputRegAddress.setErrorEnabled(false);
 
-                Map<String, Object> user = new HashMap<>();
-                user.put("first", "Ada");
-                user.put("last", "Lovelace");
-                user.put("born", 1815);
+                inputRegFullName.setErrorEnabled(true);
+                inputRegBirthdate.setErrorEnabled(true);
+                inputRegAddress.setErrorEnabled(true);
 
-                // Add a new document with a generated ID
-                db.collection("users")
-                        .add(user)
-                        .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                boolean isInputValid = true;
+                int validateFullNameResult = ValidationUtils.validateEmail(regFullname);
+
+                if (validateFullNameResult == 1) {
+                    isInputValid = false;
+                    inputRegFullName.setError("Full Name must not be empty!");
+                } else if (validateFullNameResult == 2) {
+                    isInputValid = false;
+                    inputRegFullName.setError("Full Name must have at least 2 words, with a whitespace between words!");
+                }
+
+                ProgressDialog progressDialog = new ProgressDialog(getActivity());
+
+                /* show progress dialog*/
+                progressDialog.setTitle("Registering...");
+                progressDialog.setMessage("Please wait while we register you in Note App.");
+                progressDialog.setCanceledOnTouchOutside(false);
+                progressDialog.show();
+
+                mAu.createUserWithEmailAndPassword(regEmail, regPassword)
+                        .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                             @Override
-                            public void onSuccess(DocumentReference documentReference) {
-                                Log.d(TAG, "DocumentSnapshot added with ID: " + documentReference.getId());
-                            }
-                        })
-                        .addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                                Log.w(TAG, "Error adding document", e);
+                            public void onComplete(@NonNull Task<AuthResult> task) {
+                                if (task.isSuccessful()) {
+                                    progressDialog.dismiss();
+                                    // Sign in success, update UI with the signed-in user's information
+                                    Log.d(TAG, "createUserWithEmail:success");
+                                    String userUid = task.getResult().getUser().getUid();
+
+                                    User newUser = new User();
+                                    newUser.setFullName(regFullname);
+                                    newUser.setBirthdate(regBirthdate);
+                                    newUser.setAddress(regAddress);
+
+                                    db.collection("users")
+                                            .document(userUid)
+                                            .set(newUser)
+                                            .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                @Override
+                                                public void onSuccess(Void aVoid) {
+                                                    Log.d(TAG, "DocumentSnapshot written with ID: " + userUid);
+                                                    Toast.makeText(getActivity(), "Success", Toast.LENGTH_SHORT).show();
+                                                }
+                                            })
+                                            .addOnFailureListener(new OnFailureListener() {
+                                                @Override
+                                                public void onFailure(@NonNull Exception e) {
+                                                    Log.w(TAG, "Error adding document", e);
+                                                }
+                                            });
+                                } else {
+                                    // handle error
+                                    progressDialog.dismiss();
+                                    String error = task.getException().getMessage();
+
+                                    if (error.equalsIgnoreCase("The email address is already in use by another account.")){
+                                        AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
+                                        alert.setTitle("Registration Failed");                                                  // set dialog title
+                                        alert.setMessage("Email address is already in use. Please use another email!");     // set dialog message
+                                        alert.setCancelable(false);
+
+                                        alert.setPositiveButton("OK",
+                                                new DialogInterface.OnClickListener() {
+                                                    /**
+                                                     * To register activity
+                                                     * @param dialog dialog
+                                                     * @param which which
+                                                     */
+                                                    @Override
+                                                    public void onClick(DialogInterface dialog, int which) {
+                                                        dialog.dismiss();
+                                                    }
+                                                });
+
+                                        alert.create().show();
+                                    } else {
+                                        AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
+                                        alert.setTitle("Registration Failed");                                                  // set dialog title
+                                        alert.setMessage("An unknown error occurred!\nError message:\n\"" + error +"\"");        // set dialog message
+                                        alert.setCancelable(false);
+
+                                        alert.setPositiveButton("OK",
+                                                new DialogInterface.OnClickListener() {
+                                                    /**
+                                                     * To register activity
+                                                     * @param dialog dialog
+                                                     * @param which which
+                                                     */
+                                                    @Override
+                                                    public void onClick(DialogInterface dialog, int which) {
+                                                        dialog.dismiss();
+                                                    }
+                                                });
+
+                                        alert.create().show();
+                                    }
+                                }
                             }
                         });
             }

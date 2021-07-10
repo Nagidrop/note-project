@@ -7,49 +7,40 @@
     android:layout_height="match_parent"
     tools:context=".controller.RegisterFragment01">
 
-    <Button
-        android:id="@+id/btnNext01"
-        android:layout_width="0dp"
-        android:layout_height="50dp"
-        android:layout_marginTop="84dp"
-        android:text="@string/next"
-        app:layout_constraintEnd_toStartOf="@+id/guideline10"
-        app:layout_constraintStart_toStartOf="@+id/guideline9"
-        app:layout_constraintTop_toBottomOf="@+id/textInputRegRePassword" />
-
-    <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/txtOneThree"
-        style="@style/TextAppearance.MyTheme.Headline4"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="100dp"
-        android:text="@string/step_one_of_two"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toStartOf="@+id/guideline8"
-        app:layout_constraintTop_toTopOf="parent" />
-
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/txtRegister"
         style="@style/TextAppearance.MyTheme.Headline4"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="100dp"
+        android:layout_marginTop="80dp"
         android:text="@string/register"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="@+id/guideline7"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/txtOneTwo"
+        style="@style/TextAppearance.MyTheme.Headline4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="80dp"
+        android:text="@string/step_one_of_two"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toStartOf="@+id/guideline8"
         app:layout_constraintTop_toTopOf="parent" />
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/textInputRegEmail"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="0dp"
-        android:layout_height="60dp"
-        android:layout_marginTop="200dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="190dp"
         android:ems="10"
         android:hint="@string/email"
         android:inputType="textPersonName"
         android:textColorHint="?android:colorPrimary"
         app:boxStrokeColor="?android:colorPrimary"
+        app:errorEnabled="true"
         app:layout_constraintEnd_toStartOf="@+id/guideline8"
         app:layout_constraintStart_toStartOf="@+id/guideline7"
         app:layout_constraintTop_toTopOf="parent"
@@ -65,13 +56,14 @@
         android:id="@+id/textInputRegPassword"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="0dp"
-        android:layout_height="60dp"
-        android:layout_marginTop="35dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
         android:ems="10"
         android:hint="@string/password"
         android:textColorHint="?android:colorPrimary"
         app:boxStrokeColor="?android:colorPrimary"
         app:endIconMode="password_toggle"
+        app:errorEnabled="true"
         app:layout_constraintEnd_toStartOf="@+id/guideline8"
         app:layout_constraintStart_toStartOf="@+id/guideline7"
         app:layout_constraintTop_toBottomOf="@+id/textInputRegEmail"
@@ -87,13 +79,14 @@
         android:id="@+id/textInputRegRePassword"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="0dp"
-        android:layout_height="60dp"
-        android:layout_marginTop="35dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
         android:ems="10"
         android:hint="@string/re_password"
         android:textColorHint="?android:colorPrimary"
         app:boxStrokeColor="?android:colorPrimary"
         app:endIconMode="password_toggle"
+        app:errorEnabled="true"
         app:layout_constraintEnd_toStartOf="@+id/guideline8"
         app:layout_constraintStart_toStartOf="@+id/guideline7"
         app:layout_constraintTop_toBottomOf="@+id/textInputRegPassword"
@@ -104,6 +97,18 @@
             android:layout_height="match_parent"
             android:inputType="textPassword" />
     </com.google.android.material.textfield.TextInputLayout>
+
+    <Button
+        android:id="@+id/btnNext01"
+        android:layout_width="0dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="75dp"
+        android:insetTop="0dp"
+        android:insetBottom="0dp"
+        android:text="@string/next"
+        app:layout_constraintEnd_toStartOf="@+id/guideline10"
+        app:layout_constraintStart_toStartOf="@+id/guideline9"
+        app:layout_constraintTop_toBottomOf="@+id/textInputRegRePassword" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline7"
