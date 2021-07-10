@@ -29,7 +29,7 @@
     <string name="re_password">Re-enter Password</string>
     <string name="register">Register</string>
     <string name="reset_pass">Reset Password</string>
-    <string name="email_sent_success">We have sent to \n%1$s an email to confirm registration.\n\nPlease check your inbox
+    <string name="email_sent_success">We have sent to <b>\n%1$s</b> an email to confirm registration.\n\nPlease check your inbox
 to verify your email.</string>
 <!--    <string name="sign_in_google">Sign In with Google</string>-->
     <string name="register_guide">Basic information</string>
