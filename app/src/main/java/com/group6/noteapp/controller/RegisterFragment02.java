@@ -24,6 +24,7 @@ import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.group6.noteapp.R;
@@ -159,7 +160,8 @@ public class RegisterFragment02 extends Fragment {
                                         progressDialog.dismiss();
                                         // Sign in success, update UI with the signed-in user's information
                                         Log.d(TAG, "createUserWithEmail:success");
-                                        String userUid = task.getResult().getUser().getUid();
+                                        FirebaseUser firebaseUser = task.getResult().getUser();
+                                        String userUid = firebaseUser.getUid();
 
                                         User newUser = new User();
                                         newUser.setFullName(regFullname);
@@ -174,9 +176,13 @@ public class RegisterFragment02 extends Fragment {
                                                     @Override
                                                     public void onSuccess(Void aVoid) {
                                                         Log.d(TAG, "DocumentSnapshot written with ID: " + userUid);
+                                                        firebaseUser.sendEmailVerification();
+
+                                                        Bundle regData = new Bundle();
+                                                        regData.putString("regEmail", regEmail);
 
                                                         NavHostFragment.findNavController(RegisterFragment02.this)
-                                                                .navigate(R.id.action_registerFragment02_to_registerFragment03);
+                                                                .navigate(R.id.action_registerFragment02_to_registerFragment03, regData);
                                                     }
                                                 })
                                                 .addOnFailureListener(new OnFailureListener() {

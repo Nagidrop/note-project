@@ -1,6 +1,8 @@
 package com.group6.noteapp.controller;
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -76,7 +78,6 @@ public class LoginFragment extends Fragment {
         args.putString(ARG_PARAM2, param2);
         fragment.setArguments(args);
 
-
         return fragment;
     }
 
@@ -85,7 +86,6 @@ public class LoginFragment extends Fragment {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
         }
 
         firebaseAuth = FirebaseAuth.getInstance();
@@ -203,9 +203,32 @@ public class LoginFragment extends Fragment {
                 public void onComplete(@NonNull @NotNull Task<AuthResult> task) {
                     if (task.isSuccessful()) {
                         progressDialog.dismiss();
-                        Intent intent = new Intent(getActivity(), MainActivity.class);
-                        intent.setFlags(intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-                        startActivity(intent);
+
+                        if (task.getResult().getUser().isEmailVerified()) {
+                            Intent intent = new Intent(getActivity(), MainActivity.class);
+                            intent.setFlags(intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                            startActivity(intent);
+                        } else {
+                            AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
+                            alert.setTitle("Login Failed");                                             // set dialog title
+                            alert.setMessage("Please verify your email address before logging in!");    // set dialog message
+                            alert.setCancelable(false);
+
+                            alert.setPositiveButton("OK",
+                                    new DialogInterface.OnClickListener() {
+                                        /**
+                                         * To register activity
+                                         * @param dialog dialog
+                                         * @param which which
+                                         */
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            dialog.dismiss();
+                                        }
+                                    });
+
+                            alert.create().show();
+                        }
                     } else {
                         Toast.makeText(getActivity(), "Email or Password is incorrect.", Toast.LENGTH_SHORT).show();
                         progressDialog.dismiss();

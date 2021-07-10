@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
@@ -18,6 +19,7 @@ import com.group6.noteapp.R;
  */
 public class RegisterFragment03 extends Fragment {
     private View inflatedView;
+    private String regEmail;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -54,18 +56,20 @@ public class RegisterFragment03 extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+            regEmail = getArguments().getString("regEmail");
         }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
         inflatedView = inflater.inflate(R.layout.fragment_register03, container, false);
+
+        TextView txtRegisterSuccess = inflatedView.findViewById(R.id.txtRegisterSuccess);
+        txtRegisterSuccess.setText(getString(R.string.email_sent_success, regEmail));
+
         // Get register button
-        MaterialButton btnRegister = inflatedView.findViewById(R.id.btnNoAccount);
+        MaterialButton btnRegister = inflatedView.findViewById(R.id.btnRegLogin);
         // Set navigate to register button
         btnRegister.setOnClickListener(new View.OnClickListener() {
             @Override

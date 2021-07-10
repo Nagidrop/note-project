@@ -8,10 +8,10 @@
     tools:context=".controller.RegisterFragment03">
 
     <Button
-        android:id="@+id/btnForgotLogin"
+        android:id="@+id/btnRegLogin"
         android:layout_width="0dp"
         android:layout_height="40dp"
-        android:layout_marginTop="136dp"
+        android:layout_marginTop="80dp"
         android:insetTop="0dp"
         android:insetBottom="0dp"
         android:text="@string/login"
@@ -19,7 +19,7 @@
         app:layout_constraintEnd_toStartOf="@+id/guideline17"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/guideline16"
-        app:layout_constraintTop_toBottomOf="@+id/textView" />
+        app:layout_constraintTop_toBottomOf="@+id/txtRegisterSuccess" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline14"
@@ -50,7 +50,7 @@
         app:layout_constraintGuide_percent="0.77" />
 
     <com.google.android.material.imageview.ShapeableImageView
-        android:id="@+id/imageView"
+        android:id="@+id/imgEmailReg"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:src="@drawable/ic_mail_24"
@@ -66,25 +66,25 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.26" />
+        app:layout_constraintGuide_percent="0.2" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline19"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.46"/>
+        app:layout_constraintGuide_percent="0.4" />
 
     <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/textView"
+        android:id="@+id/txtRegisterSuccess"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="36dp"
         android:gravity="center"
-        android:text="@string/sample_forgot_password_success"
+        android:text="@string/email_sent_success"
         style="@style/TextAppearance.MyTheme.Body1"
         app:layout_constraintEnd_toStartOf="@+id/guideline15"
         app:layout_constraintHorizontal_bias="0.496"
         app:layout_constraintStart_toStartOf="@+id/guideline14"
-        app:layout_constraintTop_toBottomOf="@+id/imageView" />
+        app:layout_constraintTop_toBottomOf="@+id/imgEmailReg" />
 </androidx.constraintlayout.widget.ConstraintLayout>
