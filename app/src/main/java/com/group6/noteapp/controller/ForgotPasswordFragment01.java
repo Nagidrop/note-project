@@ -105,7 +105,9 @@ public class ForgotPasswordFragment01 extends Fragment {
                     public void onComplete(@NonNull Task<Void> task) {
                         if (task.isSuccessful()) {
                             Toast.makeText(getActivity(), "We have sent you instructions to reset your password!", Toast.LENGTH_SHORT).show();
-                            NavHostFragment.findNavController(ForgotPasswordFragment01.this).navigate(R.id.action_forgotPasswordFragment01_to_registerFragment03);
+                            Bundle bundle = new Bundle();
+                            bundle.putString("email", emailAddress);
+                            NavHostFragment.findNavController(ForgotPasswordFragment01.this).navigate(R.id.action_forgotPasswordFragment01_to_forgotPasswordFragment02, bundle);
                         }else{
                             Toast.makeText(getActivity(), "Failed to send reset email!", Toast.LENGTH_SHORT).show();
                         }

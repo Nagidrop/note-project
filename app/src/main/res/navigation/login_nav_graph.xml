@@ -29,24 +29,36 @@
         android:id="@+id/registerFragment02"
         android:name="com.group6.noteapp.controller.RegisterFragment02"
         android:label="fragment_register02"
-        tools:layout="@layout/fragment_register02" />
+        tools:layout="@layout/fragment_register02" >
+        <action
+            android:id="@+id/action_registerFragment02_to_registerFragment03"
+            app:destination="@id/registerFragment03" />
+    </fragment>
     <fragment
         android:id="@+id/forgotPasswordFragment01"
         android:name="com.group6.noteapp.controller.ForgotPasswordFragment01"
         android:label="fragment_forgot_password01"
         tools:layout="@layout/fragment_forgot_password01" >
         <action
-            android:id="@+id/action_forgotPasswordFragment01_to_registerFragment03"
-            app:destination="@id/registerFragment03" />
+            android:id="@+id/action_forgotPasswordFragment01_to_forgotPasswordFragment02"
+            app:destination="@id/forgotPasswordFragment02" />
     </fragment>
     <fragment
         android:id="@+id/forgotPasswordFragment02"
         android:name="com.group6.noteapp.controller.ForgotPasswordFragment02"
         android:label="fragment_forgot_password02"
-        tools:layout="@layout/fragment_forgot_password02" />
+        tools:layout="@layout/fragment_forgot_password02" >
+        <action
+            android:id="@+id/action_forgotPasswordFragment02_to_loginFragment"
+            app:destination="@id/loginFragment" />
+    </fragment>
     <fragment
         android:id="@+id/registerFragment03"
         android:name="com.group6.noteapp.controller.RegisterFragment03"
         android:label="fragment_register03"
-        tools:layout="@layout/fragment_register03" />
+        tools:layout="@layout/fragment_register03" >
+        <action
+            android:id="@+id/action_registerFragment03_to_loginFragment"
+            app:destination="@id/loginFragment" />
+    </fragment>
 </navigation>
