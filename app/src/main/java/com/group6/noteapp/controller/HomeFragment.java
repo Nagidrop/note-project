@@ -20,7 +20,7 @@ import com.group6.noteapp.R;
  * create an instance of this fragment.
  */
 public class HomeFragment extends Fragment {
-    private FirebaseAuth firebaseAuth;
+
     View inflatedView;
 
     // TODO: Rename parameter arguments, choose names that match
@@ -61,7 +61,7 @@ public class HomeFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
-        firebaseAuth= FirebaseAuth.getInstance();
+
     }
 
     @Override
@@ -70,21 +70,7 @@ public class HomeFragment extends Fragment {
         // Inflate the layout for this fragment
         inflatedView = inflater.inflate(R.layout.fragment_home, container, false);
 
-        // Get register button
-        MaterialButton btnLogout = inflatedView.findViewById(R.id.btnLogout);
-        btnLogout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                signOut();
-            }
-        });
         return inflatedView;
     }
-    //sign out method
-    public void signOut() {
-        firebaseAuth.signOut();
-        Intent intent = new Intent(getActivity(),LoginActivity.class);
-        intent.setFlags(intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
-        startActivity(intent);
-    }
+
 }
