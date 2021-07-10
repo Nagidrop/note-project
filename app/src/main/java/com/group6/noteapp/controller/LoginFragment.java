@@ -5,6 +5,7 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -244,9 +245,7 @@ public class LoginFragment extends Fragment {
                         progressDialog.dismiss();
 
                         if (task.getResult().getUser().isEmailVerified()) {
-                            Intent intent = new Intent(getActivity(), MainActivity.class);
-                            intent.setFlags(intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-                            startActivity(intent);
+                            reload();
                         } else {
                             AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
                             alert.setTitle("Login Failed");                                             // set dialog title
