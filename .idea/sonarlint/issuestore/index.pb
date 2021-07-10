@@ -9,8 +9,6 @@ F
 Mapp/src/main/java/com/group6/noteapp/controller/ForgotPasswordFragment01.java,5\e\5ed305edb32159dc4aa9e2114a3303b08b50aedc
 w
 Gapp/src/main/java/com/group6/noteapp/controller/RegisterFragment03.java,c\a\ca9322d61060c57f082e9ac1798fd463a1cc7db2
-;
-gradlew.bat,2\a\2a45a911a8f1836b0b6c5b758962572012d8f8c3
 ?
 settings.gradle,0\5\05efc8b1657769a27696d478ded1e95f38737233
 :
@@ -26,8 +24,6 @@ A
 build.gradle,f\0\f07866736216be0ee2aba49e392191aeae700a35
 @
 app/build.gradle,f\4\f4a01d6a4fcb971362ec00a83903fd3902f52164
-}
-Mapp/src/main/java/com/group6/noteapp/controller/ForgotPasswordFragment02.java,5\3\53ae6f9c783d48329c5b86ed4a8245eab90d5c63
 w
 Gapp/src/main/java/com/group6/noteapp/controller/RegisterFragment01.java,c\a\ca32a263d95c8fd47bf5413e5c179cba70832311
 P
@@ -36,3 +32,9 @@ p
 @app/src/main/java/com/group6/noteapp/controller/NoteAdapter.java,3\2\329d32f25bd138d898ca8efa434b309bb740d358
 d
 4app/src/main/java/com/group6/noteapp/model/User.java,e\2\e233909562b7eaf5636b22623bcf5e6f049b2bfe
+q
+Aapp/src/main/java/com/group6/noteapp/controller/MainActivity.java,3\f\3f171484156c6f6760e5d0185a23057008250b6f
+N
+app/debug/output-metadata.json,6\d\6d0d047f57b3ed56db47b6d89a6ec6080e4cb494
+P
+ app/release/output-metadata.json,0\7\079ee2b81fdfd2faf349bcf552fe1a1bc16be431
