@@ -184,7 +184,7 @@ public class RegisterFragment02 extends Fragment {
                                         if (error.equalsIgnoreCase("The email address is already in use by another account.")) {
                                             AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
                                             alert.setTitle("Registration Failed");                                                  // set dialog title
-                                            alert.setMessage("Email address is already in use. Please use another email!");     // set dialog message
+                                            alert.setMessage("Email address is already in use. Please use a different email address!");     // set dialog message
                                             alert.setCancelable(false);
 
                                             alert.setPositiveButton("OK",
