@@ -34,3 +34,5 @@ r
 Bapp/src/main/java/com/group6/noteapp/controller/LoginFragment.java,8\1\818049e6407837f50523a0e1696f33860302ee46
 P
  app/src/main/AndroidManifest.xml,8\c\8c55c3ccc257e5907959013f99656e4c8ec3903e
+r
+Bapp/src/main/java/com/group6/noteapp/controller/LoginActivity.java,a\f\afbcec810a6927b20bfeaa7856ca50663595e781
