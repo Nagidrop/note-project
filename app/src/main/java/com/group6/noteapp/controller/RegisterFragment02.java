@@ -40,8 +40,8 @@ public class RegisterFragment02 extends Fragment {
     private static final String ARG_PARAM2 = "param2";
 
     // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    private String regEmail;
+    private String regPassword;
 
     public RegisterFragment02() {
         // Required empty public constructor
@@ -69,8 +69,8 @@ public class RegisterFragment02 extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+            regEmail = getArguments().getString(ARG_PARAM1);
+            regPassword = getArguments().getString(ARG_PARAM2);
         }
     }
 
@@ -85,18 +85,18 @@ public class RegisterFragment02 extends Fragment {
 
         /* Get EditText Views */
 
-        TextInputLayout etFullname = inflatedView.findViewById(R.id.textInputRegFullname);
-        TextInputLayout etBirthday = inflatedView.findViewById(R.id.textInputRegBirthday);
-        TextInputLayout etAddress = inflatedView.findViewById(R.id.textInputRegAddress);
+        TextInputLayout inputRegFullName = inflatedView.findViewById(R.id.textInputRegFullname);
+        TextInputLayout inputRegBirthdate = inflatedView.findViewById(R.id.textInputRegBirthdate);
+        TextInputLayout inputRegAddress = inflatedView.findViewById(R.id.textInputRegAddress);
 
         MaterialButton btnLogin = inflatedView.findViewById(R.id.btnLoginReg);
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override public void onClick(View v) {
                 /* Create local variables to store the EditText Views' current values */
 
-                String regFullname = etFullname.getEditText().getText().toString();
-                String regBirthday = etBirthday.getEditText().getText().toString();
-                String regAddress = etAddress.getEditText().getText().toString();
+                String regFullname = inputRegFullName.getEditText().getText().toString();
+                String regBirthday = inputRegBirthdate.getEditText().getText().toString();
+                String regAddress = inputRegAddress.getEditText().getText().toString();
                 // Create a new user with a first and last name
 
                 Map<String, Object> user = new HashMap<>();

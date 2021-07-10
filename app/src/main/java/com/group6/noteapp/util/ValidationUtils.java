@@ -6,13 +6,12 @@ package com.group6.noteapp.util;
 import android.text.TextUtils;
 
 public final class ValidationUtils {
-    private static final String passwordRegex = "^(?=.*[a-z])(?=.*[A-Z])" +
-            "(?=.*\\d)(?=.*[$&+,:;=?@#|'<>.^*()%!-])[A-Za-z\\d$&+,:;=?@#|'<>.^*()%!-]{8,}$";
+    private static final String passwordRegex = "^[A-Za-z\\d$&+,:;=?@#|'<>.^*()%!-]{8,}$";
     private static final String fullNameRegex = "^([a-zA-Zàáãạảăắằẳẵặâấầẩẫậèéẹẻẽêềếểễệđìíĩỉị" +
             "òóõọỏôốồổỗộơớờởỡợùúũụủưứừửữựỳỵỷỹýÀÁÃẠẢĂẮẰẲẴẶÂẤẦẨẪẬÈÉẸẺẼÊỀẾỂỄỆĐÌÍĨỈỊÒÓÕỌỎÔỐỒỔỖỘƠỚỜỞỠỢ" +
-            "ÙÚŨỤỦƯỨỪỬỮỰỲỴỶỸÝ]{2,})(\\s[a-zA-Zàáãạảăắằẳẵặâấầẩẫậèéẹẻẽêềếểễệđìíĩỉị" +
+            "ÙÚŨỤỦƯỨỪỬỮỰỲỴỶỸÝ]{1,})(\\s[a-zA-Zàáãạảăắằẳẵặâấầẩẫậèéẹẻẽêềếểễệđìíĩỉị" +
             "òóõọỏôốồổỗộơớờởỡợùúũụủưứừửữựỳỵỷỹýÀÁÃẠẢĂẮẰẲẴẶÂẤẦẨẪẬÈÉẸẺẼÊỀẾỂỄỆĐÌÍĨỈỊÒÓÕỌỎÔỐỒỔỖỘƠỚỜỞỠỢ" +
-            "ÙÚŨỤỦƯỨỪỬỮỰỲỴỶỸÝ]{2,})+$";
+            "ÙÚŨỤỦƯỨỪỬỮỰỲỴỶỸÝ]{1,})+$";
     private static final String emailRegex = "^(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*" +
             "|\"(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21\\x23-\\x5b\\x5d-\\x7f]|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])*\")" +
             "@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?" +
@@ -54,17 +53,17 @@ public final class ValidationUtils {
      *          3 if confirm password doesn't match password
      */
     public static int validatePasswordReg(String password, String confirmPassword){
-//        if (TextUtils.isEmpty(password)) {
-//            return 1;
-//        } else if (!password.matches(passwordRegex)) {
-//            return 2;
-//        } else if (!password.equals(confirmPassword)) {
-//            return 3;
-//        }
-
         if (TextUtils.isEmpty(password)) {
             return 1;
+        } else if (!password.matches(passwordRegex)) {
+            return 2;
+        } else if (!password.equals(confirmPassword)) {
+            return 3;
         }
+
+//        if (TextUtils.isEmpty(password)) {
+//            return 1;
+//        } else if ()
 
         return 0;
     }
@@ -104,15 +103,14 @@ public final class ValidationUtils {
      * Validate if email input is valid
      * @param email email to validate
      * @return  0 if valid
-     *          1 if isn't empty AND doesn't match regex
+     *          1 if isn't empty
+     *          2 if doesn't match regex
      */
     public static int validateEmail(String email){
-//        if (!TextUtils.isEmpty(email) && !email.matches(emailRegex)) {
-//            return 1;
-//        }
-
         if (TextUtils.isEmpty(email)) {
             return 1;
+        } else if (!email.matches(emailRegex)){
+            return 2;
         }
 
         return 0;

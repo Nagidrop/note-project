@@ -3,7 +3,6 @@ package com.group6.noteapp.controller;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,8 +17,6 @@ import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
-import com.facebook.FacebookSdk;
-import com.facebook.login.Login;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -45,7 +42,7 @@ public class LoginFragment extends Fragment {
 
     View inflatedView;
     private Button btnLogin;
-    private TextInputLayout inputEmail, inputPassword;
+    private TextInputLayout inputLogEmail, inputLogPassword;
     private FirebaseAuth firebaseAuth;
     private LoginButton loginButton;
     private CallbackManager callbackManager;
@@ -128,8 +125,8 @@ public class LoginFragment extends Fragment {
         });
 
         //get TextInputlayout
-        inputEmail = inflatedView.findViewById(R.id.txtInputLoginEmail);
-        inputPassword = inflatedView.findViewById(R.id.txtInputLoginPassword);
+        inputLogEmail = inflatedView.findViewById(R.id.txtInputLoginEmail);
+        inputLogPassword = inflatedView.findViewById(R.id.txtInputLoginPassword);
         //Get login button
         btnLogin = inflatedView.findViewById(R.id.btnLogin);
         btnLogin.setOnClickListener(new View.OnClickListener() {
@@ -170,27 +167,30 @@ public class LoginFragment extends Fragment {
     }
 
     private void checkCredentials() {
-        String email = inputEmail.getEditText().getText().toString();
-        String password = inputPassword.getEditText().getText().toString();
+        String logEmail = inputLogEmail.getEditText().getText().toString();
+        String logPassword = inputLogPassword.getEditText().getText().toString();
 
-        inputEmail.setErrorEnabled(false);
-        inputPassword.setErrorEnabled(false);
+        inputLogEmail.setErrorEnabled(false);
+        inputLogPassword.setErrorEnabled(false);
 
-        inputEmail.setErrorEnabled(true);
-        inputPassword.setErrorEnabled(true);
+        inputLogEmail.setErrorEnabled(true);
+        inputLogPassword.setErrorEnabled(true);
 
         boolean isInputValid = true;
-        int emailValidateResult = ValidationUtils.validateEmail(email);
-        int passwordValidateResult = ValidationUtils.validatePasswordLog(password);
+        int emailValidateResult = ValidationUtils.validateEmail(logEmail);
+        int passwordValidateResult = ValidationUtils.validatePasswordLog(logPassword);
 
         if (emailValidateResult == 1) {
             isInputValid = false;
-            inputEmail.setError("Email must not be empty!");
+            inputLogEmail.setError("Email must not be empty!");
+        } else if (emailValidateResult == 2) {
+            isInputValid = false;
+            inputLogEmail.setError("Please use a valid email! (Ex: abc@g.cn)");
         }
 
         if (passwordValidateResult == 1) {
             isInputValid = false;
-            inputPassword.setError("Password must not be empty!");
+            inputLogPassword.setError("Password must not be empty!");
         }
 
         if (isInputValid) {
@@ -198,7 +198,7 @@ public class LoginFragment extends Fragment {
             progressDialog.setMessage("Please wait while we connect you to Note App.");
             progressDialog.setCanceledOnTouchOutside(false);
             progressDialog.show();
-            firebaseAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+            firebaseAuth.signInWithEmailAndPassword(logEmail, logPassword).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                 @Override
                 public void onComplete(@NonNull @NotNull Task<AuthResult> task) {
                     if (task.isSuccessful()) {
