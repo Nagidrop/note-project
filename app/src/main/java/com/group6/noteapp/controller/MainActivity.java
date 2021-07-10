@@ -63,7 +63,7 @@ public class MainActivity extends AppCompatActivity {
                         // Uncheck previous item if it exists
                         MenuItem uncheckedItem = navigationView.getCheckedItem();
                         if(uncheckedItem != null) {
-                            Log.d("")
+                           // Log.d("...")
                             uncheckedItem.setChecked(false);
                         }
 
