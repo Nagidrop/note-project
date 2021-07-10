@@ -11,6 +11,8 @@ import android.os.Build;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -18,6 +20,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.facebook.login.LoginManager;
 import com.google.android.material.appbar.MaterialToolbar;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.group6.noteapp.R;
@@ -29,13 +32,44 @@ public class MainActivity extends AppCompatActivity {
     private BroadcastReceiver MyReceiver = null;
     private FirebaseAuth firebaseAuth;
     private MenuItem previousItem;
+    private Animation rotateClose;
+    private Animation rotateOpen;
+    private Animation fromBottom;
+    private Animation toBottom;
+    FloatingActionButton fabMenu;
+    FloatingActionButton fabNote;
+    FloatingActionButton fabRecord;
+    FloatingActionButton fabCapture;
+    boolean clicked; // fabMenu clicked state
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        firebaseAuth= FirebaseAuth.getInstance();
+        firebaseAuth = FirebaseAuth.getInstance();
         setContentView(R.layout.activity_main);
 
+        // -----------------------------
+        // Floating button
+        // -----------------------------
+        rotateClose = AnimationUtils.loadAnimation(this, R.anim.rotate_close_anim);
+        rotateOpen = AnimationUtils.loadAnimation(this, R.anim.rotate_open_anim);
+        fromBottom = AnimationUtils.loadAnimation(this, R.anim.from_bottom_anim);
+        toBottom = AnimationUtils.loadAnimation(this, R.anim.to_bottom_anim);
+
+        fabMenu = findViewById(R.id.fabMenu);
+        fabNote = findViewById(R.id.fabNote);
+        fabRecord = findViewById(R.id.fabRecord);
+        fabCapture = findViewById(R.id.fabCapture);
+
+        fabMenu.setOnClickListener(new View.OnClickListener() {
+            @Override public void onClick(View v) {
+                fabMenuOnClick();
+            }
+        });
+
+        // -----------------------------
+        // Navigation drawer
+        //------------------------------
         MaterialToolbar topAppBar = findViewById(R.id.topAppBar);
         DrawerLayout drawerLayout = findViewById(R.id.drawerLayout);
         NavigationView navigationView = findViewById(R.id.navigationView);
@@ -56,7 +90,7 @@ public class MainActivity extends AppCompatActivity {
                     public boolean onNavigationItemSelected(@NonNull @NotNull MenuItem item) {
                         drawerLayout.close();
 
-                        if(item.getItemId() == R.id.menu_logout){
+                        if (item.getItemId() == R.id.menu_logout) {
                             signOut();
                             return false;
                         }
@@ -70,7 +104,7 @@ public class MainActivity extends AppCompatActivity {
 //                        }
 
                         // Check selected item
-                        if(previousItem!= null){
+                        if (previousItem != null) {
                             previousItem.setChecked(false);
                         }
                         item.setChecked(true);
@@ -81,8 +115,8 @@ public class MainActivity extends AppCompatActivity {
                 });
 
 
-            previousItem = navigationView.getMenu().getItem(0).getSubMenu().getItem(0);
-            previousItem.setChecked(true);
+        previousItem = navigationView.getMenu().getItem(0).getSubMenu().getItem(0);
+        previousItem.setChecked(true);
 
 //        if (!isNetworkAvailable()) {
 //            new AlertDialog.Builder(this)
@@ -155,6 +189,51 @@ public class MainActivity extends AppCompatActivity {
                     }
                 });
         alert.create().show();
+    }
+
+    /**
+     * handle fabMenu button onclick action
+     */
+    public void fabMenuOnClick(){
+        setVisibility(clicked);
+        setAnimation(clicked);
+        clicked = !clicked;
+    }
+
+    /**
+     * Set Animation of floating action button
+     * @param clicked fabMenu click state
+     */
+    private void setAnimation(boolean clicked) {
+        if(!clicked){
+            fabMenu.startAnimation(rotateOpen);
+            fabNote.startAnimation(fromBottom);
+            fabCapture.startAnimation(fromBottom);
+            fabRecord.startAnimation(fromBottom);
+
+        }else{
+            fabMenu.startAnimation(rotateClose);
+            fabNote.startAnimation(toBottom);
+            fabCapture.startAnimation(toBottom);
+            fabRecord.startAnimation(toBottom);
+
+        }
+    }
+
+    /**
+     * Set visibility of fabRecord, fabNote, fabCapture
+     * @param clicked
+     */
+    private void setVisibility(boolean clicked){
+        if(!clicked){
+            fabNote.setVisibility(View.VISIBLE);
+            fabRecord.setVisibility(View.VISIBLE);
+            fabCapture.setVisibility(View.VISIBLE);
+        }else{
+            fabNote.setVisibility(View.INVISIBLE);
+            fabRecord.setVisibility(View.INVISIBLE);
+            fabCapture.setVisibility(View.INVISIBLE);
+        }
     }
 
 }
