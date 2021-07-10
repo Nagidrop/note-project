@@ -2,18 +2,26 @@ package com.group6.noteapp.controller;
 
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
 
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
-import androidx.fragment.app.Fragment;
-import androidx.navigation.fragment.NavHostFragment;
-
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.button.MaterialButton;
+import com.google.android.material.textfield.TextInputLayout;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthException;
 import com.group6.noteapp.R;
+
+import static android.content.ContentValues.TAG;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -23,6 +31,7 @@ import com.group6.noteapp.R;
 public class ForgotPasswordFragment01 extends Fragment {
 
     View inflatedView;
+    TextInputLayout textResetPassword;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -68,14 +77,39 @@ public class ForgotPasswordFragment01 extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         inflatedView = inflater.inflate(R.layout.fragment_forgot_password01, container, false);
-        MaterialButton btnSubmit = inflatedView.findViewById(R.id.btnForgotSubmit);
-        btnSubmit.setOnClickListener(new View.OnClickListener() {
-            @Override public void onClick(View v) {
-                NavHostFragment.findNavController(ForgotPasswordFragment01.this)
-                        .navigate(R.id.action_forgotPasswordFragment01_to_forgotPasswordFragment02);
-            }
-        });
+        //get text Input text layout
+            MaterialButton btnSubmit = inflatedView.findViewById(R.id.btnForgotSubmit);
+
+            btnSubmit.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    textResetPassword=inflatedView.findViewById(R.id.textInputForgotEmail);
+                    String emailAddressForgot = textResetPassword.getEditText().getText().toString();
+                    if (TextUtils.isEmpty(emailAddressForgot)) {
+                        Toast.makeText(getActivity(), "Please enter your email.", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                    sendEmailResetPassword(emailAddressForgot);
+                    }
+            });
+
         // Inflate the layout for this fragment
         return inflatedView;
+    }
+    private void sendEmailResetPassword(String emailAddress){
+        FirebaseAuth auth = FirebaseAuth.getInstance();
+
+        auth.sendPasswordResetEmail(emailAddress)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()) {
+                            Toast.makeText(getActivity(), "We have sent you instructions to reset your password!", Toast.LENGTH_SHORT).show();
+                            NavHostFragment.findNavController(ForgotPasswordFragment01.this).navigate(R.id.action_forgotPasswordFragment01_to_registerFragment03);
+                        }else{
+                            Toast.makeText(getActivity(), "Failed to send reset email!", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
     }
 }
