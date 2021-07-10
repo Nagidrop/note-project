@@ -32,8 +32,6 @@ w
 Gapp/src/main/java/com/group6/noteapp/controller/RegisterFragment01.java,c\a\ca32a263d95c8fd47bf5413e5c179cba70832311
 P
  app/src/main/AndroidManifest.xml,8\c\8c55c3ccc257e5907959013f99656e4c8ec3903e
-q
-Aapp/src/main/java/com/group6/noteapp/controller/HomeFragment.java,7\6\76245912de1e89ae20be64d68262cd415ad4a605
 p
 @app/src/main/java/com/group6/noteapp/controller/NoteAdapter.java,3\2\329d32f25bd138d898ca8efa434b309bb740d358
 d
