@@ -68,7 +68,7 @@ public class ForgotPasswordFragment01 extends Fragment {
         MaterialButton btnSubmit = inflatedView.findViewById(R.id.btnForgotSubmit);
         btnSubmit.setOnClickListener(new View.OnClickListener() {
             @Override public void onClick(View v) {
-                NavHostFragment.findNavController(ForgotPasswordFragment01.this).navigate(R.id.action_forgotPasswordFragment01_to_registerFragment03);
+                NavHostFragment.findNavController(ForgotPasswordFragment01.this).navigate(R.id.action_registerFragment01_to_registerFragment02);
             }
         });
         // Inflate the layout for this fragment

@@ -39,7 +39,7 @@
         android:layout_gravity="bottom|right"
         android:layout_marginEnd="19dp"
         android:layout_marginBottom="230dp"
-        android:visibility="visible"
+        android:visibility="invisible"
         android:clickable="true"
         app:fabCustomSize="50dp"
         android:contentDescription="@string/fab_content_desc"
@@ -53,7 +53,7 @@
         android:layout_marginBottom="162dp"
         android:layout_marginEnd="19dp"
         android:clickable="true"
-        android:visibility="visible"
+        android:visibility="invisible"
         app:fabCustomSize="50dp"
         android:contentDescription="@string/fab_content_desc"
         app:srcCompat="@drawable/ic_photo_camera_24" />
@@ -66,7 +66,7 @@
         android:layout_marginBottom="94dp"
         android:layout_marginEnd="19dp"
         app:fabCustomSize="50dp"
-        android:visibility="visible"
+        android:visibility="invisible"
         android:clickable="true"
         android:contentDescription="@string/fab_content_desc"
         app:srcCompat="@drawable/ic_writing_24" />
