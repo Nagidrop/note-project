@@ -1,25 +1,28 @@
 package com.group6.noteapp.controller;
 
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputLayout;
+import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.group6.noteapp.R;
-
-import java.util.HashMap;
-import java.util.Map;
+import com.group6.noteapp.model.User;
 
 import static android.content.ContentValues.TAG;
 
@@ -69,8 +72,8 @@ public class RegisterFragment02 extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            regEmail = getArguments().getString(ARG_PARAM1);
-            regPassword = getArguments().getString(ARG_PARAM2);
+            regEmail = getArguments().getString("regEmail");
+            regPassword = getArguments().getString("regPassword");
         }
     }
 
@@ -82,7 +85,7 @@ public class RegisterFragment02 extends Fragment {
         inflatedView = inflater.inflate(R.layout.fragment_register02, container, false);
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-
+        mAu = FirebaseAuth.getInstance();
         /* Get EditText Views */
 
         TextInputLayout inputRegFullName = inflatedView.findViewById(R.id.textInputRegFullname);
@@ -95,28 +98,60 @@ public class RegisterFragment02 extends Fragment {
                 /* Create local variables to store the EditText Views' current values */
 
                 String regFullname = inputRegFullName.getEditText().getText().toString();
-                String regBirthday = inputRegBirthdate.getEditText().getText().toString();
+                String regBirthdate = inputRegBirthdate.getEditText().getText().toString();
                 String regAddress = inputRegAddress.getEditText().getText().toString();
                 // Create a new user with a first and last name
 
-                Map<String, Object> user = new HashMap<>();
-                user.put("first", "Ada");
-                user.put("last", "Lovelace");
-                user.put("born", 1815);
+                User newUser = new User();
+                newUser.setFullName(regFullname);
+                newUser.setBirthdate(regBirthdate);
+                newUser.setAddress(regAddress);
 
-                // Add a new document with a generated ID
-                db.collection("users")
-                        .add(user)
-                        .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                ProgressDialog progressDialog = new ProgressDialog(getActivity());
+
+                /* show progress dialog*/
+                progressDialog.setTitle("Login");
+                progressDialog.setMessage("Please wait while check your credentials");
+                progressDialog.setCanceledOnTouchOutside(false);
+                progressDialog.show();
+
+                mAu.createUserWithEmailAndPassword(regEmail, regPassword)
+                        .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                             @Override
-                            public void onSuccess(DocumentReference documentReference) {
-                                Log.d(TAG, "DocumentSnapshot added with ID: " + documentReference.getId());
-                            }
-                        })
-                        .addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                                Log.w(TAG, "Error adding document", e);
+                            public void onComplete(@NonNull Task<AuthResult> task) {
+                                if (task.isSuccessful()) {
+                                    progressDialog.dismiss();
+                                    // Sign in success, update UI with the signed-in user's information
+                                    Log.d(TAG, "createUserWithEmail:success");
+                                    String userUid = task.getResult().getUser().getUid();
+
+//                                    db.collection("users").document(userUid).set(newUser);
+                                    db.collection("users")
+                                            .document(userUid)
+                                            .set(newUser)
+                                            .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                @Override
+                                                public void onSuccess(Void aVoid) {
+                                                    Log.d(TAG, "DocumentSnapshot written with ID: " + userUid);
+                                                    Toast.makeText(getActivity(), "Success", Toast.LENGTH_SHORT).show();
+                                                }
+                                            })
+                                            .addOnFailureListener(new OnFailureListener() {
+                                                @Override
+                                                public void onFailure(@NonNull Exception e) {
+                                                    Log.w(TAG, "Error adding document", e);
+                                                }
+                                            });
+
+
+                                } else if (task.getException() instanceof FirebaseAuthUserCollisionException) {
+                                    progressDialog.dismiss();
+                                    FirebaseAuthUserCollisionException exception =
+                                            (FirebaseAuthUserCollisionException) task.getException();
+                                    if (exception.getErrorCode().equalsIgnoreCase("ERROR_ACCOUNT_EXISTS_WITH_DIFFERENT_CREDENTIAL")) {
+
+                                    }
+                                }
                             }
                         });
             }

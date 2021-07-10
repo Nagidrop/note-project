@@ -82,7 +82,6 @@ public class RegisterFragment01 extends Fragment {
         TextInputLayout inputRegPassword = inflatedView.findViewById(R.id.textInputRegPassword);
         TextInputLayout inputRegConfirmPassword = inflatedView.findViewById(R.id.textInputRegRePassword);
 
-        progressDialog = new ProgressDialog(getActivity());
         MaterialButton btnNext = inflatedView.findViewById(R.id.btnNext01);
 
         btnNext.setOnClickListener(new View.OnClickListener() {
@@ -140,7 +139,7 @@ public class RegisterFragment01 extends Fragment {
 //                    progressDialog.setMessage("Please wait while check your credentials");
 //                    progressDialog.setCanceledOnTouchOutside(false);
 //                    progressDialog.show();
-
+//
 //                    mAuth.createUserWithEmailAndPassword(regEmail, regPassword)
 //                            .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
 //                                @Override
