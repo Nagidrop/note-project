@@ -1,13 +1,14 @@
 package com.group6.noteapp.controller;
 
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.fragment.app.Fragment;
+import androidx.navigation.fragment.NavHostFragment;
+
+import com.google.android.material.button.MaterialButton;
 import com.group6.noteapp.R;
 
 /**
@@ -16,6 +17,7 @@ import com.group6.noteapp.R;
  * create an instance of this fragment.
  */
 public class RegisterFragment03 extends Fragment {
+    private View inflatedView;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -60,7 +62,20 @@ public class RegisterFragment03 extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
+        inflatedView = inflater.inflate(R.layout.fragment_register03, container, false);
+        // Get register button
+        MaterialButton btnRegister = inflatedView.findViewById(R.id.btnNoAccount);
+        // Set navigate to register button
+        btnRegister.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                NavHostFragment.findNavController(RegisterFragment03.this)
+                        .navigate(R.id.action_registerFragment03_to_loginFragment);
+            }
+        });
+
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_register03, container, false);
+        return inflatedView;
     }
 }

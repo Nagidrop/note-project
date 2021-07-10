@@ -9,11 +9,11 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.fragment.NavHostFragment;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -174,7 +174,9 @@ public class RegisterFragment02 extends Fragment {
                                                     @Override
                                                     public void onSuccess(Void aVoid) {
                                                         Log.d(TAG, "DocumentSnapshot written with ID: " + userUid);
-                                                        Toast.makeText(getActivity(), "Success", Toast.LENGTH_SHORT).show();
+
+                                                        NavHostFragment.findNavController(RegisterFragment02.this)
+                                                                .navigate(R.id.action_registerFragment02_to_registerFragment03);
                                                     }
                                                 })
                                                 .addOnFailureListener(new OnFailureListener() {
