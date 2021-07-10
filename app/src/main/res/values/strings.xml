@@ -10,12 +10,12 @@
     <string name="email">Email</string>
     <string name="enter_email">Enter your email</string>
     <string name="facebook_app_id">506452847140505</string>
-<!--    <string name="facebook_client_token">506452847140505</string>-->
+    <!--    <string name="facebook_client_token">506452847140505</string>-->
     <string name="forgot_pass">Forgot password?</string>
     <string name="forgot_pass_title">Forgot\nPassword</string>
     <string name="full_name">Fullname</string>
     <string name="login">Login</string>
-<!--    <string name="login_facebook">Login with Facebook</string>-->
+    <!--    <string name="login_facebook">Login with Facebook</string>-->
     <string name="login_title">LOGIN</string>
     <string name="login_with">Login with</string>
     <string name="logout">Logout</string>
@@ -30,10 +30,12 @@
     <string name="reset_pass">Reset Password</string>
     <string name="sample_forgot_password_success">We have sent to kelvinpham@gmail.com an email to reset password.\n\nPlease check your inbox
 and follow the instructions in the email.</string>
-<!--    <string name="sign_in_google">Sign In with Google</string>-->
+    <!--    <string name="sign_in_google">Sign In with Google</string>-->
     <string name="step_one_of_two">1/2</string>
     <string name="step_two_of_two">2/2</string>
     <string name="submit">Submit</string>
     <string name="system">System</string>
     <string name="trash">Trash</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

@@ -26,3 +26,9 @@ P
  app/src/main/AndroidManifest.xml,8\c\8c55c3ccc257e5907959013f99656e4c8ec3903e
 A
 gradle.properties,2\a\2afbb999f001938c88fa43fc2ef52abf0f8213e4
+r
+Bapp/src/main/java/com/group6/noteapp/controller/LoginActivity.java,a\f\afbcec810a6927b20bfeaa7856ca50663595e781
+p
+@app/src/main/java/com/group6/noteapp/controller/NoteAdapter.java,3\2\329d32f25bd138d898ca8efa434b309bb740d358
+<
+build.gradle,f\0\f07866736216be0ee2aba49e392191aeae700a35

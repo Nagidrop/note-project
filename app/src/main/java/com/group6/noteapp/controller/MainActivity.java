@@ -8,6 +8,7 @@ import android.net.NetworkCapabilities;
 import android.os.Build;
 import android.os.Bundle;
 import android.telecom.Call;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -62,6 +63,7 @@ public class MainActivity extends AppCompatActivity {
                         // Uncheck previous item if it exists
                         MenuItem uncheckedItem = navigationView.getCheckedItem();
                         if(uncheckedItem != null) {
+                            Log.d("")
                             uncheckedItem.setChecked(false);
                         }
 
