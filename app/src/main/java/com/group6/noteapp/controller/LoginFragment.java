@@ -85,33 +85,6 @@ public class LoginFragment extends Fragment implements GoogleApiClient.OnConnect
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
-
-        // Button listeners
-        inflatedView.findViewById(R.id.btnLoginGoogle).setOnClickListener(this);
-
-        // [START configure_signin]
-        // Configure sign-in to request the user's ID, email address, and basic
-        // profile. ID and basic profile are included in DEFAULT_SIGN_IN.
-        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestEmail()
-                .build();
-        // [END configure_signin]
-
-        // [START build_client]
-        // Build a GoogleApiClient with access to the Google Sign-In API and the
-        // options specified by gso.
-        mGoogleApiClient = new GoogleApiClient.Builder(getActivity())
-                .enableAutoManage(getActivity() /* FragmentActivity */, this /* OnConnectionFailedListener */)
-                .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
-                .build();
-        // [END build_client]
-
-        // [START customize_button]
-        // Customize sign-in button. The sign-in button can be displayed in
-        SignInButton signInButton = (SignInButton) inflatedView.findViewById(R.id.btnLoginGoogle);
-        signInButton.setSize(SignInButton.SIZE_STANDARD);
-        signInButton.setScopes(gso.getScopeArray());
-        // [END customize_button]
     }
 
     @Override
@@ -135,6 +108,34 @@ public class LoginFragment extends Fragment implements GoogleApiClient.OnConnect
                 NavHostFragment.findNavController(LoginFragment.this).navigate(R.id.action_loginFragment_to_forgotPasswordFragment01);
             }
         });
+
+        // Button listeners
+        inflatedView.findViewById(R.id.btn_LoginGoogle).setOnClickListener(this);
+
+        // [START configure_signin]
+        // Configure sign-in to request the user's ID, email address, and basic
+        // profile. ID and basic profile are included in DEFAULT_SIGN_IN.
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestEmail()
+                .build();
+        // [END configure_signin]
+
+        // [START build_client]
+        // Build a GoogleApiClient with access to the Google Sign-In API and the
+        // options specified by gso.
+        mGoogleApiClient = new GoogleApiClient.Builder(getActivity())
+                .enableAutoManage(getActivity() /* FragmentActivity */, this /* OnConnectionFailedListener */)
+                .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
+                .build();
+        // [END build_client]
+
+        // [START customize_button]
+        // Customize sign-in button. The sign-in button can be displayed in
+        SignInButton signInButton = (SignInButton) inflatedView.findViewById(R.id.btn_LoginGoogle);
+        signInButton.setSize(SignInButton.SIZE_STANDARD);
+        signInButton.setScopes(gso.getScopeArray());
+        // [END customize_button]
+
         return inflatedView;
     }
 
@@ -190,7 +191,7 @@ public class LoginFragment extends Fragment implements GoogleApiClient.OnConnect
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.btnLoginGoogle:
+            case R.id.btn_LoginGoogle:
                 signIn();
                 break;
         }
@@ -237,9 +238,9 @@ public class LoginFragment extends Fragment implements GoogleApiClient.OnConnect
 
     private void updateUI(boolean signedIn) {
         if (signedIn) {
-            inflatedView.findViewById(R.id.btnLoginGoogle).setVisibility(View.GONE);
+            inflatedView.findViewById(R.id.btn_LoginGoogle).setVisibility(View.GONE);
         } else {
-            inflatedView.findViewById(R.id.btnLoginGoogle).setVisibility(View.VISIBLE);
+            inflatedView.findViewById(R.id.btn_LoginGoogle).setVisibility(View.VISIBLE);
         }
     }
 }
