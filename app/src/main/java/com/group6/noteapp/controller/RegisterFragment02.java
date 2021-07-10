@@ -100,10 +100,19 @@ public class RegisterFragment02 extends Fragment {
 
         inputRegBirthdateEditText.setInputType(InputType.TYPE_NULL);
         inputRegBirthdateEditText.setKeyListener(null);
-        inputRegBirthdateEditText.setOnClickListener(new View.OnClickListener(){
+        inputRegBirthdateEditText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 openDatePicker(inputRegBirthdateEditText);
+            }
+        });
+
+        inputRegBirthdateEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (hasFocus){
+                    inputRegBirthdateEditText.performClick();
+                }
             }
         });
 
@@ -233,7 +242,7 @@ public class RegisterFragment02 extends Fragment {
         return inflatedView;
     }
 
-    public void openDatePicker(TextInputEditText inputRegBirthdateEditText){
+    public void openDatePicker(TextInputEditText inputRegBirthdateEditText) {
         DialogFragment dialogFragment = new DatePickerFragment(inputRegBirthdateEditText);
         dialogFragment.show(getActivity().getSupportFragmentManager(), "datePicker");
     }

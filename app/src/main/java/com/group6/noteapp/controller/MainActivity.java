@@ -7,31 +7,18 @@ import android.net.ConnectivityManager;
 import android.net.NetworkCapabilities;
 import android.os.Build;
 import android.os.Bundle;
-import android.telecom.Call;
-import android.util.Log;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.drawerlayout.widget.DrawerLayout;
 
-import com.facebook.CallbackManager;
-import com.facebook.FacebookCallback;
-import com.facebook.FacebookException;
 import com.facebook.login.LoginManager;
-import com.facebook.login.LoginResult;
-import com.facebook.login.widget.LoginButton;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.group6.noteapp.R;
-import com.facebook.FacebookSdk;
-import com.facebook.appevents.AppEventsLogger;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -59,8 +46,8 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        previousItem = findViewById(R.id.menu_all_notes);
-        previousItem.setChecked(true);
+//        previousItem = findViewById(R.id.menu_all_notes);
+//        previousItem.setChecked(true);
 
         // Set navigation item selected
         navigationView.setNavigationItemSelectedListener(
