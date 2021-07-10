@@ -46,8 +46,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-//        previousItem = findViewById(R.id.menu_all_notes);
-//        previousItem.setChecked(true);
 
         // Set navigation item selected
         navigationView.setNavigationItemSelectedListener(
@@ -81,7 +79,8 @@ public class MainActivity extends AppCompatActivity {
                 });
 
 
-
+            previousItem = navigationView.getMenu().getItem(0).getSubMenu().getItem(0);
+            previousItem.setChecked(true);
 
 //        if (!isNetworkAvailable()) {
 //            new AlertDialog.Builder(this)
