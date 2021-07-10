@@ -133,6 +133,14 @@ public class RegisterFragment01 extends Fragment {
 
                     registerFragment02.setArguments(regData);
 
+                    inputRegEmail.setErrorEnabled(false);
+                    inputRegPassword.setErrorEnabled(false);
+                    inputRegConfirmPassword.setErrorEnabled(false);
+
+                    inputRegEmail.setErrorEnabled(true);
+                    inputRegPassword.setErrorEnabled(true);
+                    inputRegConfirmPassword.setErrorEnabled(true);
+
                     NavHostFragment.findNavController(RegisterFragment01.this).navigate(R.id.action_registerFragment01_to_registerFragment02, regData);
                 }
             }
