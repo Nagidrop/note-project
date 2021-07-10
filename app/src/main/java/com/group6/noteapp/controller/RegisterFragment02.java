@@ -121,7 +121,6 @@ public class RegisterFragment02 extends Fragment {
             @Override
             public void onClick(View v) {
                 /* Create local variables to store the EditText Views' current values */
-
                 String regFullname = inputRegFullName.getEditText().getText().toString();
                 String regBirthdate = inputRegBirthdate.getEditText().getText().toString();
                 String regAddress = inputRegAddress.getEditText().getText().toString();
@@ -143,7 +142,6 @@ public class RegisterFragment02 extends Fragment {
                     inputRegFullName.setError("Full Name must have at least 2 words!");
                 }
 
-                isInputValid = true;
                 if (isInputValid) {
                     ProgressDialog progressDialog = new ProgressDialog(getActivity());
 
