@@ -23,6 +23,9 @@ import com.facebook.FacebookSdk;
 import com.facebook.login.Login;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.auth.api.Auth;
@@ -42,6 +45,7 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.GoogleAuthProvider;
 import com.group6.noteapp.R;
 import com.group6.noteapp.util.ValidationUtils;
 
@@ -54,20 +58,21 @@ import org.jetbrains.annotations.NotNull;
  */
 public class LoginFragment extends Fragment {
 
+    private static final int RC_SIGN_IN = 696969;
+    private static final String TAG = "LoginFragment"; // Tag for logging
+
     View inflatedView;
     private Button btnLogin;
     private TextInputLayout inputEmail, inputPassword;
     private FirebaseAuth firebaseAuth;
     private LoginButton loginButton;
     private CallbackManager callbackManager;
-    ProgressDialog progressDialog;
-
+    private ProgressDialog progressDialog;
+    private GoogleSignInClient mGoogleSignInClient;
     private GoogleApiClient mGoogleApiClient;
     private TextView mStatusTextView;
     private ProgressDialog mProgressDialog;
 
-    private static final String TAG = "LoginFragment";
-    private static final int RC_SIGN_IN = 9001;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -110,35 +115,16 @@ public class LoginFragment extends Fragment {
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
 
-        firebaseAuth = FirebaseAuth.getInstance();
-
-
-        // Button listeners
-        inflatedView.findViewById(R.id.btnLoginGoogle).setOnClickListener(this);
-
-        // [START configure_signin]
-        // Configure sign-in to request the user's ID, email address, and basic
-        // profile. ID and basic profile are included in DEFAULT_SIGN_IN.
+        // Configure Google Sign In
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken(getString(R.string.default_web_client_id))
                 .requestEmail()
                 .build();
-        // [END configure_signin]
 
-        // [START build_client]
-        // Build a GoogleApiClient with access to the Google Sign-In API and the
-        // options specified by gso.
-        mGoogleApiClient = new GoogleApiClient.Builder(getActivity())
-                .enableAutoManage(getActivity() /* FragmentActivity */, this /* OnConnectionFailedListener */)
-                .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
-                .build();
-        // [END build_client]
+        mGoogleSignInClient = GoogleSignIn.getClient(getActivity(), gso);
 
-        // [START customize_button]
-        // Customize sign-in button. The sign-in button can be displayed in
-        SignInButton signInButton = (SignInButton) inflatedView.findViewById(R.id.btnLoginGoogle);
-        signInButton.setSize(SignInButton.SIZE_STANDARD);
-        signInButton.setScopes(gso.getScopeArray());
-        // [END customize_button]
+        firebaseAuth = FirebaseAuth.getInstance();
+
     }
 
     @Override
@@ -211,6 +197,22 @@ public class LoginFragment extends Fragment {
             }
         });
 
+
+
+        // ----------------------------------
+        // Login Google
+        // ----------------------------------
+        // Button listeners
+        MaterialButton btnGoogleLogin = inflatedView.findViewById(R.id.btnLoginGoogle);
+        btnGoogleLogin.setOnClickListener(new View.OnClickListener() {
+            @Override public void onClick(View v) {
+                signIn();
+            }
+        });
+
+
+
+
         return inflatedView;
     }
 
@@ -248,9 +250,7 @@ public class LoginFragment extends Fragment {
                 public void onComplete(@NonNull @NotNull Task<AuthResult> task) {
                     if (task.isSuccessful()) {
                         progressDialog.dismiss();
-                        Intent intent = new Intent(getActivity(), MainActivity.class);
-                        intent.setFlags(intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-                        startActivity(intent);
+                       reload();
                     } else {
                         Toast.makeText(getActivity(), "Email or Password is incorrect.", Toast.LENGTH_SHORT).show();
                         progressDialog.dismiss();
@@ -275,7 +275,24 @@ public class LoginFragment extends Fragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        callbackManager.onActivityResult(requestCode, resultCode, data);
+
+
+        // Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
+        if (requestCode == RC_SIGN_IN) {
+            Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
+            try {
+                // Google Sign In was successful, authenticate with Firebase
+                GoogleSignInAccount account = task.getResult(ApiException.class);
+                firebaseAuthWithGoogle(account.getIdToken());
+            } catch (ApiException e) {
+                // Google Sign In failed, update UI appropriately
+                Log.w(TAG, "Google sign in failed", e);
+            }
+        }else{
+            // Facebook get ressult
+            callbackManager.onActivityResult(requestCode, resultCode, data);
+
+        }
     }
 
     private void reload() {
@@ -288,7 +305,7 @@ public class LoginFragment extends Fragment {
 
         AuthCredential credential = FacebookAuthProvider.getCredential(token.getToken());
         firebaseAuth.signInWithCredential(credential)
-                .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                .addOnCompleteListener(getActivity(), new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
@@ -304,109 +321,31 @@ public class LoginFragment extends Fragment {
                 });
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
-
-        OptionalPendingResult<GoogleSignInResult> opr = Auth.GoogleSignInApi.silentSignIn(mGoogleApiClient);
-        if (opr.isDone()) {
-            // If the user's cached credentials are valid, the OptionalPendingResult will be "done"
-            // and the GoogleSignInResult will be available instantly.
-            Log.d(TAG, "Got cached sign-in");
-            GoogleSignInResult result = opr.get();
-            handleSignInResult(result);
-        } else {
-            // If the user has not previously signed in on this device or the sign-in has expired,
-            // this asynchronous branch will attempt to sign in the user silently.  Cross-device
-            // single sign-on will occur in this branch.
-            showProgressDialog();
-            opr.setResultCallback(new ResultCallback<GoogleSignInResult>() {
-                @Override
-                public void onResult(GoogleSignInResult googleSignInResult) {
-                    hideProgressDialog();
-                    handleSignInResult(googleSignInResult);
-                }
-            });
-        }
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        // Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
-        if (requestCode == RC_SIGN_IN) {
-            GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
-            handleSignInResult(result);
-        }
-    }
-
-    private void handleSignInResult(GoogleSignInResult result) {
-        Log.d(TAG, "handleSignInResult:" + result.isSuccess());
-        if (result.isSuccess()) {
-            // Signed in successfully, show authenticated UI.
-            GoogleSignInAccount acct = result.getSignInAccount();
-            updateUI(true);
-        } else {
-            // Signed out, show unauthenticated UI.
-            updateUI(false);
-        }
-    }
-
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.btnLoginGoogle:
-                signIn();
-                break;
-        }
-    }
-
-    private void signIn() {
-        Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
-        startActivityForResult(signInIntent, RC_SIGN_IN);
-    }
-
-    private void revokeAccess() {
-        Auth.GoogleSignInApi.revokeAccess(mGoogleApiClient).setResultCallback(
-                new ResultCallback<Status>() {
+    private void firebaseAuthWithGoogle(String idToken) {
+        AuthCredential credential = GoogleAuthProvider.getCredential(idToken, null);
+        firebaseAuth.signInWithCredential(credential)
+                .addOnCompleteListener(getActivity() , new OnCompleteListener<AuthResult>() {
                     @Override
-                    public void onResult(Status status) {
-                        // [START_EXCLUDE]
-                        updateUI(false);
-                        // [END_EXCLUDE]
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            // Sign in success, update UI with the signed-in user's information
+                            Log.d(TAG, "signInWithCredential:success");
+                            FirebaseUser user = firebaseAuth.getCurrentUser();
+                            reload();
+                        } else {
+                            // If sign in fails, display a message to the user.
+                            Log.w(TAG, "signInWithCredential:failure", task.getException());
+                        }
                     }
                 });
     }
 
-    @Override
-    public void onConnectionFailed(ConnectionResult connectionResult) {
-        // An unresolvable error has occurred and Google APIs (including Sign-In) will not
-        // be available.
-        Log.d(TAG, "onConnectionFailed:" + connectionResult);
-    }
-
-    private void showProgressDialog() {
-        if (mProgressDialog == null) {
-            mProgressDialog = new ProgressDialog(getActivity());
-            mProgressDialog.setIndeterminate(true);
-        }
-
-        mProgressDialog.show();
-    }
-
-    private void hideProgressDialog() {
-        if (mProgressDialog != null && mProgressDialog.isShowing()) {
-            mProgressDialog.hide();
-        }
-    }
-
-    private void updateUI(boolean signedIn) {
-        if (signedIn) {
-            inflatedView.findViewById(R.id.btnLoginGoogle).setVisibility(View.GONE);
-        } else {
-            inflatedView.findViewById(R.id.btnLoginGoogle).setVisibility(View.VISIBLE);
-        }
+    /**
+     * Start google signIn intent
+     */
+    private void signIn() {
+        Intent signInIntent = mGoogleSignInClient.getSignInIntent();
+        startActivityForResult(signInIntent, RC_SIGN_IN);
     }
 
 }

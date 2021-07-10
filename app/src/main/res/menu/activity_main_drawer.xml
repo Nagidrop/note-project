@@ -1,39 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <group
-        android:id="@+id/menu_group_note"
-        android:checkableBehavior="single">
-        <item
-            android:id="@+id/subtitle_note"
-            android:title="@string/note">
+
+    <item
+        android:id="@+id/subtitle_note"
+        android:title="@string/note">
+        <group
+            android:id="@+id/menu_group_note"
+            android:checkableBehavior="single">
             <menu>
                 <item
                     android:id="@+id/menu_all_notes"
-                    android:title="@string/all_notes"
-                    android:icon="@drawable/ic_notes_24"/>
+                    android:icon="@drawable/ic_notes_24"
+                    android:title="@string/all_notes" />
                 <item
                     android:id="@+id/menu_notebooks"
-                    android:title="@string/notebooks"
-                    android:icon="@drawable/ic_notebook_24"/>
+                    android:icon="@drawable/ic_notebook_24"
+                    android:title="@string/notebooks" />
                 <item
                     android:id="@+id/menu_trash"
-                    android:title="@string/trash"
-                    android:icon="@drawable/ic_trash_can_24"/>
+                    android:icon="@drawable/ic_trash_can_24"
+                    android:title="@string/trash" />
             </menu>
-        </item>
-    </group>
-    <group
-        android:id="@+id/menu_group_app"
-        android:checkableBehavior="single">
-        <item
-            android:id="@+id/subtitle_app"
-            android:title="@string/system">
+        </group>
+    </item>
+
+    <item
+        android:id="@+id/subtitle_app"
+        android:title="@string/system">
+        <group
+            android:id="@+id/menu_group_app"
+            android:checkableBehavior="single">
             <menu>
                 <item
                     android:id="@+id/menu_logout"
-                    android:title="@string/logout"
-                    android:icon="@drawable/ic_logout_24" />
+                    android:icon="@drawable/ic_logout_24"
+                    android:title="@string/logout" />
             </menu>
-        </item>
-    </group>
+        </group>
+    </item>
+
 </menu>
