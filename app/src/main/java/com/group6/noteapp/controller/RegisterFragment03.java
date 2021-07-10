@@ -66,7 +66,7 @@ public class RegisterFragment03 extends Fragment {
         inflatedView = inflater.inflate(R.layout.fragment_register03, container, false);
 
         TextView txtRegisterSuccess = inflatedView.findViewById(R.id.txtRegisterSuccess);
-        txtRegisterSuccess.setText(getString(R.string.email_sent_success, regEmail));
+        txtRegisterSuccess.setText(getString(R.string.email_sent_reg, regEmail));
 
         // Get register button
         MaterialButton btnRegister = inflatedView.findViewById(R.id.btnRegLogin);

@@ -1,6 +1,9 @@
 package com.group6.noteapp.model;
 
+import com.google.firebase.firestore.ServerTimestamp;
+
 import java.io.Serializable;
+import java.util.Date;
 
 /* User Entity */
 public class User implements Serializable {
@@ -9,16 +12,14 @@ public class User implements Serializable {
     private String fullName;        // User's full name
     private String address;         // User's address
     private String birthdate;       // User's birth date
-    private String createdDate;     // User's created date
+    @ServerTimestamp
+    private Date createdDate;     // User's created date
 
     /* Constructors */
     public User() {
     }
 
-    public User(String fullName,
-                String address,
-                String birthdate,
-                String createdDate) {
+    public User(String fullName, String address, String birthdate, Date createdDate) {
         this.fullName = fullName;
         this.address = address;
         this.birthdate = birthdate;
@@ -51,11 +52,11 @@ public class User implements Serializable {
         this.birthdate = birthdate;
     }
 
-    public String getCreatedDate() {
+    public Date getCreatedDate() {
         return createdDate;
     }
 
-    public void setCreatedDate(String createdDate) {
+    public void setCreatedDate(Date createdDate) {
         this.createdDate = createdDate;
     }
 }

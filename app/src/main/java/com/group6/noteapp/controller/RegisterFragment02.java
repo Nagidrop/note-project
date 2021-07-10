@@ -25,7 +25,6 @@ import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.group6.noteapp.R;
 import com.group6.noteapp.model.User;
@@ -111,7 +110,7 @@ public class RegisterFragment02 extends Fragment {
         inputRegBirthdateEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
-                if (hasFocus){
+                if (hasFocus) {
                     inputRegBirthdateEditText.performClick();
                 }
             }
@@ -167,7 +166,6 @@ public class RegisterFragment02 extends Fragment {
                                         newUser.setFullName(regFullname);
                                         newUser.setBirthdate(regBirthdate);
                                         newUser.setAddress(regAddress);
-                                        newUser.setCreatedDate(FieldValue.serverTimestamp().toString());
 
                                         db.collection("users")
                                                 .document(userUid)
@@ -243,7 +241,6 @@ public class RegisterFragment02 extends Fragment {
                 }
             }
         });
-
 
         return inflatedView;
     }

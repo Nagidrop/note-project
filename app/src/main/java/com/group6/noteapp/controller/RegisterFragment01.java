@@ -24,9 +24,7 @@ public class RegisterFragment01 extends Fragment {
 
     View inflatedView;
     ProgressDialog progressDialog;
-
     private FirebaseAuth mAuth;
-
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER

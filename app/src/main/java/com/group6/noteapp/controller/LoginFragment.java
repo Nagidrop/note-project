@@ -127,7 +127,8 @@ public class LoginFragment extends Fragment {
         MaterialButton btnRegister = inflatedView.findViewById(R.id.btnNoAccount);
         // Set navigate to register button
         btnRegister.setOnClickListener(new View.OnClickListener() {
-            @Override public void onClick(View v) {
+            @Override
+            public void onClick(View v) {
                 NavHostFragment.findNavController(LoginFragment.this).navigate(R.id.action_loginFragment_to_registerFragment01);
             }
         });
@@ -143,7 +144,8 @@ public class LoginFragment extends Fragment {
 
         MaterialButton btnLoginFacebook = inflatedView.findViewById(R.id.btnLoginFacebook);
         btnLoginFacebook.setOnClickListener(new View.OnClickListener() {
-            @Override public void onClick(View v) {
+            @Override
+            public void onClick(View v) {
                 loginButton.performClick();
             }
         });
@@ -178,15 +180,14 @@ public class LoginFragment extends Fragment {
 
             @Override
             public void onCancel() {
-                Toast.makeText(getActivity(),"Cancel !", Toast.LENGTH_LONG).show();
+                Toast.makeText(getActivity(), "Cancel !", Toast.LENGTH_LONG).show();
             }
 
             @Override
             public void onError(FacebookException exception) {
-                Toast.makeText(getActivity(),"Error"+exception.getMessage(), Toast.LENGTH_LONG).show();
+                Toast.makeText(getActivity(), "Error" + exception.getMessage(), Toast.LENGTH_LONG).show();
             }
         });
-
 
 
         // ----------------------------------
@@ -195,12 +196,11 @@ public class LoginFragment extends Fragment {
         // Button listeners
         MaterialButton btnGoogleLogin = inflatedView.findViewById(R.id.btnLoginGoogle);
         btnGoogleLogin.setOnClickListener(new View.OnClickListener() {
-            @Override public void onClick(View v) {
+            @Override
+            public void onClick(View v) {
                 signIn();
             }
         });
-
-
 
 
         return inflatedView;
@@ -304,7 +304,7 @@ public class LoginFragment extends Fragment {
                 // Google Sign In failed, update UI appropriately
                 Log.w(TAG, "Google sign in failed", e);
             }
-        }else{
+        } else {
             // Facebook get ressult
             callbackManager.onActivityResult(requestCode, resultCode, data);
 
@@ -340,7 +340,7 @@ public class LoginFragment extends Fragment {
     private void firebaseAuthWithGoogle(String idToken) {
         AuthCredential credential = GoogleAuthProvider.getCredential(idToken, null);
         firebaseAuth.signInWithCredential(credential)
-                .addOnCompleteListener(getActivity() , new OnCompleteListener<AuthResult>() {
+                .addOnCompleteListener(getActivity(), new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
