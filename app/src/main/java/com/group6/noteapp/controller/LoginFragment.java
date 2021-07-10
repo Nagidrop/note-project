@@ -3,7 +3,6 @@ package com.group6.noteapp.controller;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -100,7 +99,7 @@ public class LoginFragment extends Fragment {
         inflatedView = inflater.inflate(R.layout.fragment_login, container, false);
 
         // Get register button
-        MaterialButton btnRegister = inflatedView.findViewById(R.id.btnRegister);
+        MaterialButton btnRegister = inflatedView.findViewById(R.id.btnNoAccount);
         // Set navigate to register button
         btnRegister.setOnClickListener(new View.OnClickListener() {
             @Override

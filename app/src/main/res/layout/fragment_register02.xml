@@ -96,13 +96,13 @@
     </com.google.android.material.textfield.TextInputLayout>
 
     <Button
-        android:id="@+id/btnLoginReg"
+        android:id="@+id/btnRegister"
         android:layout_width="0dp"
         android:layout_height="40dp"
         android:layout_marginTop="75dp"
         android:insetTop="0dp"
         android:insetBottom="0dp"
-        android:text="@string/login"
+        android:text="@string/register"
         app:layout_constraintEnd_toStartOf="@+id/guideline13"
         app:layout_constraintStart_toStartOf="@+id/guideline12"
         app:layout_constraintTop_toBottomOf="@+id/textInputRegAddress" />

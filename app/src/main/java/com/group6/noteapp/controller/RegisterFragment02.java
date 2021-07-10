@@ -116,7 +116,7 @@ public class RegisterFragment02 extends Fragment {
             }
         });
 
-        MaterialButton btnLogin = inflatedView.findViewById(R.id.btnLoginReg);
+        MaterialButton btnLogin = inflatedView.findViewById(R.id.btnRegister);
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
