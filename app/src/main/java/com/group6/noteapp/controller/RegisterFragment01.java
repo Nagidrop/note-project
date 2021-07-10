@@ -24,9 +24,7 @@ public class RegisterFragment01 extends Fragment {
 
     View inflatedView;
     ProgressDialog progressDialog;
-
     private FirebaseAuth mAuth;
-
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -141,7 +139,8 @@ public class RegisterFragment01 extends Fragment {
                     inputRegPassword.setErrorEnabled(true);
                     inputRegConfirmPassword.setErrorEnabled(true);
 
-                    NavHostFragment.findNavController(RegisterFragment01.this).navigate(R.id.action_registerFragment01_to_registerFragment02, regData);
+                    NavHostFragment.findNavController(RegisterFragment01.this)
+                            .navigate(R.id.action_registerFragment01_to_registerFragment02, regData);
                 }
             }
         });

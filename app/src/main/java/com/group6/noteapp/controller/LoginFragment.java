@@ -1,6 +1,8 @@
 package com.group6.noteapp.controller;
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -93,7 +95,6 @@ public class LoginFragment extends Fragment {
         args.putString(ARG_PARAM2, param2);
         fragment.setArguments(args);
 
-
         return fragment;
     }
 
@@ -102,7 +103,6 @@ public class LoginFragment extends Fragment {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
         }
 
         // Configure Google Sign In
@@ -124,10 +124,11 @@ public class LoginFragment extends Fragment {
         inflatedView = inflater.inflate(R.layout.fragment_login, container, false);
 
         // Get register button
-        MaterialButton btnRegister = inflatedView.findViewById(R.id.btnRegister);
+        MaterialButton btnRegister = inflatedView.findViewById(R.id.btnNoAccount);
         // Set navigate to register button
         btnRegister.setOnClickListener(new View.OnClickListener() {
-            @Override public void onClick(View v) {
+            @Override
+            public void onClick(View v) {
                 NavHostFragment.findNavController(LoginFragment.this).navigate(R.id.action_loginFragment_to_registerFragment01);
             }
         });
@@ -143,7 +144,8 @@ public class LoginFragment extends Fragment {
 
         MaterialButton btnLoginFacebook = inflatedView.findViewById(R.id.btnLoginFacebook);
         btnLoginFacebook.setOnClickListener(new View.OnClickListener() {
-            @Override public void onClick(View v) {
+            @Override
+            public void onClick(View v) {
                 loginButton.performClick();
             }
         });
@@ -178,15 +180,14 @@ public class LoginFragment extends Fragment {
 
             @Override
             public void onCancel() {
-                Toast.makeText(getActivity(),"Cancel !", Toast.LENGTH_LONG).show();
+                Toast.makeText(getActivity(), "Cancel !", Toast.LENGTH_LONG).show();
             }
 
             @Override
             public void onError(FacebookException exception) {
-                Toast.makeText(getActivity(),"Error"+exception.getMessage(), Toast.LENGTH_LONG).show();
+                Toast.makeText(getActivity(), "Error" + exception.getMessage(), Toast.LENGTH_LONG).show();
             }
         });
-
 
 
         // ----------------------------------
@@ -195,12 +196,11 @@ public class LoginFragment extends Fragment {
         // Button listeners
         MaterialButton btnGoogleLogin = inflatedView.findViewById(R.id.btnLoginGoogle);
         btnGoogleLogin.setOnClickListener(new View.OnClickListener() {
-            @Override public void onClick(View v) {
+            @Override
+            public void onClick(View v) {
                 signIn();
             }
         });
-
-
 
 
         return inflatedView;
@@ -243,7 +243,30 @@ public class LoginFragment extends Fragment {
                 public void onComplete(@NonNull @NotNull Task<AuthResult> task) {
                     if (task.isSuccessful()) {
                         progressDialog.dismiss();
-                        reload();
+
+                        if (task.getResult().getUser().isEmailVerified()) {
+                            reload();
+                        } else {
+                            AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
+                            alert.setTitle("Login Failed");                                             // set dialog title
+                            alert.setMessage("Please verify your email address before logging in!");    // set dialog message
+                            alert.setCancelable(false);
+
+                            alert.setPositiveButton("OK",
+                                    new DialogInterface.OnClickListener() {
+                                        /**
+                                         * To register activity
+                                         * @param dialog dialog
+                                         * @param which which
+                                         */
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            dialog.dismiss();
+                                        }
+                                    });
+
+                            alert.create().show();
+                        }
                     } else {
                         Toast.makeText(getActivity(), "Email or Password is incorrect.", Toast.LENGTH_SHORT).show();
                         progressDialog.dismiss();
@@ -259,7 +282,7 @@ public class LoginFragment extends Fragment {
         super.onStart();
         // Check if user is signed in (non-null) and update UI accordingly.
         FirebaseUser currentUser = firebaseAuth.getCurrentUser();
-        if (currentUser != null) {
+        if (currentUser != null && currentUser.isEmailVerified()) {
             reload();
         }
     }
@@ -281,7 +304,7 @@ public class LoginFragment extends Fragment {
                 // Google Sign In failed, update UI appropriately
                 Log.w(TAG, "Google sign in failed", e);
             }
-        }else{
+        } else {
             // Facebook get ressult
             callbackManager.onActivityResult(requestCode, resultCode, data);
 
@@ -317,7 +340,7 @@ public class LoginFragment extends Fragment {
     private void firebaseAuthWithGoogle(String idToken) {
         AuthCredential credential = GoogleAuthProvider.getCredential(idToken, null);
         firebaseAuth.signInWithCredential(credential)
-                .addOnCompleteListener(getActivity() , new OnCompleteListener<AuthResult>() {
+                .addOnCompleteListener(getActivity(), new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {

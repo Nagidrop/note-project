@@ -10,8 +10,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.group6.noteapp.R;
 
-
-
 public class LoginActivity extends AppCompatActivity {
 
     @Override
@@ -36,8 +34,6 @@ public class LoginActivity extends AppCompatActivity {
 //        }
 
     }
-
-
 
     public boolean isNetworkAvailable() {
 
@@ -64,6 +60,5 @@ public class LoginActivity extends AppCompatActivity {
         }
 
         return false;
-
     }
 }

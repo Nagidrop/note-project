@@ -1,7 +1,9 @@
 package com.group6.noteapp.controller;
 
+import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkCapabilities;
@@ -147,19 +149,46 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return false;
-
     }
-
 
     /**
      * Logout method
      */
     public void signOut() {
-        firebaseAuth.signOut();
-        LoginManager.getInstance().logOut();
-        Intent intent = new Intent(this, LoginActivity.class);
-        intent.setFlags(intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-        startActivity(intent);
+        AlertDialog.Builder alert = new AlertDialog.Builder(this);
+        alert.setTitle("Logout Confirmation");                      // set dialog title
+        alert.setMessage("Are you sure you want to log out?");      // set dialog message
+
+        alert.setPositiveButton("Yes",
+                new DialogInterface.OnClickListener() {
+                    /**
+                     * To register activity
+                     * @param dialog dialog
+                     * @param which which
+                     */
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        firebaseAuth.signOut();
+                        LoginManager.getInstance().logOut();
+                        Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+                        intent.setFlags(intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
+                        startActivity(intent);
+                    }
+                });
+        alert.setNegativeButton("No",
+                new DialogInterface.OnClickListener() {
+                    /**
+                     * To register activity
+                     * @param dialog dialog
+                     * @param which which
+                     */
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+
+        alert.create().show();
     }
 
     /**

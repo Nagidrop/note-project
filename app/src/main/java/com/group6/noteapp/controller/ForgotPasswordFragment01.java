@@ -9,6 +9,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.fragment.app.Fragment;
+import androidx.navigation.fragment.NavHostFragment;
+
 import com.google.android.material.button.MaterialButton;
 import com.group6.noteapp.R;
 
@@ -68,7 +71,8 @@ public class ForgotPasswordFragment01 extends Fragment {
         MaterialButton btnSubmit = inflatedView.findViewById(R.id.btnForgotSubmit);
         btnSubmit.setOnClickListener(new View.OnClickListener() {
             @Override public void onClick(View v) {
-                NavHostFragment.findNavController(ForgotPasswordFragment01.this).navigate(R.id.action_registerFragment01_to_registerFragment02);
+                NavHostFragment.findNavController(ForgotPasswordFragment01.this)
+                        .navigate(R.id.action_forgotPasswordFragment01_to_forgotPasswordFragment02);
             }
         });
         // Inflate the layout for this fragment

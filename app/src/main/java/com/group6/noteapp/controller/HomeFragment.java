@@ -1,17 +1,12 @@
 package com.group6.noteapp.controller;
 
-import android.content.Intent;
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 
-import com.google.android.material.button.MaterialButton;
-import com.google.firebase.auth.FirebaseAuth;
+import androidx.fragment.app.Fragment;
+
 import com.group6.noteapp.R;
 
 /**
@@ -61,7 +56,6 @@ public class HomeFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
-
     }
 
     @Override

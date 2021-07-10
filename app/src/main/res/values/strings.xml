@@ -29,8 +29,8 @@
     <string name="re_password">Re-enter Password</string>
     <string name="register">Register</string>
     <string name="reset_pass">Reset Password</string>
-    <string name="sample_forgot_password_success">We have sent to kelvinpham@gmail.com an email to reset password.\n\nPlease check your inbox
-and follow the instructions in the email.</string>
+    <string name="email_sent_reg">Almost done. Please check your inbox at <b>%1$s</b>\n to confirm registration. </string>
+    <string name="email_sent_forgot_pass">Please check your inbox at \n<b>%1$s</b> and follow instructions on how to reset password.</string>
 <!--    <string name="sign_in_google">Sign In with Google</string>-->
     <string name="register_guide">Basic information</string>
     <string name="step_one_of_two">1/2</string>

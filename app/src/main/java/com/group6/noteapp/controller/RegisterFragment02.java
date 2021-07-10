@@ -9,11 +9,11 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.fragment.NavHostFragment;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -24,7 +24,7 @@ import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.FieldValue;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.group6.noteapp.R;
 import com.group6.noteapp.model.User;
@@ -110,13 +110,13 @@ public class RegisterFragment02 extends Fragment {
         inputRegBirthdateEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
-                if (hasFocus){
+                if (hasFocus) {
                     inputRegBirthdateEditText.performClick();
                 }
             }
         });
 
-        MaterialButton btnLogin = inflatedView.findViewById(R.id.btnLoginReg);
+        MaterialButton btnLogin = inflatedView.findViewById(R.id.btnRegister);
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -159,13 +159,13 @@ public class RegisterFragment02 extends Fragment {
                                         progressDialog.dismiss();
                                         // Sign in success, update UI with the signed-in user's information
                                         Log.d(TAG, "createUserWithEmail:success");
-                                        String userUid = task.getResult().getUser().getUid();
+                                        FirebaseUser firebaseUser = task.getResult().getUser();
+                                        String userUid = firebaseUser.getUid();
 
                                         User newUser = new User();
                                         newUser.setFullName(regFullname);
                                         newUser.setBirthdate(regBirthdate);
                                         newUser.setAddress(regAddress);
-                                        newUser.setCreatedDate(FieldValue.serverTimestamp().toString());
 
                                         db.collection("users")
                                                 .document(userUid)
@@ -174,7 +174,13 @@ public class RegisterFragment02 extends Fragment {
                                                     @Override
                                                     public void onSuccess(Void aVoid) {
                                                         Log.d(TAG, "DocumentSnapshot written with ID: " + userUid);
-                                                        Toast.makeText(getActivity(), "Success", Toast.LENGTH_SHORT).show();
+                                                        firebaseUser.sendEmailVerification();
+
+                                                        Bundle regData = new Bundle();
+                                                        regData.putString("regEmail", regEmail);
+
+                                                        NavHostFragment.findNavController(RegisterFragment02.this)
+                                                                .navigate(R.id.action_registerFragment02_to_registerFragment03, regData);
                                                     }
                                                 })
                                                 .addOnFailureListener(new OnFailureListener() {
@@ -235,7 +241,6 @@ public class RegisterFragment02 extends Fragment {
                 }
             }
         });
-
 
         return inflatedView;
     }
