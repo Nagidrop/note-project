@@ -32,8 +32,6 @@ p
 @app/src/main/java/com/group6/noteapp/controller/NoteAdapter.java,3\2\329d32f25bd138d898ca8efa434b309bb740d358
 d
 4app/src/main/java/com/group6/noteapp/model/User.java,e\2\e233909562b7eaf5636b22623bcf5e6f049b2bfe
-q
-Aapp/src/main/java/com/group6/noteapp/controller/MainActivity.java,3\f\3f171484156c6f6760e5d0185a23057008250b6f
 N
 app/debug/output-metadata.json,6\d\6d0d047f57b3ed56db47b6d89a6ec6080e4cb494
 P

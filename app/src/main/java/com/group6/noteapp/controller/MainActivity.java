@@ -177,15 +177,17 @@ public class MainActivity extends AppCompatActivity {
      */
     private void setAnimation(boolean clicked) {
         if(!clicked){
-            fabNote.startAnimation(fromBottom);
-            fabRecord.startAnimation(fromBottom);
-            fabCapture.startAnimation(fromBottom);
             fabMenu.startAnimation(rotateOpen);
+            fabNote.startAnimation(fromBottom);
+            fabCapture.startAnimation(fromBottom);
+            fabRecord.startAnimation(fromBottom);
+
         }else{
-            fabNote.startAnimation(toBottom);
-            fabRecord.startAnimation(toBottom);
-            fabCapture.startAnimation(toBottom);
             fabMenu.startAnimation(rotateClose);
+            fabNote.startAnimation(toBottom);
+            fabCapture.startAnimation(toBottom);
+            fabRecord.startAnimation(toBottom);
+
         }
     }
 

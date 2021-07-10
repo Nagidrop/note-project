@@ -28,6 +28,7 @@
         android:layout_gravity="bottom|right"
         android:layout_margin="16dp"
         android:clickable="true"
+        app:fabCustomSize="60dp"
         android:contentDescription="@string/fab_content_desc"
         app:srcCompat="@android:drawable/ic_input_add" />
 
@@ -36,11 +37,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|right"
-        android:layout_marginEnd="24dp"
-        android:layout_marginBottom="182dp"
-        android:visibility="invisible"
+        android:layout_marginEnd="19dp"
+        android:layout_marginBottom="230dp"
+        android:visibility="visible"
         android:clickable="true"
-        app:fabSize="mini"
+        app:fabCustomSize="50dp"
         android:contentDescription="@string/fab_content_desc"
         app:srcCompat="@drawable/ic_microphone_24" />
 
@@ -49,11 +50,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|right"
-        android:layout_marginBottom="131dp"
-        android:layout_marginEnd="24dp"
+        android:layout_marginBottom="162dp"
+        android:layout_marginEnd="19dp"
         android:clickable="true"
-        android:visibility="invisible"
-        app:fabSize="mini"
+        android:visibility="visible"
+        app:fabCustomSize="50dp"
         android:contentDescription="@string/fab_content_desc"
         app:srcCompat="@drawable/ic_photo_camera_24" />
 
@@ -62,10 +63,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|right"
-        android:layout_marginBottom="80dp"
-        android:layout_marginEnd="24dp"
-        app:fabSize="mini"
-        android:visibility="invisible"
+        android:layout_marginBottom="94dp"
+        android:layout_marginEnd="19dp"
+        app:fabCustomSize="50dp"
+        android:visibility="visible"
         android:clickable="true"
         android:contentDescription="@string/fab_content_desc"
         app:srcCompat="@drawable/ic_writing_24" />
