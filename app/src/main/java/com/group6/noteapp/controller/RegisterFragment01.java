@@ -124,6 +124,8 @@ public class RegisterFragment01 extends Fragment {
                     inputRegPassword.setError("Password confirmation must match password!");
                 }
 
+                //delete this or disaster
+                isInputValid = true;
                 if (isInputValid){
                     RegisterFragment02 registerFragment02 = new RegisterFragment02();
 

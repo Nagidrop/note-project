@@ -142,8 +142,6 @@ public class RegisterFragment02 extends Fragment {
                                                     Log.w(TAG, "Error adding document", e);
                                                 }
                                             });
-
-
                                 } else if (task.getException() instanceof FirebaseAuthUserCollisionException) {
                                     progressDialog.dismiss();
                                     FirebaseAuthUserCollisionException exception =
