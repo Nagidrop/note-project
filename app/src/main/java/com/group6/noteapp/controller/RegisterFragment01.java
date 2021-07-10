@@ -102,30 +102,28 @@ public class RegisterFragment01 extends Fragment {
                 inputRegConfirmPassword.setErrorEnabled(true);
 
                 boolean isInputValid = true;
-                int emailValidateResult = ValidationUtils.validateEmail(regEmail);
-                int passwordValidateResult = ValidationUtils.validatePasswordReg(regPassword, regConfirmPassword);
+                int validateEmailResult = ValidationUtils.validateEmail(regEmail);
+                int validatePasswordResult = ValidationUtils.validatePasswordReg(regPassword, regConfirmPassword);
 
-                if (emailValidateResult == 1) {
+                if (validateEmailResult == 1) {
                     isInputValid = false;
                     inputRegEmail.setError("Email must not be empty!");
-                } else if (emailValidateResult == 2) {
+                } else if (validateEmailResult == 2) {
                     isInputValid = false;
                     inputRegEmail.setError("Please use a valid email! (Ex: abc@g.cn)");
                 }
 
-                if (passwordValidateResult == 1) {
+                if (validatePasswordResult == 1) {
                     isInputValid = false;
                     inputRegPassword.setError("Password must not be empty!");
-                } else if (passwordValidateResult == 2){
+                } else if (validatePasswordResult == 2){
                     isInputValid = false;
                     inputRegPassword.setError("Password must be at least 8 characters!");
-                } else if (passwordValidateResult == 3){
+                } else if (validatePasswordResult == 3){
                     isInputValid = false;
                     inputRegPassword.setError("Password confirmation must match password!");
                 }
 
-                //delete this or disaster
-                isInputValid = true;
                 if (isInputValid){
                     RegisterFragment02 registerFragment02 = new RegisterFragment02();
 
@@ -136,32 +134,6 @@ public class RegisterFragment01 extends Fragment {
                     registerFragment02.setArguments(regData);
 
                     NavHostFragment.findNavController(RegisterFragment01.this).navigate(R.id.action_registerFragment01_to_registerFragment02, regData);
-//                    /* show progress dialog*/
-//                    progressDialog.setTitle("Login");
-//                    progressDialog.setMessage("Please wait while check your credentials");
-//                    progressDialog.setCanceledOnTouchOutside(false);
-//                    progressDialog.show();
-//
-//                    mAuth.createUserWithEmailAndPassword(regEmail, regPassword)
-//                            .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-//                                @Override
-//                                public void onComplete(@NonNull Task<AuthResult> task) {
-//                                    if (task.isSuccessful()) {
-//                                        progressDialog.dismiss();
-//                                        // Sign in success, update UI with the signed-in user's information
-//                                        Log.d(TAG, "createUserWithEmail:success");
-//                                        FirebaseUser user = mAuth.getCurrentUser();
-//                                        NavHostFragment.findNavController(RegisterFragment01.this).navigate(R.id.action_registerFragment01_to_registerFragment02);
-//                                    } else if (task.getException() instanceof FirebaseAuthUserCollisionException) {
-//                                        progressDialog.dismiss();
-//                                        FirebaseAuthUserCollisionException exception =
-//                                                (FirebaseAuthUserCollisionException) task.getException();
-//                                        if (exception.getErrorCode().equalsIgnoreCase("ERROR_ACCOUNT_EXISTS_WITH_DIFFERENT_CREDENTIAL")) {
-//
-//                                        }
-//                                    }
-//                                }
-//                            });
                 }
             }
         });

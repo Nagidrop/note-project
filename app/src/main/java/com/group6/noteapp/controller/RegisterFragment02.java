@@ -1,6 +1,8 @@
 package com.group6.noteapp.controller;
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -19,10 +21,10 @@ import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.group6.noteapp.R;
 import com.group6.noteapp.model.User;
+import com.group6.noteapp.util.ValidationUtils;
 
 import static android.content.ContentValues.TAG;
 
@@ -94,24 +96,38 @@ public class RegisterFragment02 extends Fragment {
 
         MaterialButton btnLogin = inflatedView.findViewById(R.id.btnLoginReg);
         btnLogin.setOnClickListener(new View.OnClickListener() {
-            @Override public void onClick(View v) {
+            @Override
+            public void onClick(View v) {
                 /* Create local variables to store the EditText Views' current values */
 
                 String regFullname = inputRegFullName.getEditText().getText().toString();
                 String regBirthdate = inputRegBirthdate.getEditText().getText().toString();
                 String regAddress = inputRegAddress.getEditText().getText().toString();
                 // Create a new user with a first and last name
+                inputRegFullName.setErrorEnabled(false);
+                inputRegBirthdate.setErrorEnabled(false);
+                inputRegAddress.setErrorEnabled(false);
 
-                User newUser = new User();
-                newUser.setFullName(regFullname);
-                newUser.setBirthdate(regBirthdate);
-                newUser.setAddress(regAddress);
+                inputRegFullName.setErrorEnabled(true);
+                inputRegBirthdate.setErrorEnabled(true);
+                inputRegAddress.setErrorEnabled(true);
+
+                boolean isInputValid = true;
+                int validateFullNameResult = ValidationUtils.validateEmail(regFullname);
+
+                if (validateFullNameResult == 1) {
+                    isInputValid = false;
+                    inputRegFullName.setError("Full Name must not be empty!");
+                } else if (validateFullNameResult == 2) {
+                    isInputValid = false;
+                    inputRegFullName.setError("Full Name must have at least 2 words, with a whitespace between words!");
+                }
 
                 ProgressDialog progressDialog = new ProgressDialog(getActivity());
 
                 /* show progress dialog*/
-                progressDialog.setTitle("Login");
-                progressDialog.setMessage("Please wait while check your credentials");
+                progressDialog.setTitle("Registering...");
+                progressDialog.setMessage("Please wait while we register you in Note App.");
                 progressDialog.setCanceledOnTouchOutside(false);
                 progressDialog.show();
 
@@ -125,7 +141,11 @@ public class RegisterFragment02 extends Fragment {
                                     Log.d(TAG, "createUserWithEmail:success");
                                     String userUid = task.getResult().getUser().getUid();
 
-//                                    db.collection("users").document(userUid).set(newUser);
+                                    User newUser = new User();
+                                    newUser.setFullName(regFullname);
+                                    newUser.setBirthdate(regBirthdate);
+                                    newUser.setAddress(regAddress);
+
                                     db.collection("users")
                                             .document(userUid)
                                             .set(newUser)
@@ -142,12 +162,51 @@ public class RegisterFragment02 extends Fragment {
                                                     Log.w(TAG, "Error adding document", e);
                                                 }
                                             });
-                                } else if (task.getException() instanceof FirebaseAuthUserCollisionException) {
+                                } else {
+                                    // handle error
                                     progressDialog.dismiss();
-                                    FirebaseAuthUserCollisionException exception =
-                                            (FirebaseAuthUserCollisionException) task.getException();
-                                    if (exception.getErrorCode().equalsIgnoreCase("ERROR_ACCOUNT_EXISTS_WITH_DIFFERENT_CREDENTIAL")) {
+                                    String error = task.getException().getMessage();
 
+                                    if (error.equalsIgnoreCase("The email address is already in use by another account.")){
+                                        AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
+                                        alert.setTitle("Registration Failed");                                                  // set dialog title
+                                        alert.setMessage("Email address is already in use. Please use another email!");     // set dialog message
+                                        alert.setCancelable(false);
+
+                                        alert.setPositiveButton("OK",
+                                                new DialogInterface.OnClickListener() {
+                                                    /**
+                                                     * To register activity
+                                                     * @param dialog dialog
+                                                     * @param which which
+                                                     */
+                                                    @Override
+                                                    public void onClick(DialogInterface dialog, int which) {
+                                                        dialog.dismiss();
+                                                    }
+                                                });
+
+                                        alert.create().show();
+                                    } else {
+                                        AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
+                                        alert.setTitle("Registration Failed");                                                  // set dialog title
+                                        alert.setMessage("An unknown error occurred!\nError message:\n\"" + error +"\"");        // set dialog message
+                                        alert.setCancelable(false);
+
+                                        alert.setPositiveButton("OK",
+                                                new DialogInterface.OnClickListener() {
+                                                    /**
+                                                     * To register activity
+                                                     * @param dialog dialog
+                                                     * @param which which
+                                                     */
+                                                    @Override
+                                                    public void onClick(DialogInterface dialog, int which) {
+                                                        dialog.dismiss();
+                                                    }
+                                                });
+
+                                        alert.create().show();
                                     }
                                 }
                             }
