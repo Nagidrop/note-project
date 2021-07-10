@@ -16,7 +16,7 @@ import com.group6.noteapp.R;
  */
 public class HomeFragment extends Fragment {
 
-    View inflatedView;
+    private View inflatedView;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER

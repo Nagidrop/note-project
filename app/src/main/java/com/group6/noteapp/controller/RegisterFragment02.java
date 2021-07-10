@@ -39,7 +39,7 @@ import static android.content.ContentValues.TAG;
  */
 public class RegisterFragment02 extends Fragment {
 
-    View inflatedView;
+    private View inflatedView;
     private FirebaseAuth mAu;
 
     // TODO: Rename parameter arguments, choose names that match

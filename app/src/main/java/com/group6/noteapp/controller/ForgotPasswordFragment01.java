@@ -18,7 +18,7 @@ import com.group6.noteapp.R;
  */
 public class ForgotPasswordFragment01 extends Fragment {
 
-    View inflatedView;
+    private View inflatedView;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -64,6 +64,7 @@ public class ForgotPasswordFragment01 extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         inflatedView = inflater.inflate(R.layout.fragment_forgot_password01, container, false);
+
         MaterialButton btnSubmit = inflatedView.findViewById(R.id.btnForgotSubmit);
         btnSubmit.setOnClickListener(new View.OnClickListener() {
             @Override public void onClick(View v) {
@@ -71,6 +72,7 @@ public class ForgotPasswordFragment01 extends Fragment {
                         .navigate(R.id.action_forgotPasswordFragment01_to_forgotPasswordFragment02);
             }
         });
+
         // Inflate the layout for this fragment
         return inflatedView;
     }

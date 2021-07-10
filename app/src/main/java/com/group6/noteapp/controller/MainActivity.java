@@ -36,11 +36,11 @@ public class MainActivity extends AppCompatActivity {
     private Animation rotateOpen;
     private Animation fromBottom;
     private Animation toBottom;
-    FloatingActionButton fabMenu;
-    FloatingActionButton fabNote;
-    FloatingActionButton fabRecord;
-    FloatingActionButton fabCapture;
-    boolean clicked; // fabMenu clicked state
+    private FloatingActionButton fabMenu;
+    private FloatingActionButton fabNote;
+    private FloatingActionButton fabRecord;
+    private FloatingActionButton fabCapture;
+    private boolean clicked; // fabMenu clicked state
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,14 +74,12 @@ public class MainActivity extends AppCompatActivity {
         DrawerLayout drawerLayout = findViewById(R.id.drawerLayout);
         NavigationView navigationView = findViewById(R.id.navigationView);
 
-
         // Set navigation icon click event to show navigation drawer
         topAppBar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override public void onClick(View v) {
                 drawerLayout.open();
             }
         });
-
 
         // Set navigation item selected
         navigationView.setNavigationItemSelectedListener(
@@ -94,7 +92,6 @@ public class MainActivity extends AppCompatActivity {
                             signOut();
                             return false;
                         }
-
 
                         // Uncheck previous item if it exists
 //                        Menu navigationViewMenu = navigationView.getMenu();
@@ -114,7 +111,6 @@ public class MainActivity extends AppCompatActivity {
                     }
                 });
 
-
         previousItem = navigationView.getMenu().getItem(0).getSubMenu().getItem(0);
         previousItem.setChecked(true);
 
@@ -131,7 +127,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public boolean isNetworkAvailable() {
-
         ConnectivityManager connectivityManager =
                 (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         if (connectivityManager != null) {
@@ -216,7 +211,6 @@ public class MainActivity extends AppCompatActivity {
             fabNote.startAnimation(toBottom);
             fabCapture.startAnimation(toBottom);
             fabRecord.startAnimation(toBottom);
-
         }
     }
 
