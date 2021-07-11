@@ -25,13 +25,17 @@ import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.group6.noteapp.Constants;
 import com.group6.noteapp.R;
 import com.group6.noteapp.model.Note;
 import com.group6.noteapp.model.Notebook;
 import com.group6.noteapp.model.User;
 import com.group6.noteapp.util.ValidationUtils;
+
+import java.util.UUID;
 
 import static android.content.ContentValues.TAG;
 
@@ -146,7 +150,7 @@ public class RegisterFragment02 extends Fragment {
                     inputRegFullName.setError("Full Name must have at least 2 words.");
                 }
 
-                if (validateAddressResult == 1){
+                if (validateAddressResult == 1) {
                     isInputValid = false;
                     inputRegAddress.setError("Please use a valid address. (Ex: 3/2 Str.)");
                 }
@@ -185,16 +189,30 @@ public class RegisterFragment02 extends Fragment {
                                                         Log.d(TAG, "DocumentSnapshot written with ID: " + userUid);
 
                                                         Notebook defaultNotebook = new Notebook();
-                                                        defaultNotebook.setTitle("My First Notebook");
+                                                        defaultNotebook.setTitle(Constants.FIRST_NOTEBOOK_NAME);
 
-                                                        DocumentReference userDefaultNotebookDoc = userInfoDoc.collection("notebooks")
+                                                        DocumentReference userDefNotebookDoc = userInfoDoc.collection("notebooks")
                                                                 .document(defaultNotebook.getTitle());
-                                                        userDefaultNotebookDoc.set(defaultNotebook);
+                                                        userDefNotebookDoc.set(defaultNotebook);
 
-                                                        Note defaultNote = new Note();
-                                                        defaultNote.setTitle("");
+                                                        Note welcomeNote = new Note();
+                                                        welcomeNote.setTitle(Constants.WELCOME_NOTE_TITLE);
+                                                        welcomeNote.setContent(Constants.WELCOME_NOTE_CONTENT);
 
-//                                                        Document userDefaultNoteDoc = userDefaultNotebookDoc.collection("notes")
+                                                        Note welcomeNote2 = new Note();
+                                                        welcomeNote2.setTitle("Test note - delete at release");
+                                                        welcomeNote2.setContent(UUID.randomUUID().toString() + UUID.randomUUID().toString()
+                                                                + UUID.randomUUID().toString() + UUID.randomUUID().toString());
+
+                                                        Note welcomeNote3 = new Note();
+                                                        welcomeNote3.setTitle("Test note - delete at release");
+                                                        welcomeNote3.setContent(UUID.randomUUID().toString() + UUID.randomUUID().toString()
+                                                                + UUID.randomUUID().toString() + UUID.randomUUID().toString());
+
+                                                        CollectionReference userDefNoteCollection = userDefNotebookDoc.collection("notes");
+                                                        userDefNoteCollection.add(welcomeNote);
+                                                        userDefNoteCollection.add(welcomeNote2);
+                                                        userDefNoteCollection.add(welcomeNote3);
 
                                                         firebaseUser.sendEmailVerification();
 
