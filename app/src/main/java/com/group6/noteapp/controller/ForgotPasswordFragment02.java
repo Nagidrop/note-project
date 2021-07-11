@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
@@ -18,6 +19,7 @@ import com.group6.noteapp.R;
  */
 public class ForgotPasswordFragment02 extends Fragment {
     private View inflatedView;
+    private String email;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -54,8 +56,7 @@ public class ForgotPasswordFragment02 extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+            email = getArguments().getString("email");
         }
     }
 
@@ -64,6 +65,9 @@ public class ForgotPasswordFragment02 extends Fragment {
                              Bundle savedInstanceState) {
 
         inflatedView = inflater.inflate(R.layout.fragment_forgot_password02, container, false);
+
+        TextView txtForgotPassword = inflatedView.findViewById(R.id.txtForgotPassword);
+        txtForgotPassword.setText(getString(R.string.email_sent_forgot_pass, email));
 
         MaterialButton btnForgotLogin = inflatedView.findViewById(R.id.btnForgotLogin);
         btnForgotLogin.setOnClickListener(new View.OnClickListener() {

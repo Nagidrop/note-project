@@ -38,6 +38,7 @@ import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.group6.noteapp.R;
 import com.group6.noteapp.util.ValidationUtils;
 
@@ -122,6 +123,9 @@ public class LoginFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         inflatedView = inflater.inflate(R.layout.fragment_login, container, false);
+
+        // Get firestore instance
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
 
         // Get register button
         MaterialButton btnRegister = inflatedView.findViewById(R.id.btnNoAccount);
