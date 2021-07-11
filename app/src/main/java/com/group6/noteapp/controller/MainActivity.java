@@ -1,10 +1,12 @@
 package com.group6.noteapp.controller;
 
+import android.Manifest;
 import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkCapabilities;
 import android.os.Build;
@@ -16,6 +18,8 @@ import android.view.animation.AnimationUtils;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.facebook.login.LoginManager;
@@ -28,6 +32,10 @@ import com.group6.noteapp.R;
 import org.jetbrains.annotations.NotNull;
 
 public class MainActivity extends AppCompatActivity {
+
+    private static final String[] CAMERA_PERMISSION = new String[]{Manifest.permission.CAMERA};
+    private static final int CAMERA_REQUEST_CODE = 696;
+
 
     private BroadcastReceiver MyReceiver = null;
     private FirebaseAuth firebaseAuth;
@@ -93,13 +101,6 @@ public class MainActivity extends AppCompatActivity {
                             return false;
                         }
 
-                        // Uncheck previous item if it exists
-//                        Menu navigationViewMenu = navigationView.getMenu();
-//                        if (uncheckedItem != null) {
-//                            Log.d("Check Item", String.valueOf(uncheckedItem.getItemId()));
-//                            uncheckedItem.setChecked(false);
-//                        }
-
                         // Check selected item
                         if (previousItem != null) {
                             previousItem.setChecked(false);
@@ -114,6 +115,19 @@ public class MainActivity extends AppCompatActivity {
         previousItem = navigationView.getMenu().getItem(0).getSubMenu().getItem(0);
         previousItem.setChecked(true);
 
+        // -----------------------------
+        // Capture Image
+        // -----------------------------
+        fabCapture.setOnClickListener(new View.OnClickListener() {
+            @Override public void onClick(View v) {
+                if(hasCameraPermission()) {
+                    enableCamera();
+                }else{
+                    requestPermissions();
+                }
+            }
+        });
+
 //        if (!isNetworkAvailable()) {
 //            new AlertDialog.Builder(this)
 //                    .setIcon(android.R.drawable.ic_dialog_alert)
@@ -124,6 +138,26 @@ public class MainActivity extends AppCompatActivity {
 //            Toast.makeText(MainActivity.this,
 //                    "Welcome", Toast.LENGTH_LONG).show();
 //        }
+    }
+
+    private void requestPermissions() {
+        ActivityCompat.requestPermissions(
+                this,
+                CAMERA_PERMISSION,
+                CAMERA_REQUEST_CODE
+        );
+    }
+
+    private void enableCamera() {
+        Intent intent = new Intent(this, CameraActivity.class);
+        startActivity(intent);
+    }
+
+    private boolean hasCameraPermission() {
+        return ContextCompat.withPermissions(
+                this,
+                Manifest.permission.CAMERA
+        ) == PackageManager.PERMISSION_GRANTED;
     }
 
     public boolean isNetworkAvailable() {
