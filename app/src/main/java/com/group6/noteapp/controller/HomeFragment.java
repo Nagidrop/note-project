@@ -8,7 +8,6 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -113,33 +112,24 @@ public class HomeFragment extends Fragment {
                                         note.setId(document.getId());
 
                                         noteList.add(note);
-
-                                        Log.d("lala doc", document.getId() + " => " + document.getData());
-                                        Log.d("lala info", document.getId() + " => " + note.toString());
                                     }
+                                    
+                                    RecyclerView rvNote = inflatedView.findViewById(R.id.recyclerView);
+
+                                    noteAdapter = new NoteAdapter(getActivity(), noteList);
+                                    rvNote.setAdapter(noteAdapter);
+                                    rvNote.setLayoutManager(new LinearLayoutManager(getActivity()));
                                 } else {
-                                    Log.d("error notebook", "Error getting documents: ", task.getException());
+                                    Log.d("noteerror", "Error getting documents: ", task.getException());
                                 }
                             }
                         });
                     }
                 } else {
-                    Log.d("error note", "Error getting documents: ", task.getException());
+                    Log.d("notebookerror", "Error getting documents: ", task.getException());
                 }
             }
         });
-
-        for (Note note : noteList) {
-            Log.d("working", note.toString());
-        }
-
-        RecyclerView rvNote = inflatedView.findViewById(R.id.recyclerView);
-
-        noteAdapter = new NoteAdapter(getActivity(), noteList);
-        rvNote.setAdapter(noteAdapter);
-        rvNote.addItemDecoration(new DividerItemDecoration(getActivity(),
-                DividerItemDecoration.VERTICAL));                   // set horizontal bar to separate notes in list
-        rvNote.setLayoutManager(new LinearLayoutManager(getActivity()));
 
         return inflatedView;
     }
