@@ -1,14 +1,19 @@
 package com.group6.noteapp.model;
 
 import com.google.firebase.Timestamp;
+import com.google.firebase.firestore.Exclude;
+import com.google.firebase.firestore.IgnoreExtraProperties;
 import com.google.firebase.firestore.ServerTimestamp;
 
 import java.io.Serializable;
 
 /* Note Entity */
+@IgnoreExtraProperties
 public class Note implements Serializable {
 
     /* Entity Properties */
+    @Exclude
+    private String id;              // Note's doc ID
     private String title;           // Note's title
     private String content;         // Note's content
     private Boolean isDeleted;      // Is the note in trash?
@@ -19,7 +24,8 @@ public class Note implements Serializable {
     public Note() {
     }
 
-    public Note(String title, String content, Boolean isDeleted, Timestamp createdDate) {
+    public Note(String id, String title, String content, Boolean isDeleted, Timestamp createdDate) {
+        this.id = id;
         this.title = title;
         this.content = content;
         this.isDeleted = isDeleted;
@@ -27,6 +33,14 @@ public class Note implements Serializable {
     }
 
     /* Getters and Setters */
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 
     public String getTitle() {
         return title;

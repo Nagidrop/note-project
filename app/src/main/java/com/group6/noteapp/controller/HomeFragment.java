@@ -1,13 +1,28 @@
 package com.group6.noteapp.controller;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.group6.noteapp.R;
+import com.group6.noteapp.model.Note;
+
+import org.jetbrains.annotations.NotNull;
+
+import java.util.ArrayList;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -17,6 +32,10 @@ import com.group6.noteapp.R;
 public class HomeFragment extends Fragment {
 
     private View inflatedView;
+    private FirebaseAuth firebaseAuth;
+    private FirebaseUser firebaseUser;
+    private FirebaseFirestore db;
+    private ArrayList<Note> noteList;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -61,6 +80,31 @@ public class HomeFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        firebaseAuth = FirebaseAuth.getInstance();
+        firebaseUser = firebaseAuth.getCurrentUser();
+
+        db = FirebaseFirestore.getInstance();
+
+        CollectionReference colRec = db.collection("users").document(firebaseUser.getUid())
+                .collection("notebooks");
+
+        colRec.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull @NotNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    noteList = new ArrayList<>();
+                    for (QueryDocumentSnapshot document : task.getResult()) {
+//                        noteList = new ArrayList<>();
+//                        
+//                        Note note = new Note();
+                        Log.d("lala", document.getId() + " => " + document.getData());
+                    }
+                } else {
+                    Log.d("lala", "Error getting documents: ", task.getException());
+                }
+            }
+        });
+
         // Inflate the layout for this fragment
         inflatedView = inflater.inflate(R.layout.fragment_home, container, false);
 
