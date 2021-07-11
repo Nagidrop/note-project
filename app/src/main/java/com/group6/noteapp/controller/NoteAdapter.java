@@ -12,6 +12,7 @@ import com.group6.noteapp.R;
 import com.group6.noteapp.model.Note;
 import com.group6.noteapp.view.NoteViewHolder;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -60,7 +61,12 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteViewHolder> {
         Note note = notes.get(position);                            // get note from position
         holder.getNoteTitle().setText(note.getTitle());             // set note title
         holder.getNoteContent().setText(note.getContent());         // set note content
-        holder.getNoteCreatedDate().setText(String.valueOf(note.getCreatedDate())); // set note created date
+
+        SimpleDateFormat dateFormat = new SimpleDateFormat("E, dd MMM yyyy h:mm aa");
+
+        String createdDate = dateFormat.format(note.getCreatedDate().toDate());
+        createdDate.replace("am", "AM").replace("pm","PM");
+        holder.getNoteCreatedDate().setText(createdDate); // set note created date
     }
 
     /**
