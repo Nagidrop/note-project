@@ -222,15 +222,15 @@ public class LoginFragment extends Fragment {
 
         if (emailValidateResult == 1) {
             isInputValid = false;
-            inputLogEmail.setError("Email must not be empty!");
+            inputLogEmail.setError("Email must not be empty.");
         } else if (emailValidateResult == 2) {
             isInputValid = false;
-            inputLogEmail.setError("Please use a valid email! (Ex: abc@g.cn)");
+            inputLogEmail.setError("Please use a valid email. (Ex: abc@g.cn)");
         }
 
         if (passwordValidateResult == 1) {
             isInputValid = false;
-            inputLogPassword.setError("Password must not be empty!");
+            inputLogPassword.setError("Password must not be empty.");
         }
 
         if (isInputValid) {

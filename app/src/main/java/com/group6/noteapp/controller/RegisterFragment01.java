@@ -105,21 +105,21 @@ public class RegisterFragment01 extends Fragment {
 
                 if (validateEmailResult == 1) {
                     isInputValid = false;
-                    inputRegEmail.setError("Email must not be empty!");
+                    inputRegEmail.setError("Email must not be empty.");
                 } else if (validateEmailResult == 2) {
                     isInputValid = false;
-                    inputRegEmail.setError("Please use a valid email! (Ex: abc@g.cn)");
+                    inputRegEmail.setError("Please use a valid email. (Ex: abc@g.cn)");
                 }
 
                 if (validatePasswordResult == 1) {
                     isInputValid = false;
-                    inputRegPassword.setError("Password must not be empty!");
+                    inputRegPassword.setError("Password must not be empty.");
                 } else if (validatePasswordResult == 2){
                     isInputValid = false;
-                    inputRegPassword.setError("Password must be at least 8 characters!");
+                    inputRegPassword.setError("Password must be at least 8 characters.");
                 } else if (validatePasswordResult == 3){
                     isInputValid = false;
-                    inputRegConfirmPassword.setError("Password confirmation must match password!");
+                    inputRegConfirmPassword.setError("Password confirmation doesn't match.");
                 }
 
                 if (isInputValid){
