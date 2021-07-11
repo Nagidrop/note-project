@@ -78,7 +78,7 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteViewHolder> {
      * @return the note's ID
      */
     public int getNoteId(int position) {
-        return notes.get(position).getId();
+        return 0;
     }
 
     /**

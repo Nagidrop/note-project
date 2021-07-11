@@ -196,7 +196,7 @@ public class RegisterFragment02 extends Fragment {
                                                         Note defaultNote = new Note();
                                                         defaultNote.setTitle("");
 
-                                                        Document userDefaultNoteDoc = userDefaultNotebookDoc.collection("notes").document("")
+//                                                        Document userDefaultNoteDoc = userDefaultNotebookDoc.collection("notes").document("")
 
                                                         firebaseUser.sendEmailVerification();
 
