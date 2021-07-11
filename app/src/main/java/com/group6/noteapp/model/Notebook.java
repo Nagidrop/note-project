@@ -48,4 +48,9 @@ public class Notebook implements Serializable {
     public void setDeleted(boolean deleted) {
         isDeleted = deleted;
     }
+
+    @Override
+    public String toString(){
+        return "NOTEBOOK" + this.getTitle() + this.getCreatedDate();
+    }
 }

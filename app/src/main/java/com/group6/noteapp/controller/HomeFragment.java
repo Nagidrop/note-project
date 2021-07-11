@@ -8,14 +8,17 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.group6.noteapp.R;
 import com.group6.noteapp.model.Note;
@@ -35,7 +38,9 @@ public class HomeFragment extends Fragment {
     private FirebaseAuth firebaseAuth;
     private FirebaseUser firebaseUser;
     private FirebaseFirestore db;
+    private ArrayList<Note> notebookList;
     private ArrayList<Note> noteList;
+    private NoteAdapter noteAdapter;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -80,33 +85,61 @@ public class HomeFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+        inflatedView = inflater.inflate(R.layout.fragment_home, container, false);
+
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseUser = firebaseAuth.getCurrentUser();
 
         db = FirebaseFirestore.getInstance();
 
-        CollectionReference colRec = db.collection("users").document(firebaseUser.getUid())
+        CollectionReference notebookDocRef = db.collection("users").document(firebaseUser.getUid())
                 .collection("notebooks");
 
-        colRec.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+        notebookDocRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull @NotNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()) {
-                    noteList = new ArrayList<>();
-                    for (QueryDocumentSnapshot document : task.getResult()) {
-//                        noteList = new ArrayList<>();
-//                        
-//                        Note note = new Note();
-                        Log.d("lala", document.getId() + " => " + document.getData());
+                    for (DocumentSnapshot document : task.getResult().getDocuments()) {
+                        CollectionReference noteDocRef = document.getReference()
+                                .collection("notes");
+                        noteDocRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull @NotNull Task<QuerySnapshot> task) {
+                                if (task.isSuccessful()) {
+                                    noteList = new ArrayList<>();
+                                    for (DocumentSnapshot document : task.getResult().getDocuments()) {
+                                        Note note = document.toObject(Note.class);
+                                        note.setId(document.getId());
+
+                                        noteList.add(note);
+
+                                        Log.d("lala doc", document.getId() + " => " + document.getData());
+                                        Log.d("lala info", document.getId() + " => " + note.toString());
+                                    }
+                                } else {
+                                    Log.d("error notebook", "Error getting documents: ", task.getException());
+                                }
+                            }
+                        });
                     }
                 } else {
-                    Log.d("lala", "Error getting documents: ", task.getException());
+                    Log.d("error note", "Error getting documents: ", task.getException());
                 }
             }
         });
 
-        // Inflate the layout for this fragment
-        inflatedView = inflater.inflate(R.layout.fragment_home, container, false);
+        for (Note note : noteList) {
+            Log.d("working", note.toString());
+        }
+
+        RecyclerView rvNote = inflatedView.findViewById(R.id.recyclerView);
+
+        noteAdapter = new NoteAdapter(getActivity(), noteList);
+        rvNote.setAdapter(noteAdapter);
+        rvNote.addItemDecoration(new DividerItemDecoration(getActivity(),
+                DividerItemDecoration.VERTICAL));                   // set horizontal bar to separate notes in list
+        rvNote.setLayoutManager(new LinearLayoutManager(getActivity()));
 
         return inflatedView;
     }

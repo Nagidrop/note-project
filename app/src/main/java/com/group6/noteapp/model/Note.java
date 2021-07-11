@@ -73,4 +73,9 @@ public class Note implements Serializable {
     public void setCreatedDate(Timestamp createdDate) {
         this.createdDate = createdDate;
     }
+
+    @Override
+    public String toString(){
+        return "NOTE" + this.getTitle() + this.getContent() + this.getCreatedDate();
+    }
 }

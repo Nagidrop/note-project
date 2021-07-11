@@ -12,12 +12,13 @@ import com.group6.noteapp.R;
 import com.group6.noteapp.model.Note;
 import com.group6.noteapp.view.NoteViewHolder;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class NoteAdapter extends RecyclerView.Adapter<NoteViewHolder> {
 
     private Context context; // activity context
-    private List<Note> notes; // list of notes
+    private ArrayList<Note> notes; // list of notes
 
     /**
      * Constructor
@@ -25,7 +26,7 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteViewHolder> {
      * @param context activity context
      * @param notes   list of notes
      */
-    public NoteAdapter(Context context, List<Note> notes) {
+    public NoteAdapter(Context context, ArrayList<Note> notes) {
         this.context = context;
         this.notes = notes;
     }
@@ -69,7 +70,7 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteViewHolder> {
      */
     @Override
     public int getItemCount() {
-        return notes.size();
+        return notes == null ? 0 : notes.size();
     }
 
     /**
