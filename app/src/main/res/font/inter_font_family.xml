@@ -5,11 +5,11 @@
         android:fontStyle="normal"
         android:fontWeight="400"
         android:font="@font/inter_regular" />
-    <!-- medium -->
-    <font
-        android:fontStyle="normal"
-        android:fontWeight="500"
-        android:font="@font/inter_medium" />
+<!--    &lt;!&ndash; medium &ndash;&gt;-->
+<!--    <font-->
+<!--        android:fontStyle="normal"-->
+<!--        android:fontWeight="500"-->
+<!--        android:font="@font/inter_medium" />-->
     <!-- bold -->
     <font
         android:fontStyle="normal"
