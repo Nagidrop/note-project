@@ -15,34 +15,33 @@ import com.group6.noteapp.R;
  * Class represents each Recycler View's item in note list
  */
 public class NoteViewHolder extends RecyclerView.ViewHolder {
-    private TextView txtTitle;      // note title
-    private TextView txtContent;    // note content
+    private final TextView txtTitle;      // note title
+    private final TextView txtContent;    // note content
 
     /**
      * Constructor
      *
-     * @param itemView item view
+     * @param noteView item view
      */
-    public NoteViewHolder(@NonNull View itemView) {
-        super(itemView);
-        txtTitle = itemView.findViewById(R.id.tv_note_item_title);
-        txtContent = itemView.findViewById(R.id.tv_note_item_content);
+    public NoteViewHolder(@NonNull View noteView) {
+        super(noteView);
+        txtTitle = noteView.findViewById(R.id.txtNoteTitle);
+        txtContent = noteView.findViewById(R.id.txtNoteContent);
     }
+//
+//    @NonNull
+//    public static NoteViewHolder create(@NonNull ViewGroup parent) {
+//        return new NoteViewHolder(
+//                LayoutInflater.from(parent.getContext())
+//                        .inflate(R.layout.material_list_item_three_line, parent, false));
+//    }
 
-    /* Getters and Setters */
+    /* Getters */
     public TextView getTxtTitle() {
         return txtTitle;
     }
 
-    public void setTxtTitle(TextView txtTitle) {
-        this.txtTitle = txtTitle;
-    }
-
     public TextView getTxtContent() {
         return txtContent;
-    }
-
-    public void setTxtContent(TextView txtContent) {
-        this.txtContent = txtContent;
     }
 }

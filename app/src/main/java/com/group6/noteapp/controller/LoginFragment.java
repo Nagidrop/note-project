@@ -9,8 +9,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -33,6 +31,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputLayout;
+import com.google.android.material.textview.MaterialTextView;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FacebookAuthProvider;
@@ -54,15 +53,16 @@ public class LoginFragment extends Fragment {
     private static final String TAG = "LoginFragment"; // Tag for logging
 
     private View inflatedView;
-    private Button btnLogin;
-    private TextInputLayout inputLogEmail, inputLogPassword;
+    private MaterialButton btnLogin;
+    private TextInputLayout inputLogEmail;
+    private TextInputLayout inputLogPassword;
     private FirebaseAuth firebaseAuth;
     private LoginButton loginButton;
     private CallbackManager callbackManager;
     private ProgressDialog progressDialog;
     private GoogleSignInClient mGoogleSignInClient;
     private GoogleApiClient mGoogleApiClient;
-    private TextView mStatusTextView;
+    private MaterialTextView mStatusTextView;
     private ProgressDialog mProgressDialog;
 
 
@@ -222,15 +222,15 @@ public class LoginFragment extends Fragment {
 
         if (emailValidateResult == 1) {
             isInputValid = false;
-            inputLogEmail.setError("Email must not be empty!");
+            inputLogEmail.setError("Email must not be empty.");
         } else if (emailValidateResult == 2) {
             isInputValid = false;
-            inputLogEmail.setError("Please use a valid email! (Ex: abc@g.cn)");
+            inputLogEmail.setError("Please use a valid email. (Ex: abc@g.cn)");
         }
 
         if (passwordValidateResult == 1) {
             isInputValid = false;
-            inputLogPassword.setError("Password must not be empty!");
+            inputLogPassword.setError("Password must not be empty.");
         }
 
         if (isInputValid) {

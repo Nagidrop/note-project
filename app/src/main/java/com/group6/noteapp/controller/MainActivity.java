@@ -15,6 +15,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.Button;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -217,7 +218,18 @@ public class MainActivity extends AppCompatActivity {
                     }
                 });
 
-        alert.create().show();
+        AlertDialog alertDialog = alert.create();
+        alertDialog.setOnShowListener(new DialogInterface.OnShowListener() {
+            @Override
+            public void onShow(DialogInterface dialog) {
+                Button btnNegative = alertDialog.getButton(AlertDialog.BUTTON_NEGATIVE);
+                btnNegative.setFocusable(true);
+                btnNegative.setFocusableInTouchMode(true);
+                btnNegative.requestFocus();
+            }
+        });
+
+        alertDialog.show();
     }
 
     /**
