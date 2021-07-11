@@ -1,6 +1,7 @@
 package com.group6.noteapp.controller;
 
 import android.os.Bundle;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -66,7 +67,7 @@ public class RegisterFragment03 extends Fragment {
         inflatedView = inflater.inflate(R.layout.fragment_register03, container, false);
 
         TextView txtRegisterSuccess = inflatedView.findViewById(R.id.txtRegisterSuccess);
-        txtRegisterSuccess.setText(getString(R.string.email_sent_reg, regEmail));
+        txtRegisterSuccess.setText(Html.fromHtml(getString(R.string.email_sent_reg, regEmail)));
 
         // Get register button
         MaterialButton btnRegister = inflatedView.findViewById(R.id.btnRegLogin);

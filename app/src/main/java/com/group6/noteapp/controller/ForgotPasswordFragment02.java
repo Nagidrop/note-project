@@ -1,6 +1,7 @@
 package com.group6.noteapp.controller;
 
 import android.os.Bundle;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -67,7 +68,7 @@ public class ForgotPasswordFragment02 extends Fragment {
         inflatedView = inflater.inflate(R.layout.fragment_forgot_password02, container, false);
 
         TextView txtForgotPassword = inflatedView.findViewById(R.id.txtForgotPassword);
-        txtForgotPassword.setText(getString(R.string.email_sent_forgot_pass, email));
+        txtForgotPassword.setText(Html.fromHtml(getString(R.string.email_sent_forgot_pass, email)));
 
         MaterialButton btnForgotLogin = inflatedView.findViewById(R.id.btnForgotLogin);
         btnForgotLogin.setOnClickListener(new View.OnClickListener() {
