@@ -28,9 +28,12 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.group6.noteapp.R;
+import com.group6.noteapp.model.Note;
 import com.group6.noteapp.model.Notebook;
 import com.group6.noteapp.model.User;
 import com.group6.noteapp.util.ValidationUtils;
+
+import org.w3c.dom.Document;
 
 import static android.content.ContentValues.TAG;
 
@@ -186,8 +189,14 @@ public class RegisterFragment02 extends Fragment {
                                                         Notebook defaultNotebook = new Notebook();
                                                         defaultNotebook.setTitle("My First Notebook");
 
-                                                        DocumentReference userDefaultNotebookDoc = userInfoDoc.collection("notebooks").document(userUid);
+                                                        DocumentReference userDefaultNotebookDoc = userInfoDoc.collection("notebooks")
+                                                                .document(defaultNotebook.getTitle());
                                                         userDefaultNotebookDoc.set(defaultNotebook);
+
+                                                        Note defaultNote = new Note();
+                                                        defaultNote.setTitle("");
+
+                                                        Document userDefaultNoteDoc = userDefaultNotebookDoc.collection("notes").document("")
 
                                                         firebaseUser.sendEmailVerification();
 

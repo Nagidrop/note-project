@@ -1,45 +1,32 @@
 package com.group6.noteapp.model;
 
+import com.google.firebase.Timestamp;
+import com.google.firebase.firestore.ServerTimestamp;
+
 import java.io.Serializable;
 
 /* Note Entity */
 public class Note implements Serializable {
 
     /* Entity Properties */
-    private int id;                 // Note's ID
-    private int userId;             // Note's user ID (ID of user who created the note)
     private String title;           // Note's title
     private String content;         // Note's content
     private Boolean isDeleted;      // Is the note in trash?
+    @ServerTimestamp
+    private Timestamp createdDate;
 
     /* Constructors */
     public Note() {
     }
 
-    public Note(int id, int userId, String title, String content, Boolean isDeleted) {
-        this.id = id;
-        this.userId = userId;
+    public Note(String title, String content, Boolean isDeleted, Timestamp createdDate) {
         this.title = title;
         this.content = content;
         this.isDeleted = isDeleted;
+        this.createdDate = createdDate;
     }
 
     /* Getters and Setters */
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public int getUserId() {
-        return userId;
-    }
-
-    public void setUserId(int userId) {
-        this.userId = userId;
-    }
 
     public String getTitle() {
         return title;
@@ -63,5 +50,13 @@ public class Note implements Serializable {
 
     public void setDeleted(Boolean deleted) {
         isDeleted = deleted;
+    }
+
+    public Timestamp getCreatedDate() {
+        return createdDate;
+    }
+
+    public void setCreatedDate(Timestamp createdDate) {
+        this.createdDate = createdDate;
     }
 }

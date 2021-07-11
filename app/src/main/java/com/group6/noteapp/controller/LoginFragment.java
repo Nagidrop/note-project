@@ -189,7 +189,6 @@ public class LoginFragment extends Fragment {
             }
         });
 
-
         // ----------------------------------
         // Login Google
         // ----------------------------------
