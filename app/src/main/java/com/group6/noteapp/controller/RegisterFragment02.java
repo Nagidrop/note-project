@@ -140,7 +140,7 @@ public class RegisterFragment02 extends Fragment {
                     inputRegFullName.setError("Full Name must not be empty.");
                 } else if (validateFullNameResult == 2) {
                     isInputValid = false;
-                    inputRegFullName.setError("Full Name must contain at least 2 words.");
+                    inputRegFullName.setError("Full Name must have at least 2 words.");
                 }
 
                 if (validateAddressResult == 1){
