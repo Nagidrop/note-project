@@ -5,6 +5,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -21,6 +22,8 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.group6.noteapp.R;
 import com.group6.noteapp.model.Note;
+import com.group6.noteapp.view.RecyclerViewClickListener;
+import com.group6.noteapp.view.RecyclerViewTouchListener;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -119,6 +122,19 @@ public class HomeFragment extends Fragment {
                                     noteAdapter = new NoteAdapter(getActivity(), noteList);
                                     rvNote.setAdapter(noteAdapter);
                                     rvNote.setLayoutManager(new LinearLayoutManager(getActivity()));
+
+                                    rvNote.addOnItemTouchListener(new RecyclerViewTouchListener(getActivity(),
+                                            rvNote, new RecyclerViewClickListener() {
+                                        @Override
+                                        public void onClick(View view, int position) {
+                                            Toast.makeText(getActivity(), "lala", Toast.LENGTH_SHORT);
+                                        }
+
+                                        @Override
+                                        public void onLongClick(View view, int position) {
+                                            Toast.makeText(getActivity(), "lala long", Toast.LENGTH_SHORT);
+                                        }
+                                    }));
                                 } else {
                                     Log.d("noteerror", "Error getting documents: ", task.getException());
                                 }

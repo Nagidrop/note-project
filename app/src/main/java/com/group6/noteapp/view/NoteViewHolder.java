@@ -5,8 +5,10 @@ package com.group6.noteapp.view;
 
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.group6.noteapp.R;
@@ -29,6 +31,15 @@ public class NoteViewHolder extends RecyclerView.ViewHolder {
         noteTitle = noteView.findViewById(R.id.txtNoteTitle);
         noteContent = noteView.findViewById(R.id.txtNoteContent);
         noteCreatedDate = noteView.findViewById(R.id.txtNoteCreatedDate);
+
+        CardView cv = noteView.findViewById(R.id.cardView);
+
+        cv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(noteView.getContext(), "lala", Toast.LENGTH_SHORT);
+            }
+        });
     }
 //
 //    @NonNull
