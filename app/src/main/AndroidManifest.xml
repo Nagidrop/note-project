@@ -20,7 +20,8 @@
         android:roundIcon="@mipmap/ic_note_app_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.MyApp">
-        <activity android:name=".controller.RecordActivity"></activity>
+        <activity android:name=".view.AudioListFragment"></activity>
+        <activity android:name=".controller.RecordActivity" />
         <activity android:name=".controller.CameraActivity" />
         <activity android:name=".controller.MainActivity" />
         <activity android:name=".controller.LoginActivity">
