@@ -25,14 +25,4 @@ P
 q
 Aapp/src/main/java/com/group6/noteapp/controller/HomeFragment.java,7\6\76245912de1e89ae20be64d68262cd415ad4a605
 }
-Mapp/src/main/java/com/group6/noteapp/controller/ForgotPasswordFragment02.java,5\3\53ae6f9c783d48329c5b86ed4a8245eab90d5c63
-}
 Mapp/src/main/java/com/group6/noteapp/controller/ForgotPasswordFragment01.java,5\e\5ed305edb32159dc4aa9e2114a3303b08b50aedc
-<
-build.gradle,f\0\f07866736216be0ee2aba49e392191aeae700a35
-@
-app/build.gradle,f\4\f4a01d6a4fcb971362ec00a83903fd3902f52164
-w
-Gapp/src/main/java/com/group6/noteapp/controller/DatePickerFragment.java,4\a\4a18202bb2d03719cc1dd3555811066675d890f6
-P
- app/src/main/AndroidManifest.xml,8\c\8c55c3ccc257e5907959013f99656e4c8ec3903e

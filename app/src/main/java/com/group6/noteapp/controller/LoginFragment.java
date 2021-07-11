@@ -395,7 +395,6 @@ public class LoginFragment extends Fragment {
                                     new OnCompleteListener<DocumentSnapshot>() {
                                         @Override public void onComplete(
                                                 @NonNull @NotNull Task<DocumentSnapshot> task) {
-                                            Log.d(TAG, "on Complete");
                                             if(task.isSuccessful()) {
                                                 DocumentSnapshot document = task.getResult();
                                                 if(!document.exists()){

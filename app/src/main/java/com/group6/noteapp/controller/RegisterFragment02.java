@@ -28,7 +28,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.group6.noteapp.Constants;
+import com.group6.noteapp.util.Constants;
 import com.group6.noteapp.R;
 import com.group6.noteapp.model.Note;
 import com.group6.noteapp.model.Notebook;
