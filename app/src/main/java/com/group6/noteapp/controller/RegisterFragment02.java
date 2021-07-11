@@ -33,8 +33,6 @@ import com.group6.noteapp.model.Notebook;
 import com.group6.noteapp.model.User;
 import com.group6.noteapp.util.ValidationUtils;
 
-import org.w3c.dom.Document;
-
 import static android.content.ContentValues.TAG;
 
 /**
@@ -196,7 +194,7 @@ public class RegisterFragment02 extends Fragment {
                                                         Note defaultNote = new Note();
                                                         defaultNote.setTitle("");
 
-                                                        Document userDefaultNoteDoc = userDefaultNotebookDoc.collection("notes").document("")
+//                                                        Document userDefaultNoteDoc = userDefaultNotebookDoc.collection("notes")
 
                                                         firebaseUser.sendEmailVerification();
 
