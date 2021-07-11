@@ -155,7 +155,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private boolean hasCameraPermission() {
-        return ContextCompat.withPermissions(
+        return ContextCompat.checkSelfPermission(
                 this,
                 Manifest.permission.CAMERA
         ) == PackageManager.PERMISSION_GRANTED;
