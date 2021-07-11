@@ -14,8 +14,6 @@ X
 (gradle/wrapper/gradle-wrapper.properties,f\b\fbe448ebfc3eb2d4e308f6b8b043666f5b57235e
 A
 gradle.properties,2\a\2afbb999f001938c88fa43fc2ef52abf0f8213e4
-p
-@app/src/main/java/com/group6/noteapp/controller/NoteAdapter.java,3\2\329d32f25bd138d898ca8efa434b309bb740d358
 d
 4app/src/main/java/com/group6/noteapp/model/User.java,e\2\e233909562b7eaf5636b22623bcf5e6f049b2bfe
 N
@@ -26,17 +24,11 @@ P
 gradlew.bat,2\a\2a45a911a8f1836b0b6c5b758962572012d8f8c3
 q
 Aapp/src/main/java/com/group6/noteapp/controller/HomeFragment.java,7\6\76245912de1e89ae20be64d68262cd415ad4a605
-r
-Bapp/src/main/java/com/group6/noteapp/controller/LoginActivity.java,a\f\afbcec810a6927b20bfeaa7856ca50663595e781
-r
-Bapp/src/main/java/com/group6/noteapp/controller/LoginFragment.java,8\1\818049e6407837f50523a0e1696f33860302ee46
-w
-Gapp/src/main/java/com/group6/noteapp/controller/RegisterFragment03.java,c\a\ca9322d61060c57f082e9ac1798fd463a1cc7db2
 }
 Mapp/src/main/java/com/group6/noteapp/controller/ForgotPasswordFragment02.java,5\3\53ae6f9c783d48329c5b86ed4a8245eab90d5c63
-w
-Gapp/src/main/java/com/group6/noteapp/controller/RegisterFragment02.java,e\f\ef31fe2e5e07075b434f4f6cec7f76c347abae86
 w
 Gapp/src/main/java/com/group6/noteapp/controller/RegisterFragment01.java,c\a\ca32a263d95c8fd47bf5413e5c179cba70832311
 }
 Mapp/src/main/java/com/group6/noteapp/controller/ForgotPasswordFragment01.java,5\e\5ed305edb32159dc4aa9e2114a3303b08b50aedc
+<
+build.gradle,f\0\f07866736216be0ee2aba49e392191aeae700a35

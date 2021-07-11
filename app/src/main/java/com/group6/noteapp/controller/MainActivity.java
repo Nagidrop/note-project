@@ -16,6 +16,7 @@ import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -34,8 +35,9 @@ import org.jetbrains.annotations.NotNull;
 
 public class MainActivity extends AppCompatActivity {
 
-    private static final String[] CAMERA_PERMISSION = new String[]{Manifest.permission.CAMERA};
     private static final int CAMERA_REQUEST_CODE = 696;
+    private static final int STORAGE_READ_REQUEST_CODE = 697;
+    private static final int STORAGE_WRITE_REQUEST_CODE = 698;
 
 
     private BroadcastReceiver MyReceiver = null;
@@ -121,10 +123,13 @@ public class MainActivity extends AppCompatActivity {
         // -----------------------------
         fabCapture.setOnClickListener(new View.OnClickListener() {
             @Override public void onClick(View v) {
-                if(hasCameraPermission()) {
+                if (checkPermission(Manifest.permission.READ_EXTERNAL_STORAGE,
+                        STORAGE_READ_REQUEST_CODE) &&
+                        checkPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                                STORAGE_WRITE_REQUEST_CODE) &&
+                        checkPermission(Manifest.permission.CAMERA, CAMERA_REQUEST_CODE)){
+                    fabMenuOnClick();
                     enableCamera();
-                }else{
-                    requestPermissions();
                 }
             }
         });
@@ -141,25 +146,26 @@ public class MainActivity extends AppCompatActivity {
 //        }
     }
 
-    private void requestPermissions() {
-        ActivityCompat.requestPermissions(
-                this,
-                CAMERA_PERMISSION,
-                CAMERA_REQUEST_CODE
-        );
-    }
 
     private void enableCamera() {
         Intent intent = new Intent(this, CameraActivity.class);
         startActivity(intent);
     }
 
-    private boolean hasCameraPermission() {
-        return ContextCompat.checkSelfPermission(
-                this,
-                Manifest.permission.CAMERA
-        ) == PackageManager.PERMISSION_GRANTED;
+    // Function to check and request permission.
+    public boolean checkPermission(String permission, int requestCode) {
+        if (ContextCompat.checkSelfPermission(MainActivity.this, permission) ==
+                PackageManager.PERMISSION_GRANTED) {
+            return true;
+        } else {
+            // Requesting the permission
+            ActivityCompat
+                    .requestPermissions(MainActivity.this, new String[]{permission}, requestCode);
+        }
+
+        return false;
     }
+
 
     public boolean isNetworkAvailable() {
         ConnectivityManager connectivityManager =
@@ -201,7 +207,8 @@ public class MainActivity extends AppCompatActivity {
                         firebaseAuth.signOut();
                         LoginManager.getInstance().logOut();
                         Intent intent = new Intent(MainActivity.this, LoginActivity.class);
-                        intent.setFlags(intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
+                        intent.setFlags(
+                                intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                         startActivity(intent);
                     }
                 });
@@ -235,7 +242,7 @@ public class MainActivity extends AppCompatActivity {
     /**
      * handle fabMenu button onclick action
      */
-    public void fabMenuOnClick(){
+    public void fabMenuOnClick() {
         setVisibility(clicked);
         setAnimation(clicked);
         clicked = !clicked;
@@ -243,16 +250,17 @@ public class MainActivity extends AppCompatActivity {
 
     /**
      * Set Animation of floating action button
+     *
      * @param clicked fabMenu click state
      */
     private void setAnimation(boolean clicked) {
-        if(!clicked){
+        if (!clicked) {
             fabMenu.startAnimation(rotateOpen);
             fabNote.startAnimation(fromBottom);
             fabCapture.startAnimation(fromBottom);
             fabRecord.startAnimation(fromBottom);
 
-        }else{
+        } else {
             fabMenu.startAnimation(rotateClose);
             fabNote.startAnimation(toBottom);
             fabCapture.startAnimation(toBottom);
@@ -262,14 +270,15 @@ public class MainActivity extends AppCompatActivity {
 
     /**
      * Set visibility of fabRecord, fabNote, fabCapture
+     *
      * @param clicked
      */
-    private void setVisibility(boolean clicked){
-        if(!clicked){
+    private void setVisibility(boolean clicked) {
+        if (!clicked) {
             fabNote.setVisibility(View.VISIBLE);
             fabRecord.setVisibility(View.VISIBLE);
             fabCapture.setVisibility(View.VISIBLE);
-        }else{
+        } else {
             fabNote.setVisibility(View.INVISIBLE);
             fabRecord.setVisibility(View.INVISIBLE);
             fabCapture.setVisibility(View.INVISIBLE);
