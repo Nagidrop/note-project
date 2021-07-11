@@ -36,12 +36,9 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     public boolean isNetworkAvailable() {
-
         ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
 
         if (connectivityManager != null) {
-
-
             if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                 NetworkCapabilities capabilities = connectivityManager.getNetworkCapabilities(connectivityManager.getActiveNetwork());
                 if (capabilities != null) {

@@ -39,7 +39,7 @@ import static android.content.ContentValues.TAG;
  */
 public class RegisterFragment02 extends Fragment {
 
-    View inflatedView;
+    private View inflatedView;
     private FirebaseAuth mAu;
 
     // TODO: Rename parameter arguments, choose names that match
@@ -133,6 +133,7 @@ public class RegisterFragment02 extends Fragment {
 
                 boolean isInputValid = true;
                 int validateFullNameResult = ValidationUtils.validateFullName(regFullname);
+                int validateAddressResult = ValidationUtils.validateAddress(regAddress);
 
                 if (validateFullNameResult == 1) {
                     isInputValid = false;
@@ -140,6 +141,11 @@ public class RegisterFragment02 extends Fragment {
                 } else if (validateFullNameResult == 2) {
                     isInputValid = false;
                     inputRegFullName.setError("Full Name must have at least 2 words!");
+                }
+
+                if (validateAddressResult == 1){
+                    isInputValid = false;
+                    inputRegAddress.setError("Please use a valid address! (Ex: 3/2 Str.)");
                 }
 
                 if (isInputValid) {

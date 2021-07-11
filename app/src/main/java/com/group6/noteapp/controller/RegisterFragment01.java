@@ -22,8 +22,8 @@ import com.group6.noteapp.util.ValidationUtils;
  */
 public class RegisterFragment01 extends Fragment {
 
-    View inflatedView;
-    ProgressDialog progressDialog;
+    private View inflatedView;
+    private ProgressDialog progressDialog;
     private FirebaseAuth mAuth;
 
     // TODO: Rename parameter arguments, choose names that match

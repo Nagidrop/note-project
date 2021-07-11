@@ -53,7 +53,7 @@ public class LoginFragment extends Fragment {
     private static final int RC_SIGN_IN = 696969;
     private static final String TAG = "LoginFragment"; // Tag for logging
 
-    View inflatedView;
+    private View inflatedView;
     private Button btnLogin;
     private TextInputLayout inputLogEmail, inputLogPassword;
     private FirebaseAuth firebaseAuth;
@@ -153,6 +153,7 @@ public class LoginFragment extends Fragment {
         //get TextInputlayout
         inputLogEmail = inflatedView.findViewById(R.id.txtInputLoginEmail);
         inputLogPassword = inflatedView.findViewById(R.id.txtInputLoginPassword);
+
         //Get login button
         btnLogin = inflatedView.findViewById(R.id.btnLogin);
         btnLogin.setOnClickListener(new View.OnClickListener() {
@@ -163,7 +164,6 @@ public class LoginFragment extends Fragment {
         });
 
         progressDialog = new ProgressDialog(getActivity());
-
         callbackManager = CallbackManager.Factory.create();
 
         loginButton = (LoginButton) inflatedView.findViewById(R.id.login_button);
@@ -280,6 +280,7 @@ public class LoginFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
+
         // Check if user is signed in (non-null) and update UI accordingly.
         FirebaseUser currentUser = firebaseAuth.getCurrentUser();
         if (currentUser != null && currentUser.isEmailVerified()) {
@@ -291,7 +292,6 @@ public class LoginFragment extends Fragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
 
         // Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
         if (requestCode == RC_SIGN_IN) {
