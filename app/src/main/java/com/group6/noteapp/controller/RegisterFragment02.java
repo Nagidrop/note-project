@@ -25,8 +25,10 @@ import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.group6.noteapp.R;
+import com.group6.noteapp.model.Notebook;
 import com.group6.noteapp.model.User;
 import com.group6.noteapp.util.ValidationUtils;
 
@@ -173,13 +175,20 @@ public class RegisterFragment02 extends Fragment {
                                         newUser.setBirthdate(regBirthdate);
                                         newUser.setAddress(regAddress);
 
-                                        db.collection("users")
-                                                .document(userUid)
-                                                .set(newUser)
+                                        DocumentReference userInfoDoc = db.collection("users").document(userUid);
+
+                                        userInfoDoc.set(newUser)
                                                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                                                     @Override
                                                     public void onSuccess(Void aVoid) {
                                                         Log.d(TAG, "DocumentSnapshot written with ID: " + userUid);
+
+                                                        Notebook defaultNotebook = new Notebook();
+                                                        defaultNotebook.setTitle("My First Notebook");
+
+                                                        DocumentReference userDefaultNotebookDoc = userInfoDoc.collection("notebooks").document(userUid);
+                                                        userDefaultNotebookDoc.set(defaultNotebook);
+
                                                         firebaseUser.sendEmailVerification();
 
                                                         Bundle regData = new Bundle();
