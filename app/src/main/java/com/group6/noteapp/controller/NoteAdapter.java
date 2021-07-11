@@ -72,16 +72,6 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteViewHolder> {
     }
 
     /**
-     * Get note's ID from its position in note list
-     *
-     * @param position position of note in note list
-     * @return the note's ID
-     */
-    public int getNoteId(int position) {
-        return notes.get(position).getId();
-    }
-
-    /**
      * Return note list which the adapter uses
      *
      * @return list of notes
