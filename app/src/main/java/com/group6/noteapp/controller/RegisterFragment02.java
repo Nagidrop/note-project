@@ -25,8 +25,13 @@ import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.group6.noteapp.util.Constants;
 import com.group6.noteapp.R;
+import com.group6.noteapp.model.Note;
+import com.group6.noteapp.model.Notebook;
 import com.group6.noteapp.model.User;
 import com.group6.noteapp.util.ValidationUtils;
 
@@ -143,7 +148,7 @@ public class RegisterFragment02 extends Fragment {
                     inputRegFullName.setError("Full Name must have at least 2 words.");
                 }
 
-                if (validateAddressResult == 1){
+                if (validateAddressResult == 1) {
                     isInputValid = false;
                     inputRegAddress.setError("Please use a valid address. (Ex: 3/2 Str.)");
                 }
@@ -173,13 +178,40 @@ public class RegisterFragment02 extends Fragment {
                                         newUser.setBirthdate(regBirthdate);
                                         newUser.setAddress(regAddress);
 
-                                        db.collection("users")
-                                                .document(userUid)
-                                                .set(newUser)
+                                        DocumentReference userInfoDoc = db.collection("users").document(userUid);
+
+                                        userInfoDoc.set(newUser)
                                                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                                                     @Override
                                                     public void onSuccess(Void aVoid) {
                                                         Log.d(TAG, "DocumentSnapshot written with ID: " + userUid);
+
+                                                        Notebook defaultNotebook = new Notebook();
+                                                        defaultNotebook.setTitle(Constants.FIRST_NOTEBOOK_NAME);
+
+                                                        DocumentReference userDefNotebookDoc = userInfoDoc.collection("notebooks")
+                                                                .document(defaultNotebook.getTitle());
+                                                        userDefNotebookDoc.set(defaultNotebook);
+
+                                                        Note welcomeNote = new Note();
+                                                        welcomeNote.setTitle(Constants.WELCOME_NOTE_TITLE);
+                                                        welcomeNote.setContent(Constants.WELCOME_NOTE_CONTENT);
+
+                                                        Note welcomeNote2 = new Note();
+                                                        welcomeNote2.setTitle("Test note - delete at release");
+                                                        welcomeNote2.setContent("I don't know what you did, Fry, but once again, you screwed up! Now all the planets are gonna start cracking wise about our mamas. When will that be? Uh, is the puppy mechanical in any way? She also liked to shut up!\n" +
+                                                                "\n" +
+                                                                "Who am I making this out to? Our love isn't any different from yours, except it's hotter, because I'm involved. Okay, it's 500 dollars, you have no choice of carrier, the battery can't hold the charge and the reception isn't very…");
+
+                                                        Note welcomeNote3 = new Note();
+                                                        welcomeNote3.setTitle("Test note but intentionally exceeds longer than two lines title - delete at release");
+                                                        welcomeNote3.setContent("When I was first asked to make a film about my nephew, Hubert Farnsworth, I thought \"Why should I?\" Then later, Leela made the film. But if I did make it, you can bet there would have been more topless women on motorcycles. Roll film! You are the last hope of the universe.");
+
+                                                        CollectionReference userDefNoteCollection = userDefNotebookDoc.collection("notes");
+                                                        userDefNoteCollection.add(welcomeNote);
+                                                        userDefNoteCollection.add(welcomeNote2);
+                                                        userDefNoteCollection.add(welcomeNote3);
+
                                                         firebaseUser.sendEmailVerification();
 
                                                         Bundle regData = new Bundle();

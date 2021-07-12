@@ -12,12 +12,14 @@ import com.group6.noteapp.R;
 import com.group6.noteapp.model.Note;
 import com.group6.noteapp.view.NoteViewHolder;
 
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.List;
 
 public class NoteAdapter extends RecyclerView.Adapter<NoteViewHolder> {
 
     private Context context; // activity context
-    private List<Note> notes; // list of notes
+    private ArrayList<Note> notes; // list of notes
 
     /**
      * Constructor
@@ -25,7 +27,7 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteViewHolder> {
      * @param context activity context
      * @param notes   list of notes
      */
-    public NoteAdapter(Context context, List<Note> notes) {
+    public NoteAdapter(Context context, ArrayList<Note> notes) {
         this.context = context;
         this.notes = notes;
     }
@@ -56,9 +58,15 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteViewHolder> {
     @Override
     public void onBindViewHolder(@NonNull NoteViewHolder holder,
                                  int position) {
-        Note note = notes.get(position);                // get note from position
-        holder.getTxtTitle().setText(note.getTitle());       // set note title
-        holder.getTxtContent().setText(note.getContent());   // set note content
+        Note note = notes.get(position);                            // get note from position
+        holder.getNoteTitle().setText(note.getTitle());             // set note title
+        holder.getNoteContent().setText(note.getContent());         // set note content
+
+        SimpleDateFormat dateFormat = new SimpleDateFormat("E, dd MMM yyyy h:mm aa");
+
+        String createdDate = dateFormat.format(note.getCreatedDate().toDate());
+        createdDate.replace("am", "AM").replace("pm","PM");
+        holder.getNoteCreatedDate().setText(createdDate); // set note created date
     }
 
     /**
@@ -68,17 +76,7 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteViewHolder> {
      */
     @Override
     public int getItemCount() {
-        return notes.size();
-    }
-
-    /**
-     * Get note's ID from its position in note list
-     *
-     * @param position position of note in note list
-     * @return the note's ID
-     */
-    public int getNoteId(int position) {
-        return notes.get(position).getId();
+        return notes == null ? 0 : notes.size();
     }
 
     /**

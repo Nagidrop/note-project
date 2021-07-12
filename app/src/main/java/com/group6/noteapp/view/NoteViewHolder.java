@@ -5,8 +5,10 @@ package com.group6.noteapp.view;
 
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.group6.noteapp.R;
@@ -15,8 +17,9 @@ import com.group6.noteapp.R;
  * Class represents each Recycler View's item in note list
  */
 public class NoteViewHolder extends RecyclerView.ViewHolder {
-    private final TextView txtTitle;      // note title
-    private final TextView txtContent;    // note content
+    private final TextView noteTitle;            // note title
+    private final TextView noteContent;          // note content
+    private final TextView noteCreatedDate;      // note created date
 
     /**
      * Constructor
@@ -25,8 +28,18 @@ public class NoteViewHolder extends RecyclerView.ViewHolder {
      */
     public NoteViewHolder(@NonNull View noteView) {
         super(noteView);
-        txtTitle = noteView.findViewById(R.id.txtNoteTitle);
-        txtContent = noteView.findViewById(R.id.txtNoteContent);
+        noteTitle = noteView.findViewById(R.id.txtNoteTitle);
+        noteContent = noteView.findViewById(R.id.txtNoteContent);
+        noteCreatedDate = noteView.findViewById(R.id.txtNoteCreatedDate);
+
+        CardView cv = noteView.findViewById(R.id.cardView);
+
+        cv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(noteView.getContext(), "lala", Toast.LENGTH_SHORT);
+            }
+        });
     }
 //
 //    @NonNull
@@ -37,11 +50,15 @@ public class NoteViewHolder extends RecyclerView.ViewHolder {
 //    }
 
     /* Getters */
-    public TextView getTxtTitle() {
-        return txtTitle;
+    public TextView getNoteTitle() {
+        return noteTitle;
     }
 
-    public TextView getTxtContent() {
-        return txtContent;
+    public TextView getNoteContent() {
+        return noteContent;
+    }
+
+    public TextView getNoteCreatedDate() {
+        return noteCreatedDate;
     }
 }

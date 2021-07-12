@@ -16,7 +16,6 @@ import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -305,6 +304,56 @@ public class MainActivity extends AppCompatActivity {
             fabRecord.setVisibility(View.INVISIBLE);
             fabCapture.setVisibility(View.INVISIBLE);
         }
+    }
+
+    @Override
+    public void onBackPressed(){
+        AlertDialog.Builder alert = new AlertDialog.Builder(this);
+        alert.setTitle("Exit Confirmation");                            // set dialog title
+        alert.setMessage("Are you sure you want to exit Note App?");    // set dialog message
+
+        alert.setPositiveButton("Yes",
+                new DialogInterface.OnClickListener() {
+                    /**
+                     * To register activity
+                     * @param dialog dialog
+                     * @param which which
+                     */
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        firebaseAuth.signOut();
+                        LoginManager.getInstance().logOut();
+                        Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+                        intent.setFlags(
+                                intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                        startActivity(intent);
+                    }
+                });
+        alert.setNegativeButton("No",
+                new DialogInterface.OnClickListener() {
+                    /**
+                     * To register activity
+                     * @param dialog dialog
+                     * @param which which
+                     */
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+
+        AlertDialog alertDialog = alert.create();
+        alertDialog.setOnShowListener(new DialogInterface.OnShowListener() {
+            @Override
+            public void onShow(DialogInterface dialog) {
+                Button btnNegative = alertDialog.getButton(AlertDialog.BUTTON_NEGATIVE);
+                btnNegative.setFocusable(true);
+                btnNegative.setFocusableInTouchMode(true);
+                btnNegative.requestFocus();
+            }
+        });
+
+        alertDialog.show();
     }
 
 }
