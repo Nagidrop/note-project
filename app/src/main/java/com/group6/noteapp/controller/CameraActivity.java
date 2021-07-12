@@ -13,6 +13,7 @@ import androidx.camera.view.PreviewView;
 import androidx.core.content.ContextCompat;
 import androidx.lifecycle.LifecycleOwner;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
@@ -50,6 +51,7 @@ public class CameraActivity extends AppCompatActivity {
         setContentView(R.layout.activity_camera);
         mAuth = FirebaseAuth.getInstance();
         user = mAuth.getCurrentUser();
+
         previewView = (PreviewView) findViewById(R.id.cameraPreview);
         fabTakeImage = findViewById(R.id.fabTakeImage);
         cameraProviderFuture = ProcessCameraProvider.getInstance(this);
@@ -113,6 +115,10 @@ public class CameraActivity extends AppCompatActivity {
                         runOnUiThread(new Runnable() {
                             public void run() {
                                 Toast.makeText(CameraActivity.this, "Image Saved!!", Toast.LENGTH_SHORT).show();
+
+                                Intent intent = new Intent(CameraActivity.this, ViewCaptureImageActivity.class);
+                                intent.putExtra("path", file.getAbsolutePath());
+                                startActivity(intent);
                             }
                         });
                     }

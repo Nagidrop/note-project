@@ -10,6 +10,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkCapabilities;
 import android.os.Build;
 import android.os.Bundle;
+import android.text.Html;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.Animation;
@@ -25,7 +26,9 @@ import com.facebook.login.LoginManager;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
+import com.google.android.material.textview.MaterialTextView;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.group6.noteapp.R;
 import com.group6.noteapp.view.NoteAppDialog;
 
@@ -33,13 +36,18 @@ import org.jetbrains.annotations.NotNull;
 
 public class MainActivity extends AppCompatActivity {
 
-    private static final int CAMERA_REQUEST_CODE = 696;
-    private static final int STORAGE_READ_REQUEST_CODE = 697;
-    private static final int STORAGE_WRITE_REQUEST_CODE = 698;
+    private static final int REQUEST_CODE = 696;
+    private final String[] PERMISSIONS = {
+            Manifest.permission.WRITE_EXTERNAL_STORAGE,
+            Manifest.permission.RECORD_AUDIO,
+            Manifest.permission.CAMERA,
+            Manifest.permission.READ_EXTERNAL_STORAGE
+    };
 
 
     private BroadcastReceiver MyReceiver = null;
     private FirebaseAuth firebaseAuth;
+    private FirebaseUser user;
     private MenuItem previousItem;
     private Animation rotateClose;
     private Animation rotateOpen;
@@ -51,10 +59,12 @@ public class MainActivity extends AppCompatActivity {
     private FloatingActionButton fabCapture;
     private boolean clicked; // fabMenu clicked state
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         firebaseAuth = FirebaseAuth.getInstance();
+        user = firebaseAuth.getCurrentUser();
         setContentView(R.layout.activity_main);
 
         // -----------------------------
@@ -82,6 +92,11 @@ public class MainActivity extends AppCompatActivity {
         MaterialToolbar topAppBar = findViewById(R.id.topAppBar);
         DrawerLayout drawerLayout = findViewById(R.id.drawerLayout);
         NavigationView navigationView = findViewById(R.id.navigationView);
+        View navHeader = navigationView.getHeaderView(0);
+        MaterialTextView txtNavFullname = navHeader.findViewById(R.id.txtNavFullname);
+        MaterialTextView txtNavEmail = navHeader.findViewById(R.id.txtNavEmail);
+        txtNavFullname.setText(Html.fromHtml(getString(R.string.header_title, user.getDisplayName())));
+        txtNavEmail.setText(Html.fromHtml(getString(R.string.header_text, user.getEmail())));
 
         // Set navigation icon click event to show navigation drawer
         topAppBar.setNavigationOnClickListener(new View.OnClickListener() {
@@ -121,13 +136,26 @@ public class MainActivity extends AppCompatActivity {
         // -----------------------------
         fabCapture.setOnClickListener(new View.OnClickListener() {
             @Override public void onClick(View v) {
-                if (checkPermission(Manifest.permission.READ_EXTERNAL_STORAGE,
-                        STORAGE_READ_REQUEST_CODE) &&
-                        checkPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                                STORAGE_WRITE_REQUEST_CODE) &&
-                        checkPermission(Manifest.permission.CAMERA, CAMERA_REQUEST_CODE)){
+                if (hasPermissions(MainActivity.this, PERMISSIONS)) {
                     fabMenuOnClick();
                     enableCamera();
+                } else {
+                    ActivityCompat.requestPermissions(MainActivity.this, PERMISSIONS, REQUEST_CODE);
+                }
+            }
+        });
+
+        // -----------------------------
+        // Recording
+        // -----------------------------
+        fabRecord.setOnClickListener(new View.OnClickListener() {
+            @Override public void onClick(View v) {
+                if (hasPermissions(MainActivity.this, PERMISSIONS)
+                ) {
+                    fabMenuOnClick();
+                    enableRecord();
+                } else {
+                    ActivityCompat.requestPermissions(MainActivity.this, PERMISSIONS, REQUEST_CODE);
                 }
             }
         });
@@ -150,18 +178,29 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    // Function to check and request permission.
-    public boolean checkPermission(String permission, int requestCode) {
-        if (ContextCompat.checkSelfPermission(MainActivity.this, permission) ==
-                PackageManager.PERMISSION_GRANTED) {
-            return true;
-        } else {
-            // Requesting the permission
-            ActivityCompat
-                    .requestPermissions(MainActivity.this, new String[]{permission}, requestCode);
-        }
+    private void enableRecord() {
+        Intent intent = new Intent(this, RecordActivity.class);
+        startActivity(intent);
 
-        return false;
+    }
+
+    /**
+     * Function check request permissions
+     *
+     * @param context     application context
+     * @param permissions array of permission
+     * @return allow state of permission
+     */
+    public static boolean hasPermissions(Context context, String... permissions) {
+        if (context != null && permissions != null) {
+            for (String permission : permissions) {
+                if (ActivityCompat.checkSelfPermission(context, permission) !=
+                        PackageManager.PERMISSION_GRANTED) {
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 
 
@@ -255,7 +294,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
-    public void onBackPressed(){
+    public void onBackPressed() {
         NoteAppDialog dialog = new NoteAppDialog(this);
         dialog.setupConfirmationDialog("Exit Confirmation",
                 "Are you sure you want to exit Note App?");
@@ -275,7 +314,7 @@ public class MainActivity extends AppCompatActivity {
         dialog.create().show();
     }
 
-    private void logOut(){
+    private void logOut() {
         firebaseAuth.signOut();
         LoginManager.getInstance().logOut();
         Intent intent = new Intent(MainActivity.this, LoginActivity.class);

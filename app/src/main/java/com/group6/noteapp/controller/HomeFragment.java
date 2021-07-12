@@ -106,6 +106,7 @@ public class HomeFragment extends Fragment {
                         noteDocRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                             @Override
                             public void onComplete(@NonNull @NotNull Task<QuerySnapshot> task) {
+                                Log.d("noteerror", "Error getting documents: ");
                                 if (task.isSuccessful()) {
                                     noteList = new ArrayList<>();
                                     for (DocumentSnapshot document : task.getResult().getDocuments()) {
