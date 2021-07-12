@@ -290,8 +290,9 @@ public class LoginFragment extends Fragment {
                     .addOnFailureListener(new OnFailureListener() {
                         @Override
                         public void onFailure(@NonNull @NotNull Exception e) {
-                            Toast.makeText(getActivity(), "Email or Password is incorrect.",
-                                    Toast.LENGTH_SHORT).show();
+                            inputLogEmail.setError(" ");
+                            inputLogPassword.setError("Your email or password is incorrect.");
+
                             progressDialog.dismiss();
                         }
                     });
