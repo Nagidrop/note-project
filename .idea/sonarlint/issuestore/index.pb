@@ -14,8 +14,6 @@ X
 (gradle/wrapper/gradle-wrapper.properties,f\b\fbe448ebfc3eb2d4e308f6b8b043666f5b57235e
 A
 gradle.properties,2\a\2afbb999f001938c88fa43fc2ef52abf0f8213e4
-d
-4app/src/main/java/com/group6/noteapp/model/User.java,e\2\e233909562b7eaf5636b22623bcf5e6f049b2bfe
 N
 app/debug/output-metadata.json,6\d\6d0d047f57b3ed56db47b6d89a6ec6080e4cb494
 P
@@ -24,5 +22,25 @@ P
 gradlew.bat,2\a\2a45a911a8f1836b0b6c5b758962572012d8f8c3
 q
 Aapp/src/main/java/com/group6/noteapp/controller/HomeFragment.java,7\6\76245912de1e89ae20be64d68262cd415ad4a605
-}
-Mapp/src/main/java/com/group6/noteapp/controller/ForgotPasswordFragment01.java,5\e\5ed305edb32159dc4aa9e2114a3303b08b50aedc
+<
+build.gradle,f\0\f07866736216be0ee2aba49e392191aeae700a35
+p
+@app/src/main/java/com/group6/noteapp/controller/NoteAdapter.java,3\2\329d32f25bd138d898ca8efa434b309bb740d358
+P
+ app/src/main/AndroidManifest.xml,8\c\8c55c3ccc257e5907959013f99656e4c8ec3903e
+@
+app/build.gradle,f\4\f4a01d6a4fcb971362ec00a83903fd3902f52164
+h
+8app/src/main/java/com/group6/noteapp/util/Constants.java,0\f\0f86b6ad95080641c1f2cadf1f6bf01d49d1c3f1
+r
+Bapp/src/main/java/com/group6/noteapp/controller/LoginActivity.java,a\f\afbcec810a6927b20bfeaa7856ca50663595e781
+w
+Gapp/src/main/java/com/group6/noteapp/controller/RegisterFragment03.java,c\a\ca9322d61060c57f082e9ac1798fd463a1cc7db2
+s
+Capp/src/main/java/com/group6/noteapp/controller/CameraActivity.java,6\3\638e68466573718ebe8db06559a40577842b3487
+g
+7app/src/main/java/com/group6/noteapp/model/Account.java,2\f\2fb6af04f23fbceb2c26cf323887878e58456f85
+h
+8app/src/main/java/com/group6/noteapp/model/Notebook.java,d\2\d27f68a306a13c4c646224d913f651414bacaf70
+w
+Gapp/src/main/java/com/group6/noteapp/controller/RegisterFragment02.java,e\f\ef31fe2e5e07075b434f4f6cec7f76c347abae86
