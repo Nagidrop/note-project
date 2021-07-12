@@ -13,8 +13,9 @@ public class NoteAppProgressDialog extends ProgressDialog {
     }
 
     public void setUpDialog(String title, String message){
-        this.setTitle("Just a moment...");
-        this.setMessage("Please wait while we connect you to Note App.");
+        this.setTitle(title);
+        this.setMessage(message);
+        this.setCancelable(false);
         this.setCanceledOnTouchOutside(false);
     }
 }
