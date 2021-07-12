@@ -1,6 +1,7 @@
 package com.group6.noteapp.controller;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
@@ -13,9 +14,11 @@ import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Environment;
+import android.os.Handler;
 import android.os.SystemClock;
 import android.provider.MediaStore;
 import android.text.TextUtils;
@@ -25,6 +28,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Chronometer;
 import android.widget.EditText;
+import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -52,105 +56,123 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.io.IOException;
+import java.sql.Time;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
+import java.util.Timer;
+import java.util.TimerTask;
+import java.util.concurrent.TimeUnit;
 
-public class RecordActivity extends AppCompatActivity {
+public class RecordActivity extends AppCompatActivity implements View.OnClickListener {
     private  String fileName = null;
 
     private  final String LOG_TAG = "Record_log";
     private MediaRecorder recorder ;
     private MediaPlayer player = null;
     private TextView textTimeRecord;
-    private Button btnRecording, btnPlaying,btnSaveRecord;
+    private Button btnRecording, btnPlaying,btnSaveRecord, btnStop,btnReset;
     private StorageReference storageReference;
     private ProgressDialog progressDialog;
     private TextInputLayout recordName;
     private FirebaseAuth firebaseAuth;
-    private long timeLeft=6000;
+    private SeekBar seekBar;
+    private Handler threadHandler = new Handler();
 
     private FirebaseStorage storage;
     private FirebaseUser user;
     private FirebaseFirestore db;
 
+
+    private Chronometer timer;
+
+
     //Get current date and time
     SimpleDateFormat formatter = new SimpleDateFormat("yyyy_MM_dd_hh_mm_ss", Locale.getDefault());
     Date now = new Date();
-
-    private Chronometer timer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_record);
-        btnRecording=(Button) findViewById(R.id.btnRecording);
-        timer = findViewById(R.id.record_timer);
-        btnPlaying=(Button)findViewById(R.id.btnPlay);
-        textTimeRecord=(TextView)findViewById(R.id.textTimeRecord);
-        btnSaveRecord=(Button) findViewById(R.id.btnSaveRecord);
-        recordName=findViewById(R.id.textInputRecordName);
 
+        timer = findViewById(R.id.record_timer);
+
+        recordName=findViewById(R.id.textInputRecordName);
+        textTimeRecord=findViewById(R.id.textTimeRecord);
         progressDialog = new ProgressDialog(this);
+        seekBar=findViewById(R.id.seekBar);
+
+
         storageReference= FirebaseStorage.getInstance().getReference();
         db = FirebaseFirestore.getInstance();
         firebaseAuth=FirebaseAuth.getInstance();
         user = firebaseAuth.getCurrentUser();
 
         fileName = getExternalCacheDir().getAbsolutePath();
+
+        btnPlaying=(Button)findViewById(R.id.btnPlay);
+        btnSaveRecord=(Button)findViewById(R.id.btnSaveRecord);
+        btnRecording=(Button)findViewById(R.id.btnRecording);
+        btnReset=(Button)findViewById(R.id.btnReset);
+        btnStop=(Button)findViewById(R.id.btnStop);
+
+        btnPlaying.setOnClickListener(this);
+        btnSaveRecord.setOnClickListener(this);
+        btnStop.setOnClickListener(this);
+        btnReset.setOnClickListener(this);
+        btnRecording.setOnClickListener(this);
+
+        staticButtonDefault();
+
+    }
+
+    public boolean staticButtonDefault() {
         btnPlaying.setEnabled(false);
         btnSaveRecord.setEnabled(false);
+        btnStop.setEnabled(false);
+        btnReset.setEnabled(false);
+        btnRecording.setEnabled(true);
         recordName.setEnabled(false);
-
-        try{
-            btnRecording.setOnTouchListener(new View.OnTouchListener() {
-                @Override
-                public boolean onTouch(View v, MotionEvent event) {
-                    if(event.getAction()==MotionEvent.ACTION_DOWN){
-
-                        startRecording();
-                        btnRecording.setText("Stop");
-
-                    }else if(event.getAction()==MotionEvent.ACTION_UP){
-                        stopRecording();
-                        btnRecording.setText("Record");
-                    }
-                    return false;
+        seekBar.setEnabled(false);
+        btnPlaying.setText("Play");
+    return false;
+    }
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()){
+            case R.id.btnPlay:
+                if(btnPlaying.getText().equals("Play")){
+                    btnPlaying.setText("Stop");
+                    startPlaying();
+                }else if(btnPlaying.getText().equals("Stop")){
+                    btnPlaying.setText("Play");
+                    stopPlaying();
                 }
-            });
-        }catch(Exception e) {
-           e.printStackTrace();
-        }
-
-        try {
-            btnPlaying.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                        btnPlaying.setText("Stop");
-                        startPlaying();
-//                        if(btnPlaying.getText().equals("Stop")){
-//                            stopPlaying();
-//                            btnPlaying.setText("Play");
-//                        }
-                }
-            });
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-
-        try {
-
-            btnSaveRecord.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
+                break;
+            case R.id.btnSaveRecord:
                     uploadAudio(Uri.fromFile(new File(fileName)));
-                }
-            });
-        }catch (Exception e){
-            e.printStackTrace();
+                break;
+            case R.id.btnStop:
+                    stopRecording();
+                    btnReset.setEnabled(true);
+                    recordName.setEnabled(true);
+                    btnPlaying.setEnabled(true);
+                    btnSaveRecord.setEnabled(true);
+                    btnRecording.setEnabled(false);
+                    btnStop.setEnabled(false);
+                break;
+            case R.id.btnReset:
+                staticButtonDefault();
+                resetAll();
+                break;
+            case R.id.btnRecording:
+                startRecording();
+                btnStop.setEnabled(true);
+                btnRecording.setEnabled(false);
+                break;
         }
-
-
     }
     private void startRecording() {
         //Start timer from 0
@@ -175,8 +197,6 @@ public class RecordActivity extends AppCompatActivity {
 
         //Start Recording
         recorder.start();
-        btnSaveRecord.setEnabled(true);
-        recordName.setEnabled(false);
     }
 
 
@@ -186,10 +206,12 @@ public class RecordActivity extends AppCompatActivity {
 
         //Stop media recorder and set it to null for further use to record new audio
         recorder.stop();
+        recorder.reset();
         recorder.release();
         recorder = null;
-        btnPlaying.setEnabled(true);
+
     }
+
 
     private void uploadAudio(Uri uri) {
         progressDialog.setMessage("Uploading Record ...");
@@ -215,6 +237,7 @@ public class RecordActivity extends AppCompatActivity {
                             @Override public void onComplete(
                                     @NonNull @NotNull Task<DocumentSnapshot> task) {
                                 if(task.isSuccessful()) {
+                                    progressDialog.dismiss();
                                     DocumentSnapshot document = task.getResult();
                                     Log.e(LOG_TAG, "get failed with ", task.getException());
                                     if(document.exists()){
@@ -230,7 +253,7 @@ public class RecordActivity extends AppCompatActivity {
                                             recordName.setError("Please enter Record Name!");
 
                                         }else{
-                                            progressDialog.dismiss();
+
                                             Note recordNote = new Note();
                                             recordNote.setTitle(name);
                                             recordNote.setContent(uri.getLastPathSegment());
@@ -258,41 +281,65 @@ public class RecordActivity extends AppCompatActivity {
 
 
     }
+    @RequiresApi(api = Build.VERSION_CODES.N)
     private void startPlaying() {
-        timer.setBase(SystemClock.elapsedRealtime());
-        timer.start();
+
         player = new MediaPlayer();
         try {
+
             player.setDataSource(fileName);
             player.prepare();
+            // The duration in milliseconds
+            int duration = player.getDuration();
+
+            int currentPosition = player.getCurrentPosition();
+            if(currentPosition== 0)  {
+                seekBar.setMax(duration);
+                String maxTimeString = millisecondsToString(duration);
+                timer.setText(maxTimeString);
+            } else if(currentPosition== duration)  {
+                // Resets the MediaPlayer to its uninitialized state.
+                player.reset();
+            }
             player.start();
-            textTimeRecord.setText(String.valueOf(player.getDuration()));
+            // Create a thread to update position of SeekBar.
+            UpdateSeekBarThread updateSeekBarThread= new UpdateSeekBarThread();
+            threadHandler.postDelayed(updateSeekBarThread,50);
         } catch (IOException e) {
             Log.e(LOG_TAG, "prepare() failed");
         }
+
+    }
+    private String millisecondsToString(int milliseconds)  {
+        long minutes = TimeUnit.MILLISECONDS.toMinutes((long) milliseconds);
+        long seconds =  TimeUnit.MILLISECONDS.toSeconds((long) milliseconds) ;
+        return minutes + ":"+ seconds;
     }
     private void stopPlaying() {
         //Stop Timer, very obvious
         timer.stop();
-        player.stop();
-        player.release();
-        player = null;
-    }
+        if(player.isPlaying()){
+            player.stop();
 
-    @Override
-    public void onStop() {
-        super.onStop();
-        if (recorder != null) {
-            recorder.release();
-            recorder = null;
         }
 
-        if (player != null) {
-            player.release();
-            player = null;
+    }
+
+    // Thread to Update position for SeekBar.
+    class UpdateSeekBarThread implements Runnable {
+
+        public void run()  {
+            int currentPosition = player.getCurrentPosition();
+            String currentPositionStr = millisecondsToString(currentPosition);
+            textTimeRecord.setText(currentPositionStr);
+            seekBar.setProgress(currentPosition);
+            // Delay thread 50 milisecond.
+            threadHandler.postDelayed(this, 50);
         }
     }
-    public void getTimeRecord(){
+    private void resetAll(){
 
     }
+
+
 }
