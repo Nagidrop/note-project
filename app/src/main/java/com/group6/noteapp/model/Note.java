@@ -12,11 +12,10 @@ import java.io.Serializable;
 public class Note implements Serializable {
 
     /* Entity Properties */
-    @Exclude
     private String id;              // Note's doc ID
     private String title;           // Note's title
     private String content;         // Note's content
-    private Boolean isDeleted;      // Is the note in trash?
+    private boolean isDeleted;      // Is the note in trash?
     @ServerTimestamp
     private Timestamp createdDate;
 
@@ -24,7 +23,7 @@ public class Note implements Serializable {
     public Note() {
     }
 
-    public Note(String id, String title, String content, Boolean isDeleted, Timestamp createdDate) {
+    public Note(String id, String title, String content, boolean isDeleted, Timestamp createdDate) {
         this.id = id;
         this.title = title;
         this.content = content;
@@ -34,6 +33,7 @@ public class Note implements Serializable {
 
     /* Getters and Setters */
 
+    @Exclude
     public String getId() {
         return id;
     }
@@ -58,11 +58,11 @@ public class Note implements Serializable {
         this.content = content;
     }
 
-    public Boolean getDeleted() {
+    public boolean getDeleted() {
         return isDeleted;
     }
 
-    public void setDeleted(Boolean deleted) {
+    public void setDeleted(boolean deleted) {
         isDeleted = deleted;
     }
 
