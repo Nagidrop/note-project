@@ -17,9 +17,9 @@ public class Note implements Serializable {
     private String content;         // Note's content
     private boolean isDeleted;      // Is the note in trash?
     @ServerTimestamp
-    private Timestamp createdDate;
+    private Timestamp createdDate;  // Note's created date
     @ServerTimestamp
-    private Timestamp updatedDate;
+    private Timestamp updatedDate;  // Note's updated date
 
     /* Constructors */
     public Note() {
