@@ -8,7 +8,10 @@ import com.google.firebase.firestore.ServerTimestamp;
 
 import java.io.Serializable;
 
+/* Notebook Entity */
 public class Notebook implements Serializable {
+
+    /* Entity Properties */
     private String title;
     @ServerTimestamp
     private Timestamp createdDate;
@@ -25,6 +28,7 @@ public class Notebook implements Serializable {
     }
 
     /* Getters and Setters */
+
     public String getTitle() {
         return title;
     }
@@ -47,10 +51,5 @@ public class Notebook implements Serializable {
 
     public void setDeleted(boolean deleted) {
         isDeleted = deleted;
-    }
-
-    @Override
-    public String toString(){
-        return "NOTEBOOK" + this.getTitle() + this.getCreatedDate();
     }
 }
