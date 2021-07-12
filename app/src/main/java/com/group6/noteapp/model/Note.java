@@ -61,7 +61,7 @@ public class Note implements Serializable {
         this.content = content;
     }
 
-    public boolean getDeleted() {
+    public boolean isDeleted() {
         return isDeleted;
     }
 
@@ -75,5 +75,13 @@ public class Note implements Serializable {
 
     public void setCreatedDate(Timestamp createdDate) {
         this.createdDate = createdDate;
+    }
+
+    public Timestamp getUpdatedDate() {
+        return updatedDate;
+    }
+
+    public void setUpdatedDate(Timestamp updatedDate) {
+        this.updatedDate = updatedDate;
     }
 }
