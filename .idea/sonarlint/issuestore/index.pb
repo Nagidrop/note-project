@@ -20,8 +20,6 @@ P
  app/release/output-metadata.json,0\7\079ee2b81fdfd2faf349bcf552fe1a1bc16be431
 ;
 gradlew.bat,2\a\2a45a911a8f1836b0b6c5b758962572012d8f8c3
-q
-Aapp/src/main/java/com/group6/noteapp/controller/HomeFragment.java,7\6\76245912de1e89ae20be64d68262cd415ad4a605
 <
 build.gradle,f\0\f07866736216be0ee2aba49e392191aeae700a35
 p
@@ -32,15 +30,25 @@ P
 app/build.gradle,f\4\f4a01d6a4fcb971362ec00a83903fd3902f52164
 h
 8app/src/main/java/com/group6/noteapp/util/Constants.java,0\f\0f86b6ad95080641c1f2cadf1f6bf01d49d1c3f1
+h
+8app/src/main/java/com/group6/noteapp/model/Notebook.java,d\2\d27f68a306a13c4c646224d913f651414bacaf70
+}
+Mapp/src/main/java/com/group6/noteapp/controller/ForgotPasswordFragment01.java,5\e\5ed305edb32159dc4aa9e2114a3303b08b50aedc
+}
+Mapp/src/main/java/com/group6/noteapp/controller/ForgotPasswordFragment02.java,5\3\53ae6f9c783d48329c5b86ed4a8245eab90d5c63
+d
+4app/src/main/java/com/group6/noteapp/model/Note.java,b\e\be825367b8ad6a16ab4f30ba8d598ca5ea81e478
+d
+4app/src/main/java/com/group6/noteapp/model/User.java,e\2\e233909562b7eaf5636b22623bcf5e6f049b2bfe
+}
+Mapp/src/main/java/com/group6/noteapp/controller/ViewCaptureImageActivity.java,0\2\02c303d308861703c1890bd373a6e3e680d6ffa8
+w
+Gapp/src/main/java/com/group6/noteapp/controller/RegisterFragment01.java,c\a\ca32a263d95c8fd47bf5413e5c179cba70832311
+s
+Capp/src/main/java/com/group6/noteapp/controller/RecordActivity.java,d\9\d99406e669b37bf5f0e9f0b23c2ee66ebd4c138f
 r
 Bapp/src/main/java/com/group6/noteapp/controller/LoginActivity.java,a\f\afbcec810a6927b20bfeaa7856ca50663595e781
 w
-Gapp/src/main/java/com/group6/noteapp/controller/RegisterFragment03.java,c\a\ca9322d61060c57f082e9ac1798fd463a1cc7db2
+Gapp/src/main/java/com/group6/noteapp/controller/RegisterFragment02.java,e\f\ef31fe2e5e07075b434f4f6cec7f76c347abae86
 s
 Capp/src/main/java/com/group6/noteapp/controller/CameraActivity.java,6\3\638e68466573718ebe8db06559a40577842b3487
-g
-7app/src/main/java/com/group6/noteapp/model/Account.java,2\f\2fb6af04f23fbceb2c26cf323887878e58456f85
-h
-8app/src/main/java/com/group6/noteapp/model/Notebook.java,d\2\d27f68a306a13c4c646224d913f651414bacaf70
-w
-Gapp/src/main/java/com/group6/noteapp/controller/RegisterFragment02.java,e\f\ef31fe2e5e07075b434f4f6cec7f76c347abae86

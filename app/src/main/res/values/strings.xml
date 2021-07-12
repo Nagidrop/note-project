@@ -7,6 +7,8 @@
     <string name="create_account">
         <u>Create an account</u>
     </string>
+    <string name="header_title">%1$s</string>
+    <string name="header_text">%1$s</string>
     <string name="email">Email</string>
     <string name="enter_email">Please enter your email address.</string>
     <string name="image_name">Image Name (Required)</string>
