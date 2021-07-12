@@ -13,7 +13,7 @@ public class NoteAppDialog extends AlertDialog.Builder {
         super(context);
     }
 
-    public AlertDialog setupOKDialog(String title, String message){
+    public AlertDialog setupOKDialog(String title, String message) {
         this.setTitle(title);
         this.setMessage(message);
         this.setCancelable(false);
@@ -37,7 +37,7 @@ public class NoteAppDialog extends AlertDialog.Builder {
         return dialog;
     }
 
-    public AlertDialog setupConfirmationDialog(String title, String message){
+    public AlertDialog setupConfirmationDialog(String title, String message) {
         this.setTitle(title);
         this.setMessage(message);
         this.setCancelable(false);
