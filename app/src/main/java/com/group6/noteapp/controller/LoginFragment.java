@@ -259,7 +259,7 @@ public class LoginFragment extends Fragment {
                             progressDialog.dismiss();
 
                             if (authResult.getUser().isEmailVerified()) {
-                                reload();
+                                goToMainActivity();
                             } else {
                                 AlertDialog.Builder alert =
                                         new AlertDialog.Builder(getActivity());
@@ -306,7 +306,7 @@ public class LoginFragment extends Fragment {
         // Check if user is signed in (non-null) and update UI accordingly.
         FirebaseUser currentUser = firebaseAuth.getCurrentUser();
         if (currentUser != null && currentUser.isEmailVerified()) {
-            reload();
+            goToMainActivity();
         }
     }
     // [END on_start_check_user]
@@ -333,7 +333,7 @@ public class LoginFragment extends Fragment {
         }
     }
 
-    private void reload() {
+    private void goToMainActivity() {
         Intent intent = new Intent(getActivity(), MainActivity.class);
         intent.setFlags(intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
@@ -367,7 +367,7 @@ public class LoginFragment extends Fragment {
                                         }
                                     });
 
-                            reload();
+                            goToMainActivity();
                         } else {
                             // If sign in fails, display a message to the user.
                             Toast.makeText(getActivity(), "Authentication failed.",
@@ -408,7 +408,7 @@ public class LoginFragment extends Fragment {
                                         }
                                     });
 
-                            reload();
+                            goToMainActivity();
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "signInWithCredential:failure", task.getException());
