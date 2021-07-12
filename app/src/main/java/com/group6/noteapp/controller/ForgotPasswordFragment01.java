@@ -1,27 +1,22 @@
 package com.group6.noteapp.controller;
 
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
-import androidx.navigation.fragment.NavHostFragment;
-
-import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+import androidx.navigation.fragment.NavHostFragment;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseAuthException;
 import com.group6.noteapp.R;
-
-import static android.content.ContentValues.TAG;
+import com.group6.noteapp.util.ValidationUtils;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -31,7 +26,7 @@ import static android.content.ContentValues.TAG;
 public class ForgotPasswordFragment01 extends Fragment {
 
     View inflatedView;
-    TextInputLayout textResetPassword;
+    TextInputLayout inputResetPassEmail;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -78,25 +73,40 @@ public class ForgotPasswordFragment01 extends Fragment {
                              Bundle savedInstanceState) {
         inflatedView = inflater.inflate(R.layout.fragment_forgot_password01, container, false);
         //get text Input text layout
-            MaterialButton btnSubmit = inflatedView.findViewById(R.id.btnForgotSubmit);
+        MaterialButton btnSubmit = inflatedView.findViewById(R.id.btnForgotSubmit);
 
-            btnSubmit.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    textResetPassword=inflatedView.findViewById(R.id.textInputForgotEmail);
-                    String emailAddressForgot = textResetPassword.getEditText().getText().toString();
-                    if (TextUtils.isEmpty(emailAddressForgot)) {
-                        Toast.makeText(getActivity(), "Please enter your email.", Toast.LENGTH_SHORT).show();
-                        return;
-                    }
-                    sendEmailResetPassword(emailAddressForgot);
-                    }
-            });
+        btnSubmit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                inputResetPassEmail = inflatedView.findViewById(R.id.textInputForgotEmail);
+                String resetPassEmail = inputResetPassEmail.getEditText().getText().toString();
+
+                inputResetPassEmail.setErrorEnabled(false);
+
+                inputResetPassEmail.setErrorEnabled(true);
+
+                boolean isInputValid = true;
+                int emailValidateResult = ValidationUtils.validateEmail(resetPassEmail);
+
+                if (emailValidateResult == 1) {
+                    isInputValid = false;
+                    inputResetPassEmail.setError("Email must not be empty.");
+                } else if (emailValidateResult == 2) {
+                    isInputValid = false;
+                    inputResetPassEmail.setError("Please use a valid email. (Ex: abc@g.cn)");
+                }
+
+                if (isInputValid){
+                    sendEmailResetPassword(resetPassEmail);
+                }
+            }
+        });
 
         // Inflate the layout for this fragment
         return inflatedView;
     }
-    private void sendEmailResetPassword(String emailAddress){
+
+    private void sendEmailResetPassword(String emailAddress) {
         FirebaseAuth auth = FirebaseAuth.getInstance();
 
         auth.sendPasswordResetEmail(emailAddress)
@@ -108,7 +118,7 @@ public class ForgotPasswordFragment01 extends Fragment {
                             Bundle bundle = new Bundle();
                             bundle.putString("email", emailAddress);
                             NavHostFragment.findNavController(ForgotPasswordFragment01.this).navigate(R.id.action_forgotPasswordFragment01_to_forgotPasswordFragment02, bundle);
-                        }else{
+                        } else {
                             Toast.makeText(getActivity(), "Failed to send reset email!", Toast.LENGTH_SHORT).show();
                         }
                     }

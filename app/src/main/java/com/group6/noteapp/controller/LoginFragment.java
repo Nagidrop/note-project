@@ -252,51 +252,56 @@ public class LoginFragment extends Fragment {
             progressDialog.setMessage("Please wait while we connect you to Note App.");
             progressDialog.setCanceledOnTouchOutside(false);
             progressDialog.show();
-            firebaseAuth.signInWithEmailAndPassword(logEmail, logPassword)
-                    .addOnSuccessListener(new OnSuccessListener<AuthResult>() {
-                        @Override
-                        public void onSuccess(AuthResult authResult) {
-                            progressDialog.dismiss();
 
-                            if (authResult.getUser().isEmailVerified()) {
-                                goToMainActivity();
-                            } else {
-                                AlertDialog.Builder alert =
-                                        new AlertDialog.Builder(getActivity());
-                                alert.setTitle(
-                                        "Login Failed");                                             // set dialog title
-                                alert.setMessage(
-                                        "Please verify your email address before logging in!");    // set dialog message
-                                alert.setCancelable(false);
-
-                                alert.setPositiveButton("OK",
-                                        new DialogInterface.OnClickListener() {
-                                            /**
-                                             * To register activity
-                                             * @param dialog dialog
-                                             * @param which which
-                                             */
-                                            @Override
-                                            public void onClick(DialogInterface dialog,
-                                                                int which) {
-                                                dialog.dismiss();
-                                            }
-                                        });
-
-                                alert.create().show();
-                            }
-                        }
-                    })
-                    .addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull @NotNull Exception e) {
-                            inputLogEmail.setError(" ");
-                            inputLogPassword.setError("Your email or password is incorrect.");
-
-                            progressDialog.dismiss();
-                        }
-                    });
+            loginWithEmailAndPassword(logEmail, logPassword);
         }
+    }
+
+    public void loginWithEmailAndPassword(String email, String password){
+        firebaseAuth.signInWithEmailAndPassword(email, password)
+                .addOnSuccessListener(new OnSuccessListener<AuthResult>() {
+                    @Override
+                    public void onSuccess(AuthResult authResult) {
+                        progressDialog.dismiss();
+
+                        if (authResult.getUser().isEmailVerified()) {
+                            goToMainActivity();
+                        } else {
+                            AlertDialog.Builder alert =
+                                    new AlertDialog.Builder(getActivity());
+                            alert.setTitle(
+                                    "Login Failed");                                             // set dialog title
+                            alert.setMessage(
+                                    "Please verify your email address before logging in!");    // set dialog message
+                            alert.setCancelable(false);
+
+                            alert.setPositiveButton("OK",
+                                    new DialogInterface.OnClickListener() {
+                                        /**
+                                         * To register activity
+                                         * @param dialog dialog
+                                         * @param which which
+                                         */
+                                        @Override
+                                        public void onClick(DialogInterface dialog,
+                                                            int which) {
+                                            dialog.dismiss();
+                                        }
+                                    });
+
+                            alert.create().show();
+                        }
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull @NotNull Exception e) {
+                        inputLogEmail.setError(" ");
+                        inputLogPassword.setError("Your email or password is incorrect.");
+
+                        progressDialog.dismiss();
+                    }
+                });
     }
 
     // [START on_start_check_user]
