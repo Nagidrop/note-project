@@ -16,13 +16,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="184dp"
+            android:layout_marginTop="6dp"
             android:layout_marginEnd="194dp"
-            android:layout_marginBottom="499dp"
             android:text="Time"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="1.0"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/record_timer" />
 
         <Chronometer
             android:id="@+id/record_timer"
@@ -38,40 +38,42 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <Button
-            android:id="@+id/btnRecording"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="155dp"
-            android:layout_marginTop="59dp"
-            android:text="Record"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textTimeRecord" />
-
-        <Button
             android:id="@+id/btnPlay"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="164dp"
-            android:layout_marginTop="52dp"
+            android:layout_marginStart="84dp"
+            android:layout_marginBottom="134dp"
             android:text="Play"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/btnRecording" />
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <Button
+            android:id="@+id/btnSaveRecord"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="260dp"
+            android:layout_marginBottom="132dp"
+            android:text="Save"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/textInputRecordName"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="315dp"
             android:layout_height="63dp"
-            android:layout_marginStart="43dp"
-            android:layout_marginBottom="28dp"
+            android:layout_marginStart="52dp"
+            android:layout_marginTop="50dp"
+            android:layout_marginEnd="44dp"
             android:ems="10"
+
             android:hint="@string/record_name"
             android:textColorHint="?android:colorPrimary"
-
             app:boxStrokeColor="?android:colorPrimary"
             app:errorEnabled="true"
-            app:layout_constraintBottom_toTopOf="@+id/btnSaveRecord"
-            app:layout_constraintStart_toStartOf="parent">
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textTimeRecord">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:layout_width="match_parent"
@@ -80,14 +82,50 @@
         </com.google.android.material.textfield.TextInputLayout>
 
         <Button
-            android:id="@+id/btnSaveRecord"
+            android:id="@+id/btnRecording"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="160dp"
-            android:layout_marginBottom="56dp"
-            android:text="Save"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+            android:layout_marginStart="43dp"
+            android:layout_marginTop="33dp"
+            android:text="Record"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textInputRecordName" />
+
+        <Button
+            android:id="@+id/btnReset"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="38dp"
+            android:layout_marginBottom="126dp"
+            android:text="Reset"
+            app:layout_constraintBottom_toTopOf="@+id/btnSaveRecord"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <Button
+            android:id="@+id/btnStop"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="34dp"
+            android:layout_marginEnd="25dp"
+            android:layout_marginBottom="123dp"
+            android:text="Stop"
+            app:layout_constraintBottom_toTopOf="@+id/btnPlay"
+            app:layout_constraintEnd_toStartOf="@+id/btnReset"
+            app:layout_constraintTop_toBottomOf="@+id/textInputRecordName"
+            app:layout_constraintVertical_bias="0.0" />
+
+        <SeekBar
+            android:id="@+id/seekBar"
+            android:layout_width="246dp"
+            android:layout_height="23dp"
+            android:layout_marginStart="84dp"
+            android:layout_marginTop="7dp"
+            android:layout_marginEnd="81dp"
+            android:layout_marginBottom="20dp"
+            app:layout_constraintBottom_toTopOf="@+id/textInputRecordName"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textTimeRecord" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
