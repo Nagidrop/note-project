@@ -18,17 +18,20 @@ public class Note implements Serializable {
     private boolean isDeleted;      // Is the note in trash?
     @ServerTimestamp
     private Timestamp createdDate;
+    @ServerTimestamp
+    private Timestamp updatedDate;
 
     /* Constructors */
     public Note() {
     }
 
-    public Note(String id, String title, String content, boolean isDeleted, Timestamp createdDate) {
+    public Note(String id, String title, String content, boolean isDeleted, Timestamp createdDate, Timestamp updatedDate) {
         this.id = id;
         this.title = title;
         this.content = content;
         this.isDeleted = isDeleted;
         this.createdDate = createdDate;
+        this.updatedDate = updatedDate;
     }
 
     /* Getters and Setters */
