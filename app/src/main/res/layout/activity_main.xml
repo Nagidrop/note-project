@@ -18,13 +18,13 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <com.google.android.material.navigation.NavigationView
+        android:id="@+id/navigationView"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        app:menu="@menu/activity_main_drawer"
+        android:paddingStart="10dp"
+        android:paddingEnd="10dp"
         android:layout_gravity="start"
-        android:id="@+id/navigationView"
         app:headerLayout="@layout/header_navigation_drawer"
-
-        />
+        app:menu="@menu/activity_main_drawer" />
 
 </androidx.drawerlayout.widget.DrawerLayout>
