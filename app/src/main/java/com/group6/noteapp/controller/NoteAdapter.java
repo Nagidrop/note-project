@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.group6.noteapp.R;
 import com.group6.noteapp.model.Note;
+import com.group6.noteapp.view.NoteAdapterClickListener;
 import com.group6.noteapp.view.NoteViewHolder;
 
 import java.text.SimpleDateFormat;
@@ -18,8 +19,9 @@ import java.util.List;
 
 public class NoteAdapter extends RecyclerView.Adapter<NoteViewHolder> {
 
-    private Context context; // activity context
-    private ArrayList<Note> notes; // list of notes
+    private Context context;                                // activity context
+    private ArrayList<Note> notes;                          // list of notes
+    private NoteAdapterClickListener itemClickListener;     // on click listener
 
     /**
      * Constructor
@@ -46,7 +48,7 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteViewHolder> {
         LayoutInflater inflater = LayoutInflater.from(context);
         View noteView = inflater.inflate(R.layout.rv_note_item, parent, false);
 
-        return new NoteViewHolder(noteView);
+        return new NoteViewHolder(noteView, itemClickListener);
     }
 
     /**
@@ -86,5 +88,9 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteViewHolder> {
      */
     public List<Note> getNotes() {
         return notes;
+    }
+
+    public void setItemClickListener(NoteAdapterClickListener itemClickListener) {
+        this.itemClickListener = itemClickListener;
     }
 }

@@ -55,7 +55,7 @@ public class NoteAppDialog extends AlertDialog.Builder {
                 });
 
         AlertDialog dialog = this.create();
-        dialog.setCanceledOnTouchOutside(false);
+//        dialog.setCanceledOnTouchOutside(false);
         dialog.setOnShowListener(new DialogInterface.OnShowListener() {
             /**
              * Highlight the negative button by default

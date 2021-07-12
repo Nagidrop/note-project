@@ -99,7 +99,7 @@ public class ForgotPasswordFragment01 extends Fragment {
                 }
 
                 if (isInputValid){
-                    NoteAppProgressDialog progressDialog = new NoteAppProgressDialog(getActivity());
+                    progressDialog = new NoteAppProgressDialog(getActivity());
                     progressDialog.setUpDialog("Just a moment...",
                             "Please wait while we connect you to Note App.");
                     progressDialog.show();

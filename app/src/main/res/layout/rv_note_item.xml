@@ -16,9 +16,7 @@
         android:layout_margin="14dp"
         android:layout_marginTop="20dp"
         android:layout_marginBottom="20dp"
-        android:background="?attr/selectableItemBackground"
-        android:orientation="vertical"
-        android:clickable="false">
+        android:orientation="vertical">
 
         <!--    <com.google.android.material.imageview.ShapeableImageView-->
         <!--        android:id="@+id/imgNote"-->
