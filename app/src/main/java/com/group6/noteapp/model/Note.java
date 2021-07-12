@@ -7,11 +7,11 @@ import com.google.firebase.firestore.ServerTimestamp;
 
 import java.io.Serializable;
 
-/* Note Entity */
+/* Note Object */
 @IgnoreExtraProperties
 public class Note implements Serializable {
 
-    /* Entity Properties */
+    /* Object Properties */
     private String id;              // Note's doc ID
     private String title;           // Note's title
     private String content;         // Note's content

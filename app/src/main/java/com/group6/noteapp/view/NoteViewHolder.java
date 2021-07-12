@@ -5,10 +5,8 @@ package com.group6.noteapp.view;
 
 import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.group6.noteapp.R;
@@ -26,20 +24,26 @@ public class NoteViewHolder extends RecyclerView.ViewHolder {
      *
      * @param noteView item view
      */
-    public NoteViewHolder(@NonNull View noteView) {
+    public NoteViewHolder(@NonNull View noteView, NoteAdapterClickListener itemClickListener) {
         super(noteView);
         noteTitle = noteView.findViewById(R.id.txtNoteTitle);
         noteContent = noteView.findViewById(R.id.txtNoteContent);
         noteCreatedDate = noteView.findViewById(R.id.txtNoteCreatedDate);
 
-        CardView cv = noteView.findViewById(R.id.cardView);
+//        CardView cv = noteView.findViewById(R.id.cardView);
 
-        cv.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(noteView.getContext(), "lala", Toast.LENGTH_SHORT);
-            }
-        });
+//        noteView.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                if (itemClickListener != null){
+//                    int position = getAdapterPosition();
+//                    if (position != RecyclerView.NO_POSITION){
+//                        itemClickListener.onItemClick(position);
+//                    }
+//                    Toast.makeText(noteView.getContext(), "lala at" + position, Toast.LENGTH_SHORT);
+//                }
+//            }
+//        });
     }
 //
 //    @NonNull

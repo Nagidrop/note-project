@@ -8,14 +8,14 @@ import com.google.firebase.firestore.ServerTimestamp;
 
 import java.io.Serializable;
 
-/* Notebook Entity */
+/* Notebook Object */
 public class Notebook implements Serializable {
 
-    /* Entity Properties */
-    private String title;
+    /* Object Properties */
+    private String title;               // Notebook's title
     @ServerTimestamp
-    private Timestamp createdDate;
-    private boolean isDeleted;
+    private Timestamp createdDate;      // Notebook's created date
+    private boolean isDeleted;          // Is the notebook deleted?
 
     /* Constructors */
     public Notebook() {

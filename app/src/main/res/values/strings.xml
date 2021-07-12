@@ -31,7 +31,7 @@
     <string name="register">Register</string>
     <string name="reset_pass">Reset Password</string>
     <string name="email_sent_reg">Almost done. &lt;br/>Please check your inbox at &lt;b>%1$s&lt;/b> to confirm registration. </string>
-    <string name="email_sent_forgot_pass">Please check your inbox at &lt;br/>&lt;b>%1$s&lt;/b> and follow instructions on how to reset password.</string>
+    <string name="email_sent_forgot_pass">Please check your inbox at &lt;br/>&lt;b>%1$s&lt;/b> and follow instructions to reset password.</string>
     <!--    <string name="sign_in_google">Sign In with Google</string>-->
     <string name="register_guide">Basic information</string>
     <string name="step_one_of_two">1/2</string>

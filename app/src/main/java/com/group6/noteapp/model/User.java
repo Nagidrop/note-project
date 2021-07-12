@@ -5,15 +5,15 @@ import com.google.firebase.firestore.ServerTimestamp;
 
 import java.io.Serializable;
 
-/* User Entity */
+/* User Object */
 public class User implements Serializable {
 
-    /* Entity Properties */
-    private String fullName;        // User's full name
-    private String address;         // User's address
-    private String birthdate;       // User's birth date
+    /* Object Properties */
+    private String fullName;            // User's full name
+    private String address;             // User's address
+    private String birthdate;           // User's birth date
     @ServerTimestamp
-    private Timestamp createdDate;     // User's created date
+    private Timestamp createdDate;      // User's account creation date
 
     /* Constructors */
     public User() {
