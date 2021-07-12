@@ -268,7 +268,7 @@ public class MainActivity extends AppCompatActivity {
                      */
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        MainActivity.this.onBackPressed();
+                        MainActivity.super.onBackPressed();
                     }
                 });
 
