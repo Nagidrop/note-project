@@ -1,8 +1,6 @@
 package com.group6.noteapp.controller;
 
-import android.app.AlertDialog;
 import android.app.ProgressDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -47,6 +45,7 @@ import com.group6.noteapp.R;
 import com.group6.noteapp.model.Notebook;
 import com.group6.noteapp.model.User;
 import com.group6.noteapp.util.ValidationUtils;
+import com.group6.noteapp.view.NoteAppDialog;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -267,29 +266,10 @@ public class LoginFragment extends Fragment {
                         if (authResult.getUser().isEmailVerified()) {
                             goToMainActivity();
                         } else {
-                            AlertDialog.Builder alert =
-                                    new AlertDialog.Builder(getActivity());
-                            alert.setTitle(
-                                    "Login Failed");                                             // set dialog title
-                            alert.setMessage(
-                                    "Please verify your email address before logging in!");    // set dialog message
-                            alert.setCancelable(false);
-
-                            alert.setPositiveButton("OK",
-                                    new DialogInterface.OnClickListener() {
-                                        /**
-                                         * To register activity
-                                         * @param dialog dialog
-                                         * @param which which
-                                         */
-                                        @Override
-                                        public void onClick(DialogInterface dialog,
-                                                            int which) {
-                                            dialog.dismiss();
-                                        }
-                                    });
-
-                            alert.create().show();
+                            NoteAppDialog noteAppDialog = new NoteAppDialog(getActivity());
+                            noteAppDialog.setupOKDialog("Login Failed",
+                                    "Please verify your email address before logging in!");
+                            noteAppDialog.show();
                         }
                     }
                 })

@@ -1,7 +1,6 @@
 package com.group6.noteapp.controller;
 
 import android.Manifest;
-import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -15,7 +14,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.Button;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -29,6 +27,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.group6.noteapp.R;
+import com.group6.noteapp.view.NoteAppDialog;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -190,52 +189,23 @@ public class MainActivity extends AppCompatActivity {
      * Logout method
      */
     public void signOut() {
-        AlertDialog.Builder alert = new AlertDialog.Builder(this);
-        alert.setTitle("Logout Confirmation");                      // set dialog title
-        alert.setMessage("Are you sure you want to log out?");      // set dialog message
-
-        alert.setPositiveButton("Yes",
+        NoteAppDialog noteAppDialog = new NoteAppDialog(this);
+        noteAppDialog.setupConfirmationDialog("Logout Confirmation",
+                "Are you sure you want to log out?");
+        noteAppDialog.setPositiveButton("Yes",
                 new DialogInterface.OnClickListener() {
                     /**
-                     * To register activity
-                     * @param dialog dialog
-                     * @param which which
+                     * Log the current user out
+                     * @param dialog
+                     * @param which
                      */
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        firebaseAuth.signOut();
-                        LoginManager.getInstance().logOut();
-                        Intent intent = new Intent(MainActivity.this, LoginActivity.class);
-                        intent.setFlags(
-                                intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-                        startActivity(intent);
-                    }
-                });
-        alert.setNegativeButton("No",
-                new DialogInterface.OnClickListener() {
-                    /**
-                     * To register activity
-                     * @param dialog dialog
-                     * @param which which
-                     */
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
+                        logOut();
                     }
                 });
 
-        AlertDialog alertDialog = alert.create();
-        alertDialog.setOnShowListener(new DialogInterface.OnShowListener() {
-            @Override
-            public void onShow(DialogInterface dialog) {
-                Button btnNegative = alertDialog.getButton(AlertDialog.BUTTON_NEGATIVE);
-                btnNegative.setFocusable(true);
-                btnNegative.setFocusableInTouchMode(true);
-                btnNegative.requestFocus();
-            }
-        });
-
-        alertDialog.show();
+        noteAppDialog.show();
     }
 
     /**
@@ -286,52 +256,31 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed(){
-        AlertDialog.Builder alert = new AlertDialog.Builder(this);
-        alert.setTitle("Exit Confirmation");                            // set dialog title
-        alert.setMessage("Are you sure you want to exit Note App?");    // set dialog message
-
-        alert.setPositiveButton("Yes",
+        NoteAppDialog noteAppDialog = new NoteAppDialog(this);
+        noteAppDialog.setupConfirmationDialog("Exit Confirmation",
+                "Are you sure you want to exit Note App?");
+        noteAppDialog.setPositiveButton("Yes",
                 new DialogInterface.OnClickListener() {
                     /**
-                     * To register activity
-                     * @param dialog dialog
-                     * @param which which
+                     * Log the current user out
+                     * @param dialog
+                     * @param which
                      */
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        firebaseAuth.signOut();
-                        LoginManager.getInstance().logOut();
-                        Intent intent = new Intent(MainActivity.this, LoginActivity.class);
-                        intent.setFlags(
-                                intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-                        startActivity(intent);
-                    }
-                });
-        alert.setNegativeButton("No",
-                new DialogInterface.OnClickListener() {
-                    /**
-                     * To register activity
-                     * @param dialog dialog
-                     * @param which which
-                     */
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
+                        logOut();
                     }
                 });
 
-        AlertDialog alertDialog = alert.create();
-        alertDialog.setOnShowListener(new DialogInterface.OnShowListener() {
-            @Override
-            public void onShow(DialogInterface dialog) {
-                Button btnNegative = alertDialog.getButton(AlertDialog.BUTTON_NEGATIVE);
-                btnNegative.setFocusable(true);
-                btnNegative.setFocusableInTouchMode(true);
-                btnNegative.requestFocus();
-            }
-        });
-
-        alertDialog.show();
+        noteAppDialog.show();
     }
 
+    private void logOut(){
+        firebaseAuth.signOut();
+        LoginManager.getInstance().logOut();
+        Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+        intent.setFlags(
+                intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
+    }
 }

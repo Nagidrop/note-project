@@ -1,8 +1,6 @@
 package com.group6.noteapp.controller;
 
-import android.app.AlertDialog;
 import android.app.ProgressDialog;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.text.InputType;
 import android.util.Log;
@@ -32,6 +30,7 @@ import com.group6.noteapp.model.Note;
 import com.group6.noteapp.model.Notebook;
 import com.group6.noteapp.model.User;
 import com.group6.noteapp.util.ValidationUtils;
+import com.group6.noteapp.view.NoteAppDialog;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -239,43 +238,15 @@ public class RegisterFragment02 extends Fragment {
                                             String error = e.getMessage();
 
                                             if (error.equalsIgnoreCase("The email address is already in use by another account.")) {
-                                                AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
-                                                alert.setTitle("Registration Failed");                                                  // set dialog title
-                                                alert.setMessage("Email address is already in use. Please use a different email address!");     // set dialog message
-                                                alert.setCancelable(false);
-                                                alert.setPositiveButton("OK",
-                                                        new DialogInterface.OnClickListener() {
-                                                            /**
-                                                             * To register activity
-                                                             * @param dialog dialog
-                                                             * @param which which
-                                                             */
-                                                            @Override
-                                                            public void onClick(DialogInterface dialog, int which) {
-                                                                dialog.dismiss();
-                                                            }
-                                                        });
-
-                                                alert.create().show();
+                                                NoteAppDialog noteAppDialog = new NoteAppDialog(getActivity());
+                                                noteAppDialog.setupOKDialog("Registration Failed",
+                                                        "Email address is already in use. Please use a different one!");
+                                                noteAppDialog.show();
                                             } else {
-                                                AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
-                                                alert.setTitle("Registration Failed");                                                  // set dialog title
-                                                alert.setMessage("An unknown error occurred!\nError message:\n\"" + error + "\"");        // set dialog message
-                                                alert.setCancelable(false);
-                                                alert.setPositiveButton("OK",
-                                                        new DialogInterface.OnClickListener() {
-                                                            /**
-                                                             * To register activity
-                                                             * @param dialog dialog
-                                                             * @param which which
-                                                             */
-                                                            @Override
-                                                            public void onClick(DialogInterface dialog, int which) {
-                                                                dialog.dismiss();
-                                                            }
-                                                        });
-
-                                                alert.create().show();
+                                                NoteAppDialog noteAppDialog = new NoteAppDialog(getActivity());
+                                                noteAppDialog.setupOKDialog("Registration Failed",
+                                                        "An unknown error occurred!\nError message:\n\"" + error + "\"");
+                                                noteAppDialog.show();
                                             }
                                         }
                                     });
