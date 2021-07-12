@@ -190,6 +190,7 @@ public class MainActivity extends AppCompatActivity {
      */
     public void logOutConfirmation() {
         NoteAppDialog dialog = new NoteAppDialog(this);
+
         dialog.setupConfirmationDialog("Logout Confirmation",
                 "Are you sure you want to log out?");
         dialog.setPositiveButton("Yes",
@@ -205,7 +206,7 @@ public class MainActivity extends AppCompatActivity {
                     }
                 });
 
-        dialog.show();
+        dialog.create().show();
     }
 
     /**
@@ -271,7 +272,7 @@ public class MainActivity extends AppCompatActivity {
                     }
                 });
 
-        dialog.show();
+        dialog.create().show();
     }
 
     private void logOut(){

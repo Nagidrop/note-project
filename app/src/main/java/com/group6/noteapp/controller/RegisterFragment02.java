@@ -198,7 +198,7 @@ public class RegisterFragment02 extends Fragment {
                                                 dialog.setupOKDialog("Registration Failed",
                                                         "An unknown error occurred!\nError message:\n\"" + error + "\"");
                                             }
-                                            dialog.show();
+                                            dialog.create().show();
                                         }
                                     });
                         }
@@ -244,7 +244,7 @@ public class RegisterFragment02 extends Fragment {
                         NoteAppDialog dialog = new NoteAppDialog(getActivity());
                         dialog.setupOKDialog("Registration Failed",
                                 "An error occurred during your account setup. Please try register again!");
-                        dialog.show();
+                        dialog.create().show();
 
                         Log.w(TAG, "Error adding document", e);
                     }
@@ -289,7 +289,7 @@ public class RegisterFragment02 extends Fragment {
                         NoteAppDialog dialog = new NoteAppDialog(getActivity());
                         dialog.setupOKDialog("Registration Failed",
                                 "An error occurred during your account setup. Please try register again!");
-                        dialog.show();
+                        dialog.create().show();
                     }
                 });
 

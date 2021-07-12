@@ -3,17 +3,25 @@
  */
 package com.group6.noteapp.view;
 
-import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.widget.Button;
 
-public class NoteAppDialog extends AlertDialog.Builder {
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
+
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+
+import org.jetbrains.annotations.NotNull;
+
+public class NoteAppDialog extends MaterialAlertDialogBuilder {
+    private String type;  // dialog Type
+
     public NoteAppDialog(Context context) {
         super(context);
     }
 
-    public AlertDialog setupOKDialog(String title, String message) {
+    public void setupOKDialog(String title, String message) {
         this.setTitle(title);
         this.setMessage(message);
         this.setCancelable(false);
@@ -30,14 +38,10 @@ public class NoteAppDialog extends AlertDialog.Builder {
                         dialog.dismiss();
                     }
                 });
-
-        AlertDialog dialog = this.create();
-        dialog.setCanceledOnTouchOutside(false);
-
-        return dialog;
+        this.type = "OKDialog";
     }
 
-    public AlertDialog setupConfirmationDialog(String title, String message) {
+    public void setupConfirmationDialog(String title, String message) {
         this.setTitle(title);
         this.setMessage(message);
         this.setCancelable(false);
@@ -53,23 +57,32 @@ public class NoteAppDialog extends AlertDialog.Builder {
                         dialog.dismiss();
                     }
                 });
+        this.type = "ConfirmationDialog";
+    }
 
-        AlertDialog dialog = this.create();
-//        dialog.setCanceledOnTouchOutside(false);
-        dialog.setOnShowListener(new DialogInterface.OnShowListener() {
-            /**
-             * Highlight the negative button by default
-             * @param dialogInterface
-             */
-            @Override
-            public void onShow(DialogInterface dialogInterface) {
-                Button btnNegative = dialog.getButton(AlertDialog.BUTTON_NEGATIVE);
-                btnNegative.setFocusable(true);
-                btnNegative.setFocusableInTouchMode(true);
-                btnNegative.requestFocus();
-            }
-        });
+    @NonNull
+    @NotNull
+    @Override
+    public AlertDialog create() {
+        AlertDialog alertDialog = super.create();
+        alertDialog.setCanceledOnTouchOutside(false);
 
-        return dialog;
+        if (this.type.equalsIgnoreCase("ConfirmationDialog")){
+            alertDialog.setOnShowListener(new DialogInterface.OnShowListener() {
+                /**
+                 * Highlight the negative button by default
+                 * @param dialogInterface
+                 */
+                @Override
+                public void onShow(DialogInterface dialogInterface) {
+                    Button btnNegative = alertDialog.getButton(AlertDialog.BUTTON_NEGATIVE);
+                    btnNegative.setFocusable(true);
+                    btnNegative.setFocusableInTouchMode(true);
+                    btnNegative.requestFocus();
+                }
+            });
+        }
+
+        return alertDialog;
     }
 }

@@ -134,7 +134,6 @@ public class LoginFragment extends Fragment {
 
         // Get firestore instance
 
-
         // Get register button
         MaterialButton btnRegister = inflatedView.findViewById(R.id.btnNoAccount);
         // Set navigate to register button
@@ -270,7 +269,7 @@ public class LoginFragment extends Fragment {
                             NoteAppDialog dialog = new NoteAppDialog(getActivity());
                             dialog.setupOKDialog("Login Failed",
                                     "Please verify your email address before logging in!");
-                            dialog.show();
+                            dialog.create().show();
                         }
                     }
                 })

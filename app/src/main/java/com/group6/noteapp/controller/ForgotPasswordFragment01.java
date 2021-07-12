@@ -137,7 +137,7 @@ public class ForgotPasswordFragment01 extends Fragment {
                         NoteAppDialog dialog = new NoteAppDialog(getActivity());
                         dialog.setupOKDialog("Email Not Sent",
                                 "An error occurred while we send you instructions. Please try again!");
-                        dialog.show();
+                        dialog.create().show();
                     }
                 });
     }
