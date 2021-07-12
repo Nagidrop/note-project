@@ -87,6 +87,10 @@
         <item name="fontFamily">@font/inter_font_family</item>
     </style>
 
+    <style name="TextAppearance.MyTheme.Body3" parent="TextAppearance.MyTheme.Body2">
+        <item name="android:textSize">12sp</item>
+    </style>
+
     <style name="TextAppearance.MyTheme.Button" parent="TextAppearance.MaterialComponents.Button">
         <item name="android:fontFamily">@font/inter_font_family</item>
         <item name="fontFamily">@font/inter_font_family</item>

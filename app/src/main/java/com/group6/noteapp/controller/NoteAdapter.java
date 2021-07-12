@@ -10,14 +10,18 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.group6.noteapp.R;
 import com.group6.noteapp.model.Note;
+import com.group6.noteapp.view.NoteAdapterClickListener;
 import com.group6.noteapp.view.NoteViewHolder;
 
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.List;
 
 public class NoteAdapter extends RecyclerView.Adapter<NoteViewHolder> {
 
-    private Context context; // activity context
-    private List<Note> notes; // list of notes
+    private Context context;                                // activity context
+    private ArrayList<Note> notes;                          // list of notes
+    private NoteAdapterClickListener itemClickListener;     // on click listener
 
     /**
      * Constructor
@@ -25,7 +29,7 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteViewHolder> {
      * @param context activity context
      * @param notes   list of notes
      */
-    public NoteAdapter(Context context, List<Note> notes) {
+    public NoteAdapter(Context context, ArrayList<Note> notes) {
         this.context = context;
         this.notes = notes;
     }
@@ -44,7 +48,7 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteViewHolder> {
         LayoutInflater inflater = LayoutInflater.from(context);
         View noteView = inflater.inflate(R.layout.rv_note_item, parent, false);
 
-        return new NoteViewHolder(noteView);
+        return new NoteViewHolder(noteView, itemClickListener);
     }
 
     /**
@@ -56,9 +60,15 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteViewHolder> {
     @Override
     public void onBindViewHolder(@NonNull NoteViewHolder holder,
                                  int position) {
-        Note note = notes.get(position);                // get note from position
-        holder.getTxtTitle().setText(note.getTitle());       // set note title
-        holder.getTxtContent().setText(note.getContent());   // set note content
+        Note note = notes.get(position);                            // get note from position
+        holder.getNoteTitle().setText(note.getTitle());             // set note title
+        holder.getNoteContent().setText(note.getContent());         // set note content
+
+        SimpleDateFormat dateFormat = new SimpleDateFormat("E, dd MMM yyyy h:mm aa");
+
+        String createdDate = dateFormat.format(note.getCreatedDate().toDate());
+        createdDate.replace("am", "AM").replace("pm","PM");
+        holder.getNoteCreatedDate().setText(createdDate); // set note created date
     }
 
     /**
@@ -68,17 +78,7 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteViewHolder> {
      */
     @Override
     public int getItemCount() {
-        return notes.size();
-    }
-
-    /**
-     * Get note's ID from its position in note list
-     *
-     * @param position position of note in note list
-     * @return the note's ID
-     */
-    public int getNoteId(int position) {
-        return notes.get(position).getId();
+        return notes == null ? 0 : notes.size();
     }
 
     /**
@@ -88,5 +88,9 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteViewHolder> {
      */
     public List<Note> getNotes() {
         return notes;
+    }
+
+    public void setItemClickListener(NoteAdapterClickListener itemClickListener) {
+        this.itemClickListener = itemClickListener;
     }
 }

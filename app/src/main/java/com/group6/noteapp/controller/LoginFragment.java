@@ -1,8 +1,6 @@
 package com.group6.noteapp.controller;
 
-import android.app.AlertDialog;
 import android.app.ProgressDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -28,6 +26,8 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputLayout;
@@ -38,9 +38,15 @@ import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.group6.noteapp.R;
+import com.group6.noteapp.model.Notebook;
+import com.group6.noteapp.model.User;
 import com.group6.noteapp.util.ValidationUtils;
+import com.group6.noteapp.view.NoteAppDialog;
+import com.group6.noteapp.view.NoteAppProgressDialog;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -60,11 +66,12 @@ public class LoginFragment extends Fragment {
     private FirebaseAuth firebaseAuth;
     private LoginButton loginButton;
     private CallbackManager callbackManager;
-    private ProgressDialog progressDialog;
+    private NoteAppProgressDialog progressDialog;
     private GoogleSignInClient mGoogleSignInClient;
     private GoogleApiClient mGoogleApiClient;
     private MaterialTextView mStatusTextView;
     private ProgressDialog mProgressDialog;
+    private FirebaseFirestore db;
 
 
     // TODO: Rename parameter arguments, choose names that match
@@ -107,13 +114,14 @@ public class LoginFragment extends Fragment {
         }
 
         // Configure Google Sign In
-        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestIdToken(getString(R.string.default_web_client_id))
-                .requestEmail()
-                .build();
+        GoogleSignInOptions gso =
+                new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                        .requestIdToken(getString(R.string.default_web_client_id))
+                        .requestEmail()
+                        .build();
 
         mGoogleSignInClient = GoogleSignIn.getClient(getActivity(), gso);
-
+        db = FirebaseFirestore.getInstance();
         firebaseAuth = FirebaseAuth.getInstance();
 
     }
@@ -125,7 +133,7 @@ public class LoginFragment extends Fragment {
         inflatedView = inflater.inflate(R.layout.fragment_login, container, false);
 
         // Get firestore instance
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
 
         // Get register button
         MaterialButton btnRegister = inflatedView.findViewById(R.id.btnNoAccount);
@@ -133,7 +141,8 @@ public class LoginFragment extends Fragment {
         btnRegister.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                NavHostFragment.findNavController(LoginFragment.this).navigate(R.id.action_loginFragment_to_registerFragment01);
+                NavHostFragment.findNavController(LoginFragment.this)
+                        .navigate(R.id.action_loginFragment_to_registerFragment01);
             }
         });
 
@@ -142,7 +151,8 @@ public class LoginFragment extends Fragment {
         btnForgotPassword.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                NavHostFragment.findNavController(LoginFragment.this).navigate(R.id.action_loginFragment_to_forgotPasswordFragment01);
+                NavHostFragment.findNavController(LoginFragment.this)
+                        .navigate(R.id.action_loginFragment_to_forgotPasswordFragment01);
             }
         });
 
@@ -167,7 +177,7 @@ public class LoginFragment extends Fragment {
             }
         });
 
-        progressDialog = new ProgressDialog(getActivity());
+//        progressDialog = new ProgressDialog(getActivity());
         callbackManager = CallbackManager.Factory.create();
 
         loginButton = (LoginButton) inflatedView.findViewById(R.id.login_button);
@@ -189,10 +199,10 @@ public class LoginFragment extends Fragment {
 
             @Override
             public void onError(FacebookException exception) {
-                Toast.makeText(getActivity(), "Error" + exception.getMessage(), Toast.LENGTH_LONG).show();
+                Toast.makeText(getActivity(), "Error" + exception.getMessage(), Toast.LENGTH_LONG)
+                        .show();
             }
         });
-
 
         // ----------------------------------
         // Login Google
@@ -238,46 +248,41 @@ public class LoginFragment extends Fragment {
         }
 
         if (isInputValid) {
-            progressDialog.setTitle("Logging in...");
-            progressDialog.setMessage("Please wait while we connect you to Note App.");
-            progressDialog.setCanceledOnTouchOutside(false);
+            progressDialog = new NoteAppProgressDialog(getActivity());
+            progressDialog.setUpDialog("Just a moment...",
+                    "Please wait while we connect you to Note App.");
             progressDialog.show();
-            firebaseAuth.signInWithEmailAndPassword(logEmail, logPassword).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                @Override
-                public void onComplete(@NonNull @NotNull Task<AuthResult> task) {
-                    if (task.isSuccessful()) {
+
+            loginWithEmailAndPassword(logEmail, logPassword);
+        }
+    }
+
+    public void loginWithEmailAndPassword(String email, String password){
+        firebaseAuth.signInWithEmailAndPassword(email, password)
+                .addOnSuccessListener(new OnSuccessListener<AuthResult>() {
+                    @Override
+                    public void onSuccess(AuthResult authResult) {
                         progressDialog.dismiss();
 
-                        if (task.getResult().getUser().isEmailVerified()) {
-                            reload();
+                        if (authResult.getUser().isEmailVerified()) {
+                            goToMainActivity();
                         } else {
-                            AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
-                            alert.setTitle("Login Failed");                                             // set dialog title
-                            alert.setMessage("Please verify your email address before logging in!");    // set dialog message
-                            alert.setCancelable(false);
-
-                            alert.setPositiveButton("OK",
-                                    new DialogInterface.OnClickListener() {
-                                        /**
-                                         * To register activity
-                                         * @param dialog dialog
-                                         * @param which which
-                                         */
-                                        @Override
-                                        public void onClick(DialogInterface dialog, int which) {
-                                            dialog.dismiss();
-                                        }
-                                    });
-
-                            alert.create().show();
+                            NoteAppDialog dialog = new NoteAppDialog(getActivity());
+                            dialog.setupOKDialog("Login Failed",
+                                    "Please verify your email address before logging in!");
+                            dialog.show();
                         }
-                    } else {
-                        Toast.makeText(getActivity(), "Email or Password is incorrect.", Toast.LENGTH_SHORT).show();
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull @NotNull Exception e) {
+                        inputLogEmail.setError(" ");
+                        inputLogPassword.setError("Your email or password is incorrect.");
+
                         progressDialog.dismiss();
                     }
-                }
-            });
-        }
+                });
     }
 
     // [START on_start_check_user]
@@ -288,7 +293,7 @@ public class LoginFragment extends Fragment {
         // Check if user is signed in (non-null) and update UI accordingly.
         FirebaseUser currentUser = firebaseAuth.getCurrentUser();
         if (currentUser != null && currentUser.isEmailVerified()) {
-            reload();
+            goToMainActivity();
         }
     }
     // [END on_start_check_user]
@@ -315,7 +320,7 @@ public class LoginFragment extends Fragment {
         }
     }
 
-    private void reload() {
+    private void goToMainActivity() {
         Intent intent = new Intent(getActivity(), MainActivity.class);
         intent.setFlags(intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
@@ -331,7 +336,25 @@ public class LoginFragment extends Fragment {
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with the signed-in user's information
                             FirebaseUser user = firebaseAuth.getCurrentUser();
-                            reload();
+
+                            String Uid = user.getUid();
+
+                            DocumentReference userInfoDoc = db.collection("users").document(Uid);
+
+                            userInfoDoc.get().addOnCompleteListener(
+                                    new OnCompleteListener<DocumentSnapshot>() {
+                                        @Override public void onComplete(
+                                                @NonNull @NotNull Task<DocumentSnapshot> task) {
+                                            if(task.isSuccessful()) {
+                                                DocumentSnapshot document = task.getResult();
+                                                if(!document.exists()){
+                                                    addNewUser(user, userInfoDoc);
+                                                }
+                                            }
+                                        }
+                                    });
+
+                            goToMainActivity();
                         } else {
                             // If sign in fails, display a message to the user.
                             Toast.makeText(getActivity(), "Authentication failed.",
@@ -351,11 +374,51 @@ public class LoginFragment extends Fragment {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "signInWithCredential:success");
                             FirebaseUser user = firebaseAuth.getCurrentUser();
-                            reload();
+
+                            String Uid = user.getUid();
+
+                            DocumentReference userInfoDoc = db.collection("users").document(Uid);
+
+                            userInfoDoc.get().addOnCompleteListener(
+                                    new OnCompleteListener<DocumentSnapshot>() {
+                                        @Override public void onComplete(
+                                                @NonNull @NotNull Task<DocumentSnapshot> task) {
+                                            Log.d(TAG, "on Complete");
+                                            if(task.isSuccessful()) {
+                                                DocumentSnapshot document = task.getResult();
+                                                if(!document.exists()){
+                                                    addNewUser(user, userInfoDoc);
+                                                }
+                                            } else {
+                                                Log.d(TAG, "get failed with ", task.getException());
+                                            }
+                                        }
+                                    });
+
+                            goToMainActivity();
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "signInWithCredential:failure", task.getException());
                         }
+                    }
+                });
+    }
+
+
+    private void addNewUser(FirebaseUser user, DocumentReference userInfoDoc){
+        User newUser = new User();
+        newUser.setFullName(user.getDisplayName());
+        userInfoDoc.set(newUser)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override public void onSuccess(Void unused) {
+                        Log.d(TAG, "DocumentSnapshot written with ID: " + user.getUid());
+
+                        Notebook defaultNotebook = new Notebook();
+                        defaultNotebook.setTitle("My First Notebook");
+
+                        DocumentReference userDefaultNotebookDoc = userInfoDoc.collection("notebooks")
+                                .document(defaultNotebook.getTitle());
+                        userDefaultNotebookDoc.set(defaultNotebook);
                     }
                 });
     }

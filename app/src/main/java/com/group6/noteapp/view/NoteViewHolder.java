@@ -15,18 +15,35 @@ import com.group6.noteapp.R;
  * Class represents each Recycler View's item in note list
  */
 public class NoteViewHolder extends RecyclerView.ViewHolder {
-    private final TextView txtTitle;      // note title
-    private final TextView txtContent;    // note content
+    private final TextView noteTitle;            // note title
+    private final TextView noteContent;          // note content
+    private final TextView noteCreatedDate;      // note created date
 
     /**
      * Constructor
      *
      * @param noteView item view
      */
-    public NoteViewHolder(@NonNull View noteView) {
+    public NoteViewHolder(@NonNull View noteView, NoteAdapterClickListener itemClickListener) {
         super(noteView);
-        txtTitle = noteView.findViewById(R.id.txtNoteTitle);
-        txtContent = noteView.findViewById(R.id.txtNoteContent);
+        noteTitle = noteView.findViewById(R.id.txtNoteTitle);
+        noteContent = noteView.findViewById(R.id.txtNoteContent);
+        noteCreatedDate = noteView.findViewById(R.id.txtNoteCreatedDate);
+
+//        CardView cv = noteView.findViewById(R.id.cardView);
+
+//        noteView.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                if (itemClickListener != null){
+//                    int position = getAdapterPosition();
+//                    if (position != RecyclerView.NO_POSITION){
+//                        itemClickListener.onItemClick(position);
+//                    }
+//                    Toast.makeText(noteView.getContext(), "lala at" + position, Toast.LENGTH_SHORT);
+//                }
+//            }
+//        });
     }
 //
 //    @NonNull
@@ -37,11 +54,15 @@ public class NoteViewHolder extends RecyclerView.ViewHolder {
 //    }
 
     /* Getters */
-    public TextView getTxtTitle() {
-        return txtTitle;
+    public TextView getNoteTitle() {
+        return noteTitle;
     }
 
-    public TextView getTxtContent() {
-        return txtContent;
+    public TextView getNoteContent() {
+        return noteContent;
+    }
+
+    public TextView getNoteCreatedDate() {
+        return noteCreatedDate;
     }
 }

@@ -1,44 +1,48 @@
 package com.group6.noteapp.model;
 
+import com.google.firebase.Timestamp;
+import com.google.firebase.firestore.Exclude;
+import com.google.firebase.firestore.IgnoreExtraProperties;
+import com.google.firebase.firestore.ServerTimestamp;
+
 import java.io.Serializable;
 
-/* Note Entity */
+/* Note Object */
+@IgnoreExtraProperties
 public class Note implements Serializable {
 
-    /* Entity Properties */
-    private int id;                 // Note's ID
-    private int userId;             // Note's user ID (ID of user who created the note)
+    /* Object Properties */
+    private String id;              // Note's doc ID
     private String title;           // Note's title
     private String content;         // Note's content
-    private Boolean isDeleted;      // Is the note in trash?
+    private boolean isDeleted;      // Is the note in trash?
+    @ServerTimestamp
+    private Timestamp createdDate;  // Note's created date
+    @ServerTimestamp
+    private Timestamp updatedDate;  // Note's updated date
 
     /* Constructors */
     public Note() {
     }
 
-    public Note(int id, int userId, String title, String content, Boolean isDeleted) {
+    public Note(String id, String title, String content, boolean isDeleted, Timestamp createdDate, Timestamp updatedDate) {
         this.id = id;
-        this.userId = userId;
         this.title = title;
         this.content = content;
         this.isDeleted = isDeleted;
+        this.createdDate = createdDate;
+        this.updatedDate = updatedDate;
     }
 
     /* Getters and Setters */
-    public int getId() {
+
+    @Exclude
+    public String getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
-    }
-
-    public int getUserId() {
-        return userId;
-    }
-
-    public void setUserId(int userId) {
-        this.userId = userId;
     }
 
     public String getTitle() {
@@ -57,11 +61,27 @@ public class Note implements Serializable {
         this.content = content;
     }
 
-    public Boolean getDeleted() {
+    public boolean isDeleted() {
         return isDeleted;
     }
 
-    public void setDeleted(Boolean deleted) {
+    public void setDeleted(boolean deleted) {
         isDeleted = deleted;
+    }
+
+    public Timestamp getCreatedDate() {
+        return createdDate;
+    }
+
+    public void setCreatedDate(Timestamp createdDate) {
+        this.createdDate = createdDate;
+    }
+
+    public Timestamp getUpdatedDate() {
+        return updatedDate;
+    }
+
+    public void setUpdatedDate(Timestamp updatedDate) {
+        this.updatedDate = updatedDate;
     }
 }

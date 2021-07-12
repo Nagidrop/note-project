@@ -1,6 +1,5 @@
 package com.group6.noteapp.controller;
 
-import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,7 +10,6 @@ import androidx.navigation.fragment.NavHostFragment;
 
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputLayout;
-import com.google.firebase.auth.FirebaseAuth;
 import com.group6.noteapp.R;
 import com.group6.noteapp.util.ValidationUtils;
 
@@ -23,8 +21,6 @@ import com.group6.noteapp.util.ValidationUtils;
 public class RegisterFragment01 extends Fragment {
 
     private View inflatedView;
-    private ProgressDialog progressDialog;
-    private FirebaseAuth mAuth;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -73,7 +69,6 @@ public class RegisterFragment01 extends Fragment {
 
         // Inflate the layout for this fragment
         inflatedView = inflater.inflate(R.layout.fragment_register01, container, false);
-        mAuth = FirebaseAuth.getInstance();
 
         /* Get EditText Views */
         TextInputLayout inputRegEmail = inflatedView.findViewById(R.id.textInputRegEmail);
@@ -91,13 +86,7 @@ public class RegisterFragment01 extends Fragment {
                 String regPassword = inputRegPassword.getEditText().getText().toString().trim();
                 String regConfirmPassword = inputRegConfirmPassword.getEditText().getText().toString().trim();
 
-                inputRegEmail.setErrorEnabled(false);
-                inputRegPassword.setErrorEnabled(false);
-                inputRegConfirmPassword.setErrorEnabled(false);
-
-                inputRegEmail.setErrorEnabled(true);
-                inputRegPassword.setErrorEnabled(true);
-                inputRegConfirmPassword.setErrorEnabled(true);
+                clearInputErrors(inputRegEmail, inputRegPassword, inputRegConfirmPassword);
 
                 boolean isInputValid = true;
                 int validateEmailResult = ValidationUtils.validateEmail(regEmail);
@@ -114,15 +103,17 @@ public class RegisterFragment01 extends Fragment {
                 if (validatePasswordResult == 1) {
                     isInputValid = false;
                     inputRegPassword.setError("Password must not be empty.");
-                } else if (validatePasswordResult == 2){
+                } else if (validatePasswordResult == 2) {
                     isInputValid = false;
                     inputRegPassword.setError("Password must be at least 8 characters.");
-                } else if (validatePasswordResult == 3){
+                } else if (validatePasswordResult == 3) {
                     isInputValid = false;
                     inputRegConfirmPassword.setError("Password confirmation doesn't match.");
                 }
 
-                if (isInputValid){
+                if (isInputValid) {
+                    clearInputErrors(inputRegEmail, inputRegPassword, inputRegConfirmPassword);
+
                     RegisterFragment02 registerFragment02 = new RegisterFragment02();
 
                     Bundle regData = new Bundle();
@@ -131,14 +122,6 @@ public class RegisterFragment01 extends Fragment {
 
                     registerFragment02.setArguments(regData);
 
-                    inputRegEmail.setErrorEnabled(false);
-                    inputRegPassword.setErrorEnabled(false);
-                    inputRegConfirmPassword.setErrorEnabled(false);
-
-                    inputRegEmail.setErrorEnabled(true);
-                    inputRegPassword.setErrorEnabled(true);
-                    inputRegConfirmPassword.setErrorEnabled(true);
-
                     NavHostFragment.findNavController(RegisterFragment01.this)
                             .navigate(R.id.action_registerFragment01_to_registerFragment02, regData);
                 }
@@ -146,5 +129,16 @@ public class RegisterFragment01 extends Fragment {
         });
 
         return inflatedView;
+    }
+
+    private void clearInputErrors(TextInputLayout inputRegEmail, TextInputLayout inputRegPassword,
+                                  TextInputLayout inputRegConfirmPassword) {
+        inputRegEmail.setErrorEnabled(false);
+        inputRegPassword.setErrorEnabled(false);
+        inputRegConfirmPassword.setErrorEnabled(false);
+
+        inputRegEmail.setErrorEnabled(true);
+        inputRegPassword.setErrorEnabled(true);
+        inputRegConfirmPassword.setErrorEnabled(true);
     }
 }
