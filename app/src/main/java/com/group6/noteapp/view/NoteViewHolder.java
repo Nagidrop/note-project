@@ -28,6 +28,7 @@ public class NoteViewHolder extends RecyclerView.ViewHolder {
      */
     public NoteViewHolder(@NonNull View noteView) {
         super(noteView);
+
         noteTitle = noteView.findViewById(R.id.txtNoteTitle);
         noteContent = noteView.findViewById(R.id.txtNoteContent);
         noteCreatedDate = noteView.findViewById(R.id.txtNoteCreatedDate);

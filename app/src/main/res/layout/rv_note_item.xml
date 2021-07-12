@@ -32,7 +32,7 @@
             android:layout_gravity="left"
             android:maxLines="1"
             android:textAppearance="@style/TextAppearance.MyTheme.Body3"
-            android:textColor="@color/black_87" />
+            android:textColor="@color/black_65" />
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/txtNoteTitle"
@@ -45,7 +45,8 @@
             android:maxLines="2"
             android:textStyle="bold"
             android:textAppearance="@style/TextAppearance.MyTheme.Body1"
-            android:textColor="#B2000000" />
+            android:letterSpacing="0.0178571429"
+            android:textColor="@color/black_65" />
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/txtNoteContent"
