@@ -17,18 +17,21 @@ public class Note implements Serializable {
     private String content;         // Note's content
     private boolean isDeleted;      // Is the note in trash?
     @ServerTimestamp
-    private Timestamp createdDate;
+    private Timestamp createdDate;  // Note's created date
+    @ServerTimestamp
+    private Timestamp updatedDate;  // Note's updated date
 
     /* Constructors */
     public Note() {
     }
 
-    public Note(String id, String title, String content, boolean isDeleted, Timestamp createdDate) {
+    public Note(String id, String title, String content, boolean isDeleted, Timestamp createdDate, Timestamp updatedDate) {
         this.id = id;
         this.title = title;
         this.content = content;
         this.isDeleted = isDeleted;
         this.createdDate = createdDate;
+        this.updatedDate = updatedDate;
     }
 
     /* Getters and Setters */
@@ -58,7 +61,7 @@ public class Note implements Serializable {
         this.content = content;
     }
 
-    public boolean getDeleted() {
+    public boolean isDeleted() {
         return isDeleted;
     }
 
@@ -72,5 +75,13 @@ public class Note implements Serializable {
 
     public void setCreatedDate(Timestamp createdDate) {
         this.createdDate = createdDate;
+    }
+
+    public Timestamp getUpdatedDate() {
+        return updatedDate;
+    }
+
+    public void setUpdatedDate(Timestamp updatedDate) {
+        this.updatedDate = updatedDate;
     }
 }
