@@ -1,5 +1,6 @@
 package com.group6.noteapp.controller;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
@@ -8,27 +9,46 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.os.Environment;
 import android.os.SystemClock;
+import android.provider.MediaStore;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Chronometer;
+import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.group6.noteapp.R;
+import com.group6.noteapp.model.Note;
+import com.group6.noteapp.model.Notebook;
+import com.group6.noteapp.util.Constants;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.io.IOException;
@@ -43,15 +63,19 @@ public class RecordActivity extends AppCompatActivity {
     private MediaRecorder recorder ;
     private MediaPlayer player = null;
     private TextView textTimeRecord;
-    private Button btnRecording;
+    private Button btnRecording, btnPlaying,btnSaveRecord;
     private StorageReference storageReference;
     private ProgressDialog progressDialog;
-    String firebaseAuth;
+    private TextInputLayout recordName;
+    private FirebaseAuth firebaseAuth;
+    private long timeLeft=6000;
 
-    private String recordPermission = Manifest.permission.RECORD_AUDIO;
-    private int PERMISSION_CODE = 21;
+    private FirebaseStorage storage;
+    private FirebaseUser user;
+    private FirebaseFirestore db;
+
     //Get current date and time
-    SimpleDateFormat formatter = new SimpleDateFormat("yyyy_MM_dd_hh_mm_ss", Locale.ENGLISH);
+    SimpleDateFormat formatter = new SimpleDateFormat("yyyy_MM_dd_hh_mm_ss", Locale.getDefault());
     Date now = new Date();
 
     private Chronometer timer;
@@ -62,10 +86,21 @@ public class RecordActivity extends AppCompatActivity {
         setContentView(R.layout.activity_record);
         btnRecording=(Button) findViewById(R.id.btnRecording);
         timer = findViewById(R.id.record_timer);
+        btnPlaying=(Button)findViewById(R.id.btnPlay);
+        textTimeRecord=(TextView)findViewById(R.id.textTimeRecord);
+        btnSaveRecord=(Button) findViewById(R.id.btnSaveRecord);
+        recordName=findViewById(R.id.textInputRecordName);
 
         progressDialog = new ProgressDialog(this);
         storageReference= FirebaseStorage.getInstance().getReference();
+        db = FirebaseFirestore.getInstance();
+        firebaseAuth=FirebaseAuth.getInstance();
+        user = firebaseAuth.getCurrentUser();
+
         fileName = getExternalCacheDir().getAbsolutePath();
+        btnPlaying.setEnabled(false);
+        btnSaveRecord.setEnabled(false);
+        recordName.setEnabled(false);
 
         try{
             btnRecording.setOnTouchListener(new View.OnTouchListener() {
@@ -86,6 +121,35 @@ public class RecordActivity extends AppCompatActivity {
         }catch(Exception e) {
            e.printStackTrace();
         }
+
+        try {
+            btnPlaying.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                        btnPlaying.setText("Stop");
+                        startPlaying();
+//                        if(btnPlaying.getText().equals("Stop")){
+//                            stopPlaying();
+//                            btnPlaying.setText("Play");
+//                        }
+                }
+            });
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+        try {
+
+            btnSaveRecord.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    uploadAudio(Uri.fromFile(new File(fileName)));
+                }
+            });
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
 
     }
     private void startRecording() {
@@ -111,6 +175,8 @@ public class RecordActivity extends AppCompatActivity {
 
         //Start Recording
         recorder.start();
+        btnSaveRecord.setEnabled(true);
+        recordName.setEnabled(false);
     }
 
 
@@ -122,37 +188,93 @@ public class RecordActivity extends AppCompatActivity {
         recorder.stop();
         recorder.release();
         recorder = null;
-        uploadAudio();
+        btnPlaying.setEnabled(true);
     }
 
-    private void uploadAudio() {
-        progressDialog.setMessage("Uploading Audio ...");
+    private void uploadAudio(Uri uri) {
+        progressDialog.setMessage("Uploading Record ...");
         progressDialog.show();
 
-        firebaseAuth=FirebaseAuth.getInstance().getUid();
-        String email=firebaseAuth;
-        StorageReference filepath = storageReference.child("Audio_"+email).child("Recording_" + formatter.format(now) + ".3gp");
-        Uri uri = Uri.fromFile(new File(fileName));
-        filepath.putFile(uri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+        String userID=firebaseAuth.getUid();
+        StorageReference filepath = storageReference.child("Record").child(userID).child("Recording_" + formatter.format(now)+ ".3gp");
+        UploadTask uploadTask =filepath.putFile(uri);
+
+        uploadTask.addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull @NotNull Exception e) {
+                progressDialog.dismiss();
+                Toast.makeText(RecordActivity.this, "Record Upload Unsuccessful!!", Toast.LENGTH_SHORT).show();
+            }
+        }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                progressDialog.dismiss();
-                Intent intent = new Intent(RecordActivity.this, MainActivity.class);
-                startActivity(intent);
+
+                DocumentReference userInfoDoc = db.collection("users").document(user.getUid());
+                userInfoDoc.get().addOnCompleteListener(
+                        new OnCompleteListener<DocumentSnapshot>() {
+                            @Override public void onComplete(
+                                    @NonNull @NotNull Task<DocumentSnapshot> task) {
+                                if(task.isSuccessful()) {
+                                    DocumentSnapshot document = task.getResult();
+                                    Log.e(LOG_TAG, "get failed with ", task.getException());
+                                    if(document.exists()){
+
+                                        Notebook defaultNotebook = new Notebook();
+                                        defaultNotebook.setTitle(Constants.FIRST_NOTEBOOK_NAME);
+                                        DocumentReference userDefNotebookDoc = userInfoDoc.collection("notebooks")
+                                                .document(defaultNotebook.getTitle());
+
+                                        String name = recordName.getEditText().getText().toString();
+                                        if(TextUtils.isEmpty(name)){
+                                            recordName.setErrorEnabled(true);
+                                            recordName.setError("Please enter Record Name!");
+
+                                        }else{
+                                            progressDialog.dismiss();
+                                            Note recordNote = new Note();
+                                            recordNote.setTitle(name);
+                                            recordNote.setContent(uri.getLastPathSegment());
+                                            CollectionReference userDefNoteCollection = userDefNotebookDoc.collection("notes");
+                                            userDefNoteCollection.add(recordNote);
+
+                                            Toast.makeText(RecordActivity.this, "Record Upload Successful!!", Toast.LENGTH_SHORT).show();
+
+                                            Intent intent = new Intent(RecordActivity.this, LoginActivity.class);
+                                            intent.setFlags(intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                                            startActivity(intent);
+
+                                        }
+
+                                    }
+                                } else {
+                                    Log.e(LOG_TAG, "get failed with ", task.getException());
+                                }
+                            }
+                        });
+
             }
+
         });
+
+
     }
     private void startPlaying() {
+        timer.setBase(SystemClock.elapsedRealtime());
+        timer.start();
         player = new MediaPlayer();
         try {
             player.setDataSource(fileName);
             player.prepare();
             player.start();
+            textTimeRecord.setText(String.valueOf(player.getDuration()));
         } catch (IOException e) {
             Log.e(LOG_TAG, "prepare() failed");
         }
     }
     private void stopPlaying() {
+        //Stop Timer, very obvious
+        timer.stop();
+        player.stop();
         player.release();
         player = null;
     }
@@ -169,5 +291,8 @@ public class RecordActivity extends AppCompatActivity {
             player.release();
             player = null;
         }
+    }
+    public void getTimeRecord(){
+
     }
 }
