@@ -21,7 +21,6 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.group6.noteapp.R;
 import com.group6.noteapp.model.Note;
-import com.group6.noteapp.view.NoteAdapterClickListener;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -119,28 +118,8 @@ public class HomeFragment extends Fragment {
                                     RecyclerView rvNote = inflatedView.findViewById(R.id.recyclerView);
 
                                     noteAdapter = new NoteAdapter(getActivity(), noteList);
-                                    noteAdapter.setItemClickListener(new NoteAdapterClickListener() {
-                                        @Override
-                                        public void onItemClick(int position) {
-                                            noteList.get(position);
-                                        }
-                                    });
                                     rvNote.setAdapter(noteAdapter);
                                     rvNote.setLayoutManager(new LinearLayoutManager(getActivity()));
-
-
-//                                    rvNote.addOnItemTouchListener(new RecyclerViewTouchListener(getActivity(),
-//                                            rvNote, new RecyclerViewClickListener() {
-//                                        @Override
-//                                        public void onClick(View view, int position) {
-//                                            Toast.makeText(getActivity(), "lala", Toast.LENGTH_SHORT);
-//                                        }
-//
-//                                        @Override
-//                                        public void onLongClick(View view, int position) {
-//                                            Toast.makeText(getActivity(), "lala long", Toast.LENGTH_SHORT);
-//                                        }
-//                                    }));
                                 } else {
                                     Log.d("noteerror", "Error getting documents: ", task.getException());
                                 }

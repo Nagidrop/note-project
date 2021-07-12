@@ -10,7 +10,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.group6.noteapp.R;
 import com.group6.noteapp.model.Note;
-import com.group6.noteapp.view.NoteAdapterClickListener;
 import com.group6.noteapp.view.NoteViewHolder;
 
 import java.text.SimpleDateFormat;
@@ -21,7 +20,6 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteViewHolder> {
 
     private Context context;                                // activity context
     private ArrayList<Note> notes;                          // list of notes
-    private NoteAdapterClickListener itemClickListener;     // on click listener
 
     /**
      * Constructor
@@ -48,7 +46,7 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteViewHolder> {
         LayoutInflater inflater = LayoutInflater.from(context);
         View noteView = inflater.inflate(R.layout.rv_note_item, parent, false);
 
-        return new NoteViewHolder(noteView, itemClickListener);
+        return new NoteViewHolder(noteView);
     }
 
     /**
@@ -68,7 +66,15 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteViewHolder> {
 
         String createdDate = dateFormat.format(note.getCreatedDate().toDate());
         createdDate.replace("am", "AM").replace("pm","PM");
-        holder.getNoteCreatedDate().setText(createdDate); // set note created date
+        holder.getNoteCreatedDate().setText(createdDate);           // set note created date
+
+        // card view onclick
+        holder.getNoteCardView().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
     }
 
     /**
@@ -88,9 +94,5 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteViewHolder> {
      */
     public List<Note> getNotes() {
         return notes;
-    }
-
-    public void setItemClickListener(NoteAdapterClickListener itemClickListener) {
-        this.itemClickListener = itemClickListener;
     }
 }
