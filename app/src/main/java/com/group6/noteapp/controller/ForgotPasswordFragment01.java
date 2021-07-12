@@ -4,19 +4,22 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.group6.noteapp.R;
 import com.group6.noteapp.util.ValidationUtils;
+import com.group6.noteapp.view.NoteAppDialog;
+import com.group6.noteapp.view.NoteAppProgressDialog;
+
+import org.jetbrains.annotations.NotNull;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -27,6 +30,7 @@ public class ForgotPasswordFragment01 extends Fragment {
 
     View inflatedView;
     TextInputLayout inputResetPassEmail;
+    NoteAppProgressDialog progressDialog;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -81,9 +85,7 @@ public class ForgotPasswordFragment01 extends Fragment {
                 inputResetPassEmail = inflatedView.findViewById(R.id.textInputForgotEmail);
                 String resetPassEmail = inputResetPassEmail.getEditText().getText().toString();
 
-                inputResetPassEmail.setErrorEnabled(false);
-
-                inputResetPassEmail.setErrorEnabled(true);
+                clearInputErrors(inputResetPassEmail);
 
                 boolean isInputValid = true;
                 int emailValidateResult = ValidationUtils.validateEmail(resetPassEmail);
@@ -97,6 +99,13 @@ public class ForgotPasswordFragment01 extends Fragment {
                 }
 
                 if (isInputValid){
+                    NoteAppProgressDialog progressDialog = new NoteAppProgressDialog(getActivity());
+                    progressDialog.setUpDialog("Just a moment...",
+                            "Please wait while we connect you to Note App.");
+                    progressDialog.show();
+
+                    clearInputErrors(inputResetPassEmail);
+
                     sendEmailResetPassword(resetPassEmail);
                 }
             }
@@ -110,18 +119,32 @@ public class ForgotPasswordFragment01 extends Fragment {
         FirebaseAuth auth = FirebaseAuth.getInstance();
 
         auth.sendPasswordResetEmail(emailAddress)
-                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        if (task.isSuccessful()) {
-                            Toast.makeText(getActivity(), "We have sent you instructions to reset your password!", Toast.LENGTH_SHORT).show();
-                            Bundle bundle = new Bundle();
-                            bundle.putString("email", emailAddress);
-                            NavHostFragment.findNavController(ForgotPasswordFragment01.this).navigate(R.id.action_forgotPasswordFragment01_to_forgotPasswordFragment02, bundle);
-                        } else {
-                            Toast.makeText(getActivity(), "Failed to send reset email!", Toast.LENGTH_SHORT).show();
-                        }
+                    public void onSuccess(Void unused) {
+                        progressDialog.dismiss();
+                        Bundle bundle = new Bundle();
+                        bundle.putString("email", emailAddress);
+                        NavHostFragment.findNavController(ForgotPasswordFragment01.this)
+                                .navigate(R.id.action_forgotPasswordFragment01_to_forgotPasswordFragment02, bundle);
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull @NotNull Exception e) {
+                        progressDialog.dismiss();
+
+                        NoteAppDialog dialog = new NoteAppDialog(getActivity());
+                        dialog.setupOKDialog("Email Not Sent",
+                                "An error occurred while we send you instructions. Please try again!");
+                        dialog.show();
                     }
                 });
+    }
+
+    private void clearInputErrors(TextInputLayout inputResetPassEmail){
+        inputResetPassEmail.setErrorEnabled(false);
+
+        inputResetPassEmail.setErrorEnabled(true);
     }
 }

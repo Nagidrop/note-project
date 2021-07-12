@@ -1,6 +1,5 @@
 package com.group6.noteapp.controller;
 
-import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.text.InputType;
 import android.util.Log;
@@ -31,6 +30,7 @@ import com.group6.noteapp.model.Notebook;
 import com.group6.noteapp.model.User;
 import com.group6.noteapp.util.ValidationUtils;
 import com.group6.noteapp.view.NoteAppDialog;
+import com.group6.noteapp.view.NoteAppProgressDialog;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -45,7 +45,7 @@ public class RegisterFragment02 extends Fragment {
 
     private View inflatedView;
     private FirebaseAuth mAu;
-    private ProgressDialog progressDialog;
+    private NoteAppProgressDialog progressDialog;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -152,12 +152,11 @@ public class RegisterFragment02 extends Fragment {
 
                 if (isInputValid) {
                     clearInputErrors(inputRegFullName, inputRegAddress);
-                    progressDialog = new ProgressDialog(getActivity());
 
                     /* show progress dialog*/
-                    progressDialog.setTitle("Just a moment...");
-                    progressDialog.setMessage("Please wait while we set up your account for Note App.");
-                    progressDialog.setCanceledOnTouchOutside(false);
+                    progressDialog = new NoteAppProgressDialog(getActivity());
+                    progressDialog.setUpDialog("Just a moment...",
+                            "Please wait while we set up your account for Note App.");
                     progressDialog.show();
 
                     mAu.createUserWithEmailAndPassword(regEmail, regPassword).addOnSuccessListener(new OnSuccessListener<AuthResult>() {
@@ -191,15 +190,15 @@ public class RegisterFragment02 extends Fragment {
                                             // handle error
                                             String error = e.getMessage();
 
-                                            NoteAppDialog noteAppDialog = new NoteAppDialog(getActivity());
+                                            NoteAppDialog dialog = new NoteAppDialog(getActivity());
                                             if (error.equalsIgnoreCase("The email address is already in use by another account.")) {
-                                                noteAppDialog.setupOKDialog("Registration Failed",
+                                                dialog.setupOKDialog("Registration Failed",
                                                         "Email address is already in use. Please use a different one!");
                                             } else {
-                                                noteAppDialog.setupOKDialog("Registration Failed",
+                                                dialog.setupOKDialog("Registration Failed",
                                                         "An unknown error occurred!\nError message:\n\"" + error + "\"");
                                             }
-                                            noteAppDialog.show();
+                                            dialog.show();
                                         }
                                     });
                         }
@@ -242,10 +241,10 @@ public class RegisterFragment02 extends Fragment {
                     public void onFailure(@NonNull @NotNull Exception e) {
                         progressDialog.dismiss();
 
-                        NoteAppDialog noteAppDialog = new NoteAppDialog(getActivity());
-                        noteAppDialog.setupOKDialog("Registration Failed",
+                        NoteAppDialog dialog = new NoteAppDialog(getActivity());
+                        dialog.setupOKDialog("Registration Failed",
                                 "An error occurred during your account setup. Please try register again!");
-                        noteAppDialog.show();
+                        dialog.show();
 
                         Log.w(TAG, "Error adding document", e);
                     }
@@ -282,17 +281,17 @@ public class RegisterFragment02 extends Fragment {
                         .navigate(R.id.action_registerFragment02_to_registerFragment03, regData);
             }
         })
-        .addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull @NotNull Exception e) {
-                progressDialog.dismiss();
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull @NotNull Exception e) {
+                        progressDialog.dismiss();
 
-                NoteAppDialog noteAppDialog = new NoteAppDialog(getActivity());
-                noteAppDialog.setupOKDialog("Registration Failed",
-                        "An error occurred during your account setup. Please try register again!");
-                noteAppDialog.show();
-            }
-        });
+                        NoteAppDialog dialog = new NoteAppDialog(getActivity());
+                        dialog.setupOKDialog("Registration Failed",
+                                "An error occurred during your account setup. Please try register again!");
+                        dialog.show();
+                    }
+                });
 
         userNoteCollection.add(welcomeNote2);
         userNoteCollection.add(welcomeNote3);

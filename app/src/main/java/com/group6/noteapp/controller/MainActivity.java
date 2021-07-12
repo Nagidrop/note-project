@@ -189,10 +189,10 @@ public class MainActivity extends AppCompatActivity {
      * Log out confirmation
      */
     public void logOutConfirmation() {
-        NoteAppDialog noteAppDialog = new NoteAppDialog(this);
-        noteAppDialog.setupConfirmationDialog("Logout Confirmation",
+        NoteAppDialog dialog = new NoteAppDialog(this);
+        dialog.setupConfirmationDialog("Logout Confirmation",
                 "Are you sure you want to log out?");
-        noteAppDialog.setPositiveButton("Yes",
+        dialog.setPositiveButton("Yes",
                 new DialogInterface.OnClickListener() {
                     /**
                      * Log the current user out
@@ -205,7 +205,7 @@ public class MainActivity extends AppCompatActivity {
                     }
                 });
 
-        noteAppDialog.show();
+        dialog.show();
     }
 
     /**
@@ -255,10 +255,10 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed(){
-        NoteAppDialog noteAppDialog = new NoteAppDialog(this);
-        noteAppDialog.setupConfirmationDialog("Exit Confirmation",
+        NoteAppDialog dialog = new NoteAppDialog(this);
+        dialog.setupConfirmationDialog("Exit Confirmation",
                 "Are you sure you want to exit Note App?");
-        noteAppDialog.setPositiveButton("Yes",
+        dialog.setPositiveButton("Yes",
                 new DialogInterface.OnClickListener() {
                     /**
                      * Log the current user out
@@ -271,7 +271,7 @@ public class MainActivity extends AppCompatActivity {
                     }
                 });
 
-        noteAppDialog.show();
+        dialog.show();
     }
 
     private void logOut(){

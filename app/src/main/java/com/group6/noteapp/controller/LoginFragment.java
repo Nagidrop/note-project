@@ -46,6 +46,7 @@ import com.group6.noteapp.model.Notebook;
 import com.group6.noteapp.model.User;
 import com.group6.noteapp.util.ValidationUtils;
 import com.group6.noteapp.view.NoteAppDialog;
+import com.group6.noteapp.view.NoteAppProgressDialog;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -65,7 +66,7 @@ public class LoginFragment extends Fragment {
     private FirebaseAuth firebaseAuth;
     private LoginButton loginButton;
     private CallbackManager callbackManager;
-    private ProgressDialog progressDialog;
+    private NoteAppProgressDialog progressDialog;
     private GoogleSignInClient mGoogleSignInClient;
     private GoogleApiClient mGoogleApiClient;
     private MaterialTextView mStatusTextView;
@@ -176,7 +177,7 @@ public class LoginFragment extends Fragment {
             }
         });
 
-        progressDialog = new ProgressDialog(getActivity());
+//        progressDialog = new ProgressDialog(getActivity());
         callbackManager = CallbackManager.Factory.create();
 
         loginButton = (LoginButton) inflatedView.findViewById(R.id.login_button);
@@ -247,9 +248,9 @@ public class LoginFragment extends Fragment {
         }
 
         if (isInputValid) {
-            progressDialog.setTitle("Just a moment...");
-            progressDialog.setMessage("Please wait while we connect you to Note App.");
-            progressDialog.setCanceledOnTouchOutside(false);
+            progressDialog = new NoteAppProgressDialog(getActivity());
+            progressDialog.setUpDialog("Just a moment...",
+                    "Please wait while we connect you to Note App.");
             progressDialog.show();
 
             loginWithEmailAndPassword(logEmail, logPassword);
@@ -266,10 +267,10 @@ public class LoginFragment extends Fragment {
                         if (authResult.getUser().isEmailVerified()) {
                             goToMainActivity();
                         } else {
-                            NoteAppDialog noteAppDialog = new NoteAppDialog(getActivity());
-                            noteAppDialog.setupOKDialog("Login Failed",
+                            NoteAppDialog dialog = new NoteAppDialog(getActivity());
+                            dialog.setupOKDialog("Login Failed",
                                     "Please verify your email address before logging in!");
-                            noteAppDialog.show();
+                            dialog.show();
                         }
                     }
                 })
