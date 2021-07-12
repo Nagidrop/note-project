@@ -247,7 +247,7 @@ public class LoginFragment extends Fragment {
         }
 
         if (isInputValid) {
-            progressDialog.setTitle("Logging in...");
+            progressDialog.setTitle("Just a moment...");
             progressDialog.setMessage("Please wait while we connect you to Note App.");
             progressDialog.setCanceledOnTouchOutside(false);
             progressDialog.show();

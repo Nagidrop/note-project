@@ -155,8 +155,8 @@ public class RegisterFragment02 extends Fragment {
                     progressDialog = new ProgressDialog(getActivity());
 
                     /* show progress dialog*/
-                    progressDialog.setTitle("Registering...");
-                    progressDialog.setMessage("Please wait while we register you in Note App.");
+                    progressDialog.setTitle("Just a moment...");
+                    progressDialog.setMessage("Please wait while we set up your account for Note App.");
                     progressDialog.setCanceledOnTouchOutside(false);
                     progressDialog.show();
 
@@ -187,6 +187,7 @@ public class RegisterFragment02 extends Fragment {
                                         @Override
                                         public void onFailure(@NonNull @NotNull Exception e) {
                                             Log.w(TAG, "Error adding document", e);
+                                            progressDialog.dismiss();
                                             // handle error
                                             String error = e.getMessage();
 
@@ -233,13 +234,19 @@ public class RegisterFragment02 extends Fragment {
                 .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                     @Override
                     public void onSuccess(DocumentReference documentReference) {
-                        progressDialog.dismiss();
                         addWelcomeNote(documentReference, firebaseUser);
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull @NotNull Exception e) {
+                        progressDialog.dismiss();
+
+                        NoteAppDialog noteAppDialog = new NoteAppDialog(getActivity());
+                        noteAppDialog.setupOKDialog("Registration Failed",
+                                "An error occurred during your account setup. Please try register again!");
+                        noteAppDialog.show();
+
                         Log.w(TAG, "Error adding document", e);
                     }
                 });
@@ -261,16 +268,33 @@ public class RegisterFragment02 extends Fragment {
         welcomeNote3.setContent("When I was first asked to make a film about my nephew, Hubert Farnsworth, I thought \"Why should I?\" Then later, Leela made the film. But if I did make it, you can bet there would have been more topless women on motorcycles. Roll film! You are the last hope of the universe.");
 
         CollectionReference userNoteCollection = userDefNotebookDoc.collection("notes");
-        userNoteCollection.add(welcomeNote);
+        userNoteCollection.add(welcomeNote).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+            @Override
+            public void onSuccess(DocumentReference documentReference) {
+                progressDialog.dismiss();
+
+                firebaseUser.sendEmailVerification();
+
+                Bundle regData = new Bundle();
+                regData.putString("regEmail", regEmail);
+
+                NavHostFragment.findNavController(RegisterFragment02.this)
+                        .navigate(R.id.action_registerFragment02_to_registerFragment03, regData);
+            }
+        })
+        .addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull @NotNull Exception e) {
+                progressDialog.dismiss();
+
+                NoteAppDialog noteAppDialog = new NoteAppDialog(getActivity());
+                noteAppDialog.setupOKDialog("Registration Failed",
+                        "An error occurred during your account setup. Please try register again!");
+                noteAppDialog.show();
+            }
+        });
+
         userNoteCollection.add(welcomeNote2);
         userNoteCollection.add(welcomeNote3);
-
-        firebaseUser.sendEmailVerification();
-
-        Bundle regData = new Bundle();
-        regData.putString("regEmail", regEmail);
-
-        NavHostFragment.findNavController(RegisterFragment02.this)
-                .navigate(R.id.action_registerFragment02_to_registerFragment03, regData);
     }
 }
