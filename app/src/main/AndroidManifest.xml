@@ -23,8 +23,10 @@
         <activity android:name=".view.AudioListFragment"></activity>
         <activity android:name=".controller.RecordActivity" />
         <activity android:name=".ViewCaptureImageActivity"></activity>
+        <activity android:name=".controller.ViewCaptureImageActivity"></activity>
         <activity android:name=".controller.CameraActivity" />
         <activity android:name=".controller.MainActivity" />
+        <activity android:name=".controller.RecordActivity" />
         <activity android:name=".controller.LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

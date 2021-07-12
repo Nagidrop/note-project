@@ -1,7 +1,7 @@
 /**
  * Quan Duc Loc CE140037
  */
-package com.group6.noteapp;
+package com.group6.noteapp.util;
 
 public final class Constants {
     public static final int NOTE_TITLE_LEN_MAX = 255;

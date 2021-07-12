@@ -9,6 +9,7 @@
     </string>
     <string name="email">Email</string>
     <string name="enter_email">Please enter your email address.</string>
+    <string name="image_name">Image Name (Required)</string>
     <string name="fab_content_desc">fab button</string>
     <string name="facebook_app_id">506452847140505</string>
     <!--    <string name="facebook_client_token">506452847140505</string>-->
@@ -35,9 +36,11 @@
     <string name="register_guide">Basic information</string>
     <string name="step_one_of_two">1/2</string>
     <string name="step_two_of_two">2/2</string>
+    <string name="save">Save</string>
     <string name="submit">Submit</string>
     <string name="system">System</string>
     <string name="trash">Trash</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="record_name">Record Name</string>
 </resources>
