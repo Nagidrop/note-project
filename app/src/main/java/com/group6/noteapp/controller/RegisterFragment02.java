@@ -45,6 +45,7 @@ public class RegisterFragment02 extends Fragment {
 
     private View inflatedView;
     private FirebaseAuth mAu;
+    private ProgressDialog progressDialog;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -129,11 +130,8 @@ public class RegisterFragment02 extends Fragment {
                 String regBirthdate = inputRegBirthdate.getEditText().getText().toString();
                 String regAddress = inputRegAddress.getEditText().getText().toString();
                 // Create a new user with a first and last name
-                inputRegFullName.setErrorEnabled(false);
-                inputRegAddress.setErrorEnabled(false);
 
-                inputRegFullName.setErrorEnabled(true);
-                inputRegAddress.setErrorEnabled(true);
+                clearInputErrors(inputRegFullName, inputRegAddress);
 
                 boolean isInputValid = true;
                 int validateFullNameResult = ValidationUtils.validateFullName(regFullname);
@@ -153,7 +151,8 @@ public class RegisterFragment02 extends Fragment {
                 }
 
                 if (isInputValid) {
-                    ProgressDialog progressDialog = new ProgressDialog(getActivity());
+                    clearInputErrors(inputRegFullName, inputRegAddress);
+                    progressDialog = new ProgressDialog(getActivity());
 
                     /* show progress dialog*/
                     progressDialog.setTitle("Registering...");
@@ -164,7 +163,6 @@ public class RegisterFragment02 extends Fragment {
                     mAu.createUserWithEmailAndPassword(regEmail, regPassword).addOnSuccessListener(new OnSuccessListener<AuthResult>() {
                         @Override
                         public void onSuccess(AuthResult authResult) {
-                            progressDialog.dismiss();
                             // Sign in success, update UI with the signed-in user's information
                             FirebaseUser firebaseUser = authResult.getUser();
                             String userUid = firebaseUser.getUid();
@@ -182,51 +180,7 @@ public class RegisterFragment02 extends Fragment {
                                         public void onSuccess(Void aVoid) {
                                             Log.d(TAG, "DocumentSnapshot written with ID: " + userUid);
 
-                                            Notebook defaultNotebook = new Notebook();
-                                            defaultNotebook.setTitle(Constants.FIRST_NOTEBOOK_NAME);
-
-                                            CollectionReference userNotebookCol = userInfoDoc.collection("notebooks");
-
-                                            userNotebookCol.add(defaultNotebook)
-                                                    .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                                                        @Override
-                                                        public void onSuccess(DocumentReference documentReference) {
-                                                            Note welcomeNote = new Note();
-                                                            welcomeNote.setTitle(Constants.WELCOME_NOTE_TITLE);
-                                                            welcomeNote.setContent(Constants.WELCOME_NOTE_CONTENT);
-
-                                                            Note welcomeNote2 = new Note();
-                                                            welcomeNote2.setTitle("Test note - delete at release");
-                                                            welcomeNote2.setContent("I don't know what you did, Fry, but once again, you screwed up! Now all the planets are gonna start cracking wise about our mamas. When will that be? Uh, is the puppy mechanical in any way? She also liked to shut up!\n" +
-                                                                    "\n" +
-                                                                    "Who am I making this out to? Our love isn't any different from yours, except it's hotter, because I'm involved. Okay, it's 500 dollars, you have no choice of carrier, the battery can't hold the charge and the reception isn't very…");
-
-                                                            Note welcomeNote3 = new Note();
-                                                            welcomeNote3.setTitle("Test note but intentionally exceeds longer than two lines title - delete at release");
-                                                            welcomeNote3.setContent("When I was first asked to make a film about my nephew, Hubert Farnsworth, I thought \"Why should I?\" Then later, Leela made the film. But if I did make it, you can bet there would have been more topless women on motorcycles. Roll film! You are the last hope of the universe.");
-
-                                                            CollectionReference userDefNoteCollection = documentReference.collection("notes");
-                                                            userDefNoteCollection.add(welcomeNote);
-                                                            userDefNoteCollection.add(welcomeNote2);
-                                                            userDefNoteCollection.add(welcomeNote3);
-
-                                                            firebaseUser.sendEmailVerification();
-
-                                                            Bundle regData = new Bundle();
-                                                            regData.putString("regEmail", regEmail);
-
-                                                            NavHostFragment.findNavController(RegisterFragment02.this)
-                                                                    .navigate(R.id.action_registerFragment02_to_registerFragment03, regData);
-                                                        }
-                                                    })
-                                                    .addOnFailureListener(new OnFailureListener() {
-                                                        @Override
-                                                        public void onFailure(@NonNull @NotNull Exception e) {
-                                                            Log.w(TAG, "Error adding document", e);
-                                                        }
-                                                    });
-
-
+                                            addDefaultNotebook(userInfoDoc, firebaseUser);
                                         }
                                     })
                                     .addOnFailureListener(new OnFailureListener() {
@@ -234,20 +188,17 @@ public class RegisterFragment02 extends Fragment {
                                         public void onFailure(@NonNull @NotNull Exception e) {
                                             Log.w(TAG, "Error adding document", e);
                                             // handle error
-                                            progressDialog.dismiss();
                                             String error = e.getMessage();
 
+                                            NoteAppDialog noteAppDialog = new NoteAppDialog(getActivity());
                                             if (error.equalsIgnoreCase("The email address is already in use by another account.")) {
-                                                NoteAppDialog noteAppDialog = new NoteAppDialog(getActivity());
                                                 noteAppDialog.setupOKDialog("Registration Failed",
                                                         "Email address is already in use. Please use a different one!");
-                                                noteAppDialog.show();
                                             } else {
-                                                NoteAppDialog noteAppDialog = new NoteAppDialog(getActivity());
                                                 noteAppDialog.setupOKDialog("Registration Failed",
                                                         "An unknown error occurred!\nError message:\n\"" + error + "\"");
-                                                noteAppDialog.show();
                                             }
+                                            noteAppDialog.show();
                                         }
                                     });
                         }
@@ -262,5 +213,64 @@ public class RegisterFragment02 extends Fragment {
     public void openDatePicker(TextInputEditText inputRegBirthdateEditText) {
         DialogFragment dialogFragment = new DatePickerFragment(inputRegBirthdateEditText);
         dialogFragment.show(getActivity().getSupportFragmentManager(), "datePicker");
+    }
+
+    private void clearInputErrors(TextInputLayout inputRegFullName, TextInputLayout inputRegAddress) {
+        inputRegFullName.setErrorEnabled(false);
+        inputRegAddress.setErrorEnabled(false);
+
+        inputRegFullName.setErrorEnabled(true);
+        inputRegAddress.setErrorEnabled(true);
+    }
+
+    private void addDefaultNotebook(DocumentReference userInfoDoc, FirebaseUser firebaseUser) {
+        Notebook defaultNotebook = new Notebook();
+        defaultNotebook.setTitle(Constants.FIRST_NOTEBOOK_NAME);
+
+        CollectionReference userNotebookCol = userInfoDoc.collection("notebooks");
+
+        userNotebookCol.add(defaultNotebook)
+                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                    @Override
+                    public void onSuccess(DocumentReference documentReference) {
+                        progressDialog.dismiss();
+                        addWelcomeNote(documentReference, firebaseUser);
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull @NotNull Exception e) {
+                        Log.w(TAG, "Error adding document", e);
+                    }
+                });
+    }
+
+    private void addWelcomeNote(DocumentReference userDefNotebookDoc, FirebaseUser firebaseUser) {
+        Note welcomeNote = new Note();
+        welcomeNote.setTitle(Constants.WELCOME_NOTE_TITLE);
+        welcomeNote.setContent(Constants.WELCOME_NOTE_CONTENT);
+
+        Note welcomeNote2 = new Note();
+        welcomeNote2.setTitle("Test note - delete at release");
+        welcomeNote2.setContent("I don't know what you did, Fry, but once again, you screwed up! Now all the planets are gonna start cracking wise about our mamas. When will that be? Uh, is the puppy mechanical in any way? She also liked to shut up!\n" +
+                "\n" +
+                "Who am I making this out to? Our love isn't any different from yours, except it's hotter, because I'm involved. Okay, it's 500 dollars, you have no choice of carrier, the battery can't hold the charge and the reception isn't very…");
+
+        Note welcomeNote3 = new Note();
+        welcomeNote3.setTitle("Test note but intentionally exceeds longer than two lines title - delete at release");
+        welcomeNote3.setContent("When I was first asked to make a film about my nephew, Hubert Farnsworth, I thought \"Why should I?\" Then later, Leela made the film. But if I did make it, you can bet there would have been more topless women on motorcycles. Roll film! You are the last hope of the universe.");
+
+        CollectionReference userNoteCollection = userDefNotebookDoc.collection("notes");
+        userNoteCollection.add(welcomeNote);
+        userNoteCollection.add(welcomeNote2);
+        userNoteCollection.add(welcomeNote3);
+
+        firebaseUser.sendEmailVerification();
+
+        Bundle regData = new Bundle();
+        regData.putString("regEmail", regEmail);
+
+        NavHostFragment.findNavController(RegisterFragment02.this)
+                .navigate(R.id.action_registerFragment02_to_registerFragment03, regData);
     }
 }

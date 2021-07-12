@@ -13,6 +13,30 @@ public class NoteAppDialog extends AlertDialog.Builder {
         super(context);
     }
 
+    public AlertDialog setupOKDialog(String title, String message){
+        this.setTitle(title);
+        this.setMessage(message);
+        this.setCancelable(false);
+        this.setPositiveButton("OK",
+                new DialogInterface.OnClickListener() {
+                    /**
+                     * Dismiss the dialog
+                     * @param dialog
+                     * @param which
+                     */
+                    @Override
+                    public void onClick(DialogInterface dialog,
+                                        int which) {
+                        dialog.dismiss();
+                    }
+                });
+
+        AlertDialog dialog = this.create();
+        dialog.setCanceledOnTouchOutside(false);
+
+        return dialog;
+    }
+
     public AlertDialog setupConfirmationDialog(String title, String message){
         this.setTitle(title);
         this.setMessage(message);
@@ -45,30 +69,6 @@ public class NoteAppDialog extends AlertDialog.Builder {
                 btnNegative.requestFocus();
             }
         });
-
-        return dialog;
-    }
-
-    public AlertDialog setupOKDialog(String title, String message){
-        this.setTitle(title);
-        this.setMessage(message);
-        this.setCancelable(false);
-        this.setPositiveButton("OK",
-                new DialogInterface.OnClickListener() {
-                    /**
-                     * Dismiss the dialog
-                     * @param dialog
-                     * @param which
-                     */
-                    @Override
-                    public void onClick(DialogInterface dialog,
-                                        int which) {
-                        dialog.dismiss();
-                    }
-                });
-
-        AlertDialog dialog = this.create();
-        dialog.setCanceledOnTouchOutside(false);
 
         return dialog;
     }

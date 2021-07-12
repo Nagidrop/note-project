@@ -98,7 +98,7 @@ public class MainActivity extends AppCompatActivity {
                         drawerLayout.close();
 
                         if (item.getItemId() == R.id.menu_logout) {
-                            signOut();
+                            logOutConfirmation();
                             return false;
                         }
 
@@ -186,9 +186,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * Logout method
+     * Log out confirmation
      */
-    public void signOut() {
+    public void logOutConfirmation() {
         NoteAppDialog noteAppDialog = new NoteAppDialog(this);
         noteAppDialog.setupConfirmationDialog("Logout Confirmation",
                 "Are you sure you want to log out?");
@@ -228,7 +228,6 @@ public class MainActivity extends AppCompatActivity {
             fabNote.startAnimation(fromBottom);
             fabCapture.startAnimation(fromBottom);
             fabRecord.startAnimation(fromBottom);
-
         } else {
             fabMenu.startAnimation(rotateClose);
             fabNote.startAnimation(toBottom);
