@@ -288,12 +288,6 @@ public class LoginFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-
-        // Check if user is signed in (non-null) and update UI accordingly.
-        FirebaseUser currentUser = firebaseAuth.getCurrentUser();
-        if (currentUser != null && currentUser.isEmailVerified()) {
-            goToMainActivity();
-        }
     }
     // [END on_start_check_user]
 
