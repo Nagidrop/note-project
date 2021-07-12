@@ -4,9 +4,6 @@
     <string name="all_notes">All Notes</string>
     <string name="app_name">Note App</string>
     <string name="birthdate">Birthdate</string>
-    <string name="create_account">
-        <u>Create an account</u>
-    </string>
     <string name="header_title">%1$s</string>
     <string name="header_text">%1$s</string>
     <string name="email">Email</string>
