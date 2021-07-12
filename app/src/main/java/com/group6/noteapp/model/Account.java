@@ -21,6 +21,7 @@ public class Account implements Serializable {
     }
 
     /* Getters and Setters */
+
     public int getId() {
         return id;
     }
