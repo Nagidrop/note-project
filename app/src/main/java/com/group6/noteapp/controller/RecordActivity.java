@@ -48,10 +48,8 @@ public class RecordActivity extends AppCompatActivity {
     private ProgressDialog progressDialog;
     String firebaseAuth;
 
-    private String recordPermission = Manifest.permission.RECORD_AUDIO;
-    private int PERMISSION_CODE = 21;
     //Get current date and time
-    SimpleDateFormat formatter = new SimpleDateFormat("yyyy_MM_dd_hh_mm_ss", Locale.ENGLISH);
+    SimpleDateFormat formatter = new SimpleDateFormat("yyyy_MM_dd_hh_mm_ss", Locale.getDefault());
     Date now = new Date();
 
     private Chronometer timer;
@@ -126,12 +124,12 @@ public class RecordActivity extends AppCompatActivity {
     }
 
     private void uploadAudio() {
-        progressDialog.setMessage("Uploading Audio ...");
+        progressDialog.setMessage("Uploading Record ...");
         progressDialog.show();
 
         firebaseAuth=FirebaseAuth.getInstance().getUid();
-        String email=firebaseAuth;
-        StorageReference filepath = storageReference.child("Audio_"+email).child("Recording_" + formatter.format(now) + ".3gp");
+        String userID=firebaseAuth;
+        StorageReference filepath = storageReference.child("Record").child(userID).child("Recording_" + formatter.format(now) + ".3gp");
         Uri uri = Uri.fromFile(new File(fileName));
         filepath.putFile(uri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
