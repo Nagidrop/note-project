@@ -37,6 +37,7 @@ public class MainActivity extends AppCompatActivity {
     private static final int CAMERA_REQUEST_CODE = 696;
     private static final int STORAGE_READ_REQUEST_CODE = 697;
     private static final int STORAGE_WRITE_REQUEST_CODE = 698;
+    private static final int RECORD_REQUEST_CODE = 21;
 
 
     private BroadcastReceiver MyReceiver = null;
@@ -133,6 +134,22 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        // -----------------------------
+        // Recording
+        // -----------------------------
+        fabRecord.setOnClickListener(new View.OnClickListener() {
+            @Override public void onClick(View v) {
+                if (checkPermission(Manifest.permission.READ_EXTERNAL_STORAGE,
+                        STORAGE_READ_REQUEST_CODE) &&
+                        checkPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                                STORAGE_WRITE_REQUEST_CODE) &&
+                        checkPermission(Manifest.permission.RECORD_AUDIO, RECORD_REQUEST_CODE)){
+                    fabMenuOnClick();
+                    enableRecord();
+                }
+            }
+        });
+
 //        if (!isNetworkAvailable()) {
 //            new AlertDialog.Builder(this)
 //                    .setIcon(android.R.drawable.ic_dialog_alert)
@@ -149,6 +166,11 @@ public class MainActivity extends AppCompatActivity {
     private void enableCamera() {
         Intent intent = new Intent(this, CameraActivity.class);
         startActivity(intent);
+    }
+    private void enableRecord() {
+        Intent intent = new Intent(this, RecordActivity.class);
+        startActivity(intent);
+
     }
 
     // Function to check and request permission.
