@@ -8,6 +8,7 @@ import androidx.core.app.ActivityCompat;
 import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.media.AudioManager;
@@ -65,15 +66,16 @@ import java.util.TimerTask;
 import java.util.concurrent.TimeUnit;
 
 public class RecordActivity extends AppCompatActivity implements View.OnClickListener {
-    private  String fileName = null;
 
+    private  String fileName = null;
     private  final String LOG_TAG = "Record_log";
+
     private MediaRecorder recorder ;
     private MediaPlayer player = null;
     private TextView textTimeRecord;
     private Button btnRecording, btnPlaying,btnSaveRecord, btnStop,btnReset;
     private StorageReference storageReference;
-    private ProgressDialog progressDialog;
+    private ProgressDialog progressDialog, progressDialog2;
     private TextInputLayout recordName;
     private FirebaseAuth firebaseAuth;
     private SeekBar seekBar;
@@ -83,9 +85,7 @@ public class RecordActivity extends AppCompatActivity implements View.OnClickLis
     private FirebaseUser user;
     private FirebaseFirestore db;
 
-
     private Chronometer timer;
-
 
     //Get current date and time
     SimpleDateFormat formatter = new SimpleDateFormat("yyyy_MM_dd_hh_mm_ss", Locale.getDefault());
@@ -101,14 +101,14 @@ public class RecordActivity extends AppCompatActivity implements View.OnClickLis
         recordName=findViewById(R.id.textInputRecordName);
         textTimeRecord=findViewById(R.id.textTimeRecord);
         progressDialog = new ProgressDialog(this);
+        progressDialog2 = new ProgressDialog(this);
         seekBar=findViewById(R.id.seekBar);
-
 
         storageReference= FirebaseStorage.getInstance().getReference();
         db = FirebaseFirestore.getInstance();
         firebaseAuth=FirebaseAuth.getInstance();
         user = firebaseAuth.getCurrentUser();
-
+        //get file path
         fileName = getExternalCacheDir().getAbsolutePath();
 
         btnPlaying=(Button)findViewById(R.id.btnPlay);
@@ -117,17 +117,19 @@ public class RecordActivity extends AppCompatActivity implements View.OnClickLis
         btnReset=(Button)findViewById(R.id.btnReset);
         btnStop=(Button)findViewById(R.id.btnStop);
 
+        //get action click button
         btnPlaying.setOnClickListener(this);
         btnSaveRecord.setOnClickListener(this);
         btnStop.setOnClickListener(this);
         btnReset.setOnClickListener(this);
         btnRecording.setOnClickListener(this);
 
-        staticButtonDefault();
+        statusButtonDefault();
+
 
     }
-
-    public boolean staticButtonDefault() {
+    //set status button default
+    public boolean statusButtonDefault() {
         btnPlaying.setEnabled(false);
         btnSaveRecord.setEnabled(false);
         btnStop.setEnabled(false);
@@ -144,11 +146,12 @@ public class RecordActivity extends AppCompatActivity implements View.OnClickLis
         switch (v.getId()){
             case R.id.btnPlay:
                 if(btnPlaying.getText().equals("Play")){
-                    btnPlaying.setText("Stop");
+                    btnPlaying.setText("Replay");
                     startPlaying();
-                }else if(btnPlaying.getText().equals("Stop")){
-                    btnPlaying.setText("Play");
+                }else if(btnPlaying.getText().equals("Replay")){
+                    btnPlaying.setText("Replay");
                     stopPlaying();
+                    startPlaying();
                 }
                 break;
             case R.id.btnSaveRecord:
@@ -164,63 +167,70 @@ public class RecordActivity extends AppCompatActivity implements View.OnClickLis
                     btnStop.setEnabled(false);
                 break;
             case R.id.btnReset:
-                staticButtonDefault();
+                statusButtonDefault();
                 resetAll();
                 break;
             case R.id.btnRecording:
+                progressDialog2.setMessage("Record start ...");
+                progressDialog2.show();
+                new Thread(new Runnable() {
+                    public void run() {
+                        try {
+                            Thread.sleep(1000);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                        progressDialog2.dismiss();
+                    }
+                }).start();
+
                 startRecording();
                 btnStop.setEnabled(true);
                 btnRecording.setEnabled(false);
                 break;
+
         }
     }
     private void startRecording() {
+
         //Start timer from 0
         timer.setBase(SystemClock.elapsedRealtime());
         timer.start();
-
         //initialize filename variable with date and time at the end to ensure the new file wont overwrite previous file
         fileName += "Recording_" + formatter.format(now) + ".3gp";
-
         //Setup Media Recorder for recording
         recorder = new MediaRecorder();
         recorder.setAudioSource(MediaRecorder.AudioSource.MIC);
         recorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
         recorder.setOutputFile(fileName);
         recorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
-
         try {
             recorder.prepare();
         } catch (IOException e) {
             e.printStackTrace();
         }
-
         //Start Recording
         recorder.start();
     }
 
-
     private void stopRecording() {
         //Stop Timer, very obvious
-        timer.stop();
 
+        timer.stop();
         //Stop media recorder and set it to null for further use to record new audio
         recorder.stop();
         recorder.reset();
         recorder.release();
         recorder = null;
-
     }
-
-
+    //Update record to storage
     private void uploadAudio(Uri uri) {
         progressDialog.setMessage("Uploading Record ...");
         progressDialog.show();
 
         String userID=firebaseAuth.getUid();
-        StorageReference filepath = storageReference.child("Record").child(userID).child("Recording_" + formatter.format(now)+ ".3gp");
+        StorageReference filepath = storageReference.child(userID).child("Record").child("recording_" + formatter.format(now)+ ".3gp");
         UploadTask uploadTask =filepath.putFile(uri);
-
         uploadTask.addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull @NotNull Exception e) {
@@ -230,7 +240,6 @@ public class RecordActivity extends AppCompatActivity implements View.OnClickLis
         }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-
                 DocumentReference userInfoDoc = db.collection("users").document(user.getUid());
                 userInfoDoc.get().addOnCompleteListener(
                         new OnCompleteListener<DocumentSnapshot>() {
@@ -241,19 +250,15 @@ public class RecordActivity extends AppCompatActivity implements View.OnClickLis
                                     DocumentSnapshot document = task.getResult();
                                     Log.e(LOG_TAG, "get failed with ", task.getException());
                                     if(document.exists()){
-
                                         Notebook defaultNotebook = new Notebook();
                                         defaultNotebook.setTitle(Constants.FIRST_NOTEBOOK_NAME);
                                         DocumentReference userDefNotebookDoc = userInfoDoc.collection("notebooks")
                                                 .document(defaultNotebook.getTitle());
-
                                         String name = recordName.getEditText().getText().toString();
                                         if(TextUtils.isEmpty(name)){
                                             recordName.setErrorEnabled(true);
                                             recordName.setError("Please enter Record Name!");
-
                                         }else{
-
                                             Note recordNote = new Note();
                                             recordNote.setTitle(name);
                                             recordNote.setContent(uri.getLastPathSegment());
@@ -261,37 +266,30 @@ public class RecordActivity extends AppCompatActivity implements View.OnClickLis
                                             userDefNoteCollection.add(recordNote);
 
                                             Toast.makeText(RecordActivity.this, "Record Upload Successful!!", Toast.LENGTH_SHORT).show();
-
                                             Intent intent = new Intent(RecordActivity.this, LoginActivity.class);
                                             intent.setFlags(intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                                             startActivity(intent);
-
                                         }
-
                                     }
                                 } else {
                                     Log.e(LOG_TAG, "get failed with ", task.getException());
                                 }
                             }
                         });
-
             }
-
         });
-
-
     }
+
+    //play record
     @RequiresApi(api = Build.VERSION_CODES.N)
     private void startPlaying() {
-
+        textTimeRecord.setEnabled(true);
         player = new MediaPlayer();
         try {
-
             player.setDataSource(fileName);
             player.prepare();
             // The duration in milliseconds
             int duration = player.getDuration();
-
             int currentPosition = player.getCurrentPosition();
             if(currentPosition== 0)  {
                 seekBar.setMax(duration);
@@ -305,29 +303,28 @@ public class RecordActivity extends AppCompatActivity implements View.OnClickLis
             // Create a thread to update position of SeekBar.
             UpdateSeekBarThread updateSeekBarThread= new UpdateSeekBarThread();
             threadHandler.postDelayed(updateSeekBarThread,50);
+
         } catch (IOException e) {
             Log.e(LOG_TAG, "prepare() failed");
         }
-
     }
+
     private String millisecondsToString(int milliseconds)  {
         long minutes = TimeUnit.MILLISECONDS.toMinutes((long) milliseconds);
         long seconds =  TimeUnit.MILLISECONDS.toSeconds((long) milliseconds) ;
         return minutes + ":"+ seconds;
     }
+    //stop play record
     private void stopPlaying() {
         //Stop Timer, very obvious
         timer.stop();
         if(player.isPlaying()){
             player.stop();
-
         }
-
     }
 
     // Thread to Update position for SeekBar.
     class UpdateSeekBarThread implements Runnable {
-
         public void run()  {
             int currentPosition = player.getCurrentPosition();
             String currentPositionStr = millisecondsToString(currentPosition);
@@ -337,8 +334,11 @@ public class RecordActivity extends AppCompatActivity implements View.OnClickLis
             threadHandler.postDelayed(this, 50);
         }
     }
-    private void resetAll(){
 
+    private void resetAll(){
+        timer.setText("00:00");
+        textTimeRecord.setEnabled(false);
+        textTimeRecord.setText("Time");
     }
 
 
