@@ -297,17 +297,12 @@ public class RegisterFragment02 extends Fragment {
         FirebaseStorage storage = FirebaseStorage.getInstance();
         StorageReference storageRef = storage.getReference();
 
-//        // Create a reference to "mountains.jpg"
-//        StorageReference defaultAvatar = storageRef.child("mountains.jpg");
         Uri profilePic = Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE
                 + "://" + getResources().getResourcePackageName(R.drawable.img_profile_pic)
                 + '/' + getResources().getResourceTypeName(R.drawable.img_profile_pic)
                 + '/' + getResources().getResourceEntryName(R.drawable.img_profile_pic));
         // Create a reference to 'images/mountains.jpg'
         final StorageReference profilePictureRef = storageRef.child("images/" + firebaseUser.getUid() + "/profilePicture.png");
-
-////         While the file names are the same, the references point to different files
-//        profilePictureRef.getName().equals(mountainImagesRef.getName());    // true
 
         Log.e("error", profilePic.toString());
         profilePictureRef.putFile(profilePic)

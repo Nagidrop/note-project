@@ -12,6 +12,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.Html;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.Animation;
@@ -69,8 +70,8 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        firebaseAuth = FirebaseAuth.getInstance();
-        user = firebaseAuth.getCurrentUser();
+        FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+        FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
 
         setContentView(R.layout.activity_main);
 
@@ -107,7 +108,7 @@ public class MainActivity extends AppCompatActivity {
 
         FirebaseStorage storage = FirebaseStorage.getInstance();
         StorageReference profileRef = storage.getReference()
-                .child("images/" + firebaseAuth.getCurrentUser().getUid() + "/profilePicture.png");
+                .child("images/" + firebaseUser.getUid() + "/profilePicture.png");
         profileRef.getDownloadUrl()
                 .addOnSuccessListener(new OnSuccessListener<Uri>() {
                     @Override
@@ -118,11 +119,11 @@ public class MainActivity extends AppCompatActivity {
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull @NotNull Exception e) {
-
+                        Log.e("error", e.getMessage());
                     }
                 });
-        txtNavFullName.setText(Html.fromHtml(getString(R.string.user_full_name, user.getDisplayName())));
-        txtNavEmail.setText(getString(R.string.user_email, user.getEmail()));
+        txtNavFullName.setText(Html.fromHtml(getString(R.string.user_full_name, firebaseUser.getDisplayName())));
+        txtNavEmail.setText(getString(R.string.user_email, firebaseUser.getEmail()));
 
         // Set navigation icon click event to show navigation drawer
         topAppBar.setNavigationOnClickListener(new View.OnClickListener() {
