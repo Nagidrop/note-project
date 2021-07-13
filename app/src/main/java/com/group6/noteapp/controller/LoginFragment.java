@@ -125,7 +125,6 @@ public class LoginFragment extends Fragment {
         mGoogleSignInClient = GoogleSignIn.getClient(getActivity(), gso);
         db = FirebaseFirestore.getInstance();
         firebaseAuth = FirebaseAuth.getInstance();
-
     }
 
     @Override

@@ -28,6 +28,7 @@ public class ViewNoteActivity extends AppCompatActivity {
 
         txtInputNoteTitle.getEditText().setText(note.getTitle());
         txtInputNoteContent.getEditText().setText(note.getContent());
+        txtNotebook.setText(note.getNotebook().getTitle());
     }
 
     @Override

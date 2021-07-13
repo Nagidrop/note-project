@@ -21,6 +21,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.group6.noteapp.R;
 import com.group6.noteapp.model.Note;
+import com.group6.noteapp.model.Notebook;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -102,6 +103,7 @@ public class HomeFragment extends Fragment {
                     for (DocumentSnapshot document : task.getResult().getDocuments()) {
                         CollectionReference noteDocRef = document.getReference()
                                 .collection("notes");
+                        Notebook notebook = document.toObject(Notebook.class);
                         noteDocRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                             @Override
                             public void onComplete(@NonNull @NotNull Task<QuerySnapshot> task) {
@@ -111,6 +113,7 @@ public class HomeFragment extends Fragment {
                                     for (DocumentSnapshot document : task.getResult().getDocuments()) {
                                         Note note = document.toObject(Note.class);
                                         note.setId(document.getId());
+                                        note.setNotebook(notebook);
 
                                         noteList.add(note);
                                     }
