@@ -186,8 +186,13 @@ public class RegisterFragment02 extends Fragment {
                                     progressDialog.dismiss();
 
                                     NoteAppDialog dialog = new NoteAppDialog(getActivity());
-                                    dialog.setupOKDialog("Registration Failed",
-                                            "An error occurred during your account setup. Please try register again!");
+                                    if (e.getMessage().equalsIgnoreCase("The email address is already in use by another account.")){
+                                        dialog.setupOKDialog("Registration Failed",
+                                                "Email address is already in use by another account. Please use a different one.");
+                                    } else {
+                                        dialog.setupOKDialog("Registration Failed",
+                                                "An error occurred during your account setup. Please try register again!");
+                                    }
                                     dialog.create().show();
                                 }
                             });
@@ -299,7 +304,7 @@ public class RegisterFragment02 extends Fragment {
                 + '/' + getResources().getResourceTypeName(R.drawable.img_profile_pic)
                 + '/' + getResources().getResourceEntryName(R.drawable.img_profile_pic));
         // Create a reference to 'images/mountains.jpg'
-        final StorageReference profilePictureRef = storageRef.child("images/" + firebaseUser.getUid() + "/img_profile_pic.png");
+        final StorageReference profilePictureRef = storageRef.child("images/" + firebaseUser.getUid() + "/profilePicture.png");
 
 ////         While the file names are the same, the references point to different files
 //        profilePictureRef.getName().equals(mountainImagesRef.getName());    // true
