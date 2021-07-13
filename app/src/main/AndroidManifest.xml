@@ -25,7 +25,6 @@
         <activity android:name=".controller.CameraActivity" />
         <activity android:name=".view.AudioListFragment" />
         <activity android:name=".controller.RecordActivity" />
-        <activity android:name=".controller.CameraActivity" />
         <activity android:name=".controller.MainActivity" />
         <activity android:name=".controller.LoginActivity">
             <intent-filter>

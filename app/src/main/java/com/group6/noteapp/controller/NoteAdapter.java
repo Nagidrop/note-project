@@ -41,8 +41,7 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteViewHolder> {
      */
     @NonNull
     @Override
-    public NoteViewHolder onCreateViewHolder(@NonNull ViewGroup parent,
-                                             int viewType) {
+    public NoteViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(context);
         View noteView = inflater.inflate(R.layout.rv_note_item, parent, false);
 
@@ -56,8 +55,7 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteViewHolder> {
      * @param position
      */
     @Override
-    public void onBindViewHolder(@NonNull NoteViewHolder holder,
-                                 int position) {
+    public void onBindViewHolder(@NonNull NoteViewHolder holder, int position) {
         Note note = notes.get(position);                            // get note from position
         holder.getNoteTitle().setText(note.getTitle());             // set note title
         holder.getNoteContent().setText(note.getContent());         // set note content
@@ -72,7 +70,7 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteViewHolder> {
         holder.getNoteCardView().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                // do something
             }
         });
     }

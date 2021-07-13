@@ -20,6 +20,7 @@ import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -44,7 +45,6 @@ import static android.content.ContentValues.TAG;
 public class RegisterFragment02 extends Fragment {
 
     private View inflatedView;
-    private FirebaseAuth mAu;
     private NoteAppProgressDialog progressDialog;
 
     // TODO: Rename parameter arguments, choose names that match
@@ -93,9 +93,6 @@ public class RegisterFragment02 extends Fragment {
 
         // Inflate the layout for this fragment
         inflatedView = inflater.inflate(R.layout.fragment_register02, container, false);
-
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-        mAu = FirebaseAuth.getInstance();
         /* Get EditText Views */
 
         TextInputLayout inputRegFullName = inflatedView.findViewById(R.id.textInputRegFullName);
@@ -151,6 +148,9 @@ public class RegisterFragment02 extends Fragment {
                 }
 
                 if (isInputValid) {
+                    FirebaseFirestore db = FirebaseFirestore.getInstance();
+                    FirebaseAuth mAu = FirebaseAuth.getInstance();
+
                     clearInputErrors(inputRegFullName, inputRegAddress);
 
                     /* show progress dialog*/
@@ -159,50 +159,31 @@ public class RegisterFragment02 extends Fragment {
                             "Please wait while we set up your account for Note App.");
                     progressDialog.show();
 
-                    mAu.createUserWithEmailAndPassword(regEmail, regPassword).addOnSuccessListener(new OnSuccessListener<AuthResult>() {
-                        @Override
-                        public void onSuccess(AuthResult authResult) {
-                            // Sign in success, update UI with the signed-in user's information
-                            FirebaseUser firebaseUser = authResult.getUser();
-                            String userUid = firebaseUser.getUid();
+                    mAu.createUserWithEmailAndPassword(regEmail, regPassword)
+                            .addOnSuccessListener(new OnSuccessListener<AuthResult>() {
+                                @Override
+                                public void onSuccess(AuthResult authResult) {
+                                    // Sign in success, update UI with the signed-in user's information
+                                    FirebaseUser firebaseUser = authResult.getUser();
+                                    String userUid = firebaseUser.getUid();
 
-                            User newUser = new User();
-                            newUser.setFullName(regFullname);
-                            newUser.setBirthdate(regBirthdate);
-                            newUser.setAddress(regAddress);
+                                    User newUser = new User();
+                                    newUser.setFullName(regFullname);
+                                    newUser.setBirthdate(regBirthdate);
+                                    newUser.setAddress(regAddress);
 
-                            DocumentReference userInfoDoc = db.collection("users").document(userUid);
-
-                            userInfoDoc.set(newUser)
-                                    .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                        @Override
-                                        public void onSuccess(Void aVoid) {
-                                            Log.d(TAG, "DocumentSnapshot written with ID: " + userUid);
-
-                                            addDefaultNotebook(userInfoDoc, firebaseUser);
-                                        }
-                                    })
-                                    .addOnFailureListener(new OnFailureListener() {
-                                        @Override
-                                        public void onFailure(@NonNull @NotNull Exception e) {
-                                            Log.w(TAG, "Error adding document", e);
-                                            progressDialog.dismiss();
-                                            // handle error
-                                            String error = e.getMessage();
-
-                                            NoteAppDialog dialog = new NoteAppDialog(getActivity());
-                                            if (error.equalsIgnoreCase("The email address is already in use by another account.")) {
-                                                dialog.setupOKDialog("Registration Failed",
-                                                        "Email address is already in use. Please use a different one!");
-                                            } else {
-                                                dialog.setupOKDialog("Registration Failed",
-                                                        "An unknown error occurred!\nError message:\n\"" + error + "\"");
-                                            }
-                                            dialog.create().show();
-                                        }
-                                    });
-                        }
-                    });
+                                    setUpUserInfo(newUser, firebaseUser, db);
+                                }
+                            })
+                            .addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull @NotNull Exception e) {
+                                    NoteAppDialog dialog = new NoteAppDialog(getActivity());
+                                    dialog.setupOKDialog("Registration Failed",
+                                            "An error occurred during your account setup. Please try register again!");
+                                    dialog.create().show();
+                                }
+                            });
                 }
             }
         });
@@ -267,20 +248,21 @@ public class RegisterFragment02 extends Fragment {
         welcomeNote3.setContent("When I was first asked to make a film about my nephew, Hubert Farnsworth, I thought \"Why should I?\" Then later, Leela made the film. But if I did make it, you can bet there would have been more topless women on motorcycles. Roll film! You are the last hope of the universe.");
 
         CollectionReference userNoteCollection = userDefNotebookDoc.collection("notes");
-        userNoteCollection.add(welcomeNote).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-            @Override
-            public void onSuccess(DocumentReference documentReference) {
-                progressDialog.dismiss();
+        userNoteCollection.add(welcomeNote)
+                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                    @Override
+                    public void onSuccess(DocumentReference documentReference) {
+                        progressDialog.dismiss();
 
-                firebaseUser.sendEmailVerification();
+                        firebaseUser.sendEmailVerification();
 
-                Bundle regData = new Bundle();
-                regData.putString("regEmail", regEmail);
+                        Bundle regData = new Bundle();
+                        regData.putString("regEmail", regEmail);
 
-                NavHostFragment.findNavController(RegisterFragment02.this)
-                        .navigate(R.id.action_registerFragment02_to_registerFragment03, regData);
-            }
-        })
+                        NavHostFragment.findNavController(RegisterFragment02.this)
+                                .navigate(R.id.action_registerFragment02_to_registerFragment03, regData);
+                    }
+                })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull @NotNull Exception e) {
@@ -295,5 +277,57 @@ public class RegisterFragment02 extends Fragment {
 
         userNoteCollection.add(welcomeNote2);
         userNoteCollection.add(welcomeNote3);
+    }
+
+    private void setUpUserInfo(User newUser, FirebaseUser firebaseUser, FirebaseFirestore db) {
+        UserProfileChangeRequest profileSetup = new UserProfileChangeRequest.Builder()
+                .setDisplayName(newUser.getFullName())
+                .build();
+
+        firebaseUser.updateProfile(profileSetup)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void unused) {
+                        DocumentReference userInfoDoc = db.collection("users").document(firebaseUser.getUid());
+
+                        userInfoDoc.set(newUser)
+                                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void aVoid) {
+                                        Log.d(TAG, "DocumentSnapshot written with ID: " + firebaseUser.getUid());
+
+                                        addDefaultNotebook(userInfoDoc, firebaseUser);
+                                    }
+                                })
+                                .addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull @NotNull Exception e) {
+                                        Log.w(TAG, "Error adding document", e);
+                                        progressDialog.dismiss();
+                                        // handle error
+                                        String error = e.getMessage();
+
+                                        NoteAppDialog dialog = new NoteAppDialog(getActivity());
+                                        if (error.equalsIgnoreCase("The email address is already in use by another account.")) {
+                                            dialog.setupOKDialog("Registration Failed",
+                                                    "Email address is already in use. Please use a different one!");
+                                        } else {
+                                            dialog.setupOKDialog("Registration Failed",
+                                                    "An unknown error occurred!\nError message:\n\"" + error + "\"");
+                                        }
+                                        dialog.create().show();
+                                    }
+                                });
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull @NotNull Exception e) {
+                        NoteAppDialog dialog = new NoteAppDialog(getActivity());
+                        dialog.setupOKDialog("Registration Failed",
+                                "An error occurred during your account setup. Please try register again!");
+                        dialog.create().show();
+                    }
+                });
     }
 }

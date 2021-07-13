@@ -60,9 +60,8 @@
 <!--        <item name="android:textColorSecondary">@color/purple_500</item>    &lt;!&ndash;days of the week&ndash;&gt;-->
     </style>
 
-<!--    <style name="errorAppearance" parent="@android:style/TextAppearance">-->
-<!--        <item name="android:lines">2</item>-->
-<!--        <item name="android:textColor">@color/red_500</item>-->
-<!--        <item name="android:textSize">12sp</item>-->
-<!--    </style>-->
+    <style name="circleImageView" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">50%</item>
+    </style>
 </resources>

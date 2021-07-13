@@ -1,9 +1,5 @@
 package com.group6.noteapp.controller;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.camera.core.impl.utils.Exif;
-
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -15,6 +11,9 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -53,7 +52,6 @@ public class ViewCaptureImageActivity extends AppCompatActivity {
     private FirebaseUser user;
     private FirebaseFirestore db;
     private TextInputLayout imageName;
-
 
     String path = "";
 

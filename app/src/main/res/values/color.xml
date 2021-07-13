@@ -73,4 +73,6 @@
 
     <color name="blue_yonder">#4267B2</color>
 
+    <color name="transparent">#00FFFFFF</color>
+
 </resources>

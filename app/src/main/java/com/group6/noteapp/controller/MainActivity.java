@@ -19,7 +19,6 @@ import android.view.animation.AnimationUtils;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.facebook.login.LoginManager;
@@ -96,7 +95,7 @@ public class MainActivity extends AppCompatActivity {
         MaterialTextView txtNavFullname = navHeader.findViewById(R.id.txtNavFullname);
         MaterialTextView txtNavEmail = navHeader.findViewById(R.id.txtNavEmail);
         txtNavFullname.setText(Html.fromHtml(getString(R.string.header_title, user.getDisplayName())));
-        txtNavEmail.setText(Html.fromHtml(getString(R.string.header_text, user.getEmail())));
+        txtNavEmail.setText(getString(R.string.header_text, user.getEmail()));
 
         // Set navigation icon click event to show navigation drawer
         topAppBar.setNavigationOnClickListener(new View.OnClickListener() {
