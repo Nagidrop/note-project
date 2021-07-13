@@ -114,7 +114,7 @@ public class ViewCaptureImageActivity extends AppCompatActivity {
 
     public void saveImageToStorage(Uri uri){
         StorageReference storageRef = storage.getReference();
-        StorageReference imageReference = storageRef.child("images/"+user.getUid()+"/"+ uri.getLastPathSegment());
+        StorageReference imageReference = storageRef.child(user.getUid()+"/images/"+ uri.getLastPathSegment());
         UploadTask uploadTask = imageReference.putFile(uri);
 
         // Register observers to listen for when the download is done or if it fails

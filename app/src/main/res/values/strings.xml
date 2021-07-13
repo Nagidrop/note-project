@@ -4,8 +4,12 @@
     <string name="all_notes">All Notes</string>
     <string name="app_name">Note App</string>
     <string name="birthdate">Birthdate</string>
-    <string name="user_full_name">%1$s</string>
-    <string name="user_email">%1$s</string>
+    <string name="change">Change</string>
+    <string name="create_account">
+        <u>Create an account</u>
+    </string>
+    <string name="header_title">%1$s</string>
+    <string name="header_text">%1$s</string>
     <string name="email">Email</string>
     <string name="enter_email">Please enter your email address.</string>
     <string name="image_name">Image Name (Required)</string>

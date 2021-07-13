@@ -20,6 +20,8 @@
         android:roundIcon="@mipmap/ic_note_app_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.MyApp">
+        <activity android:name=".controller.ViewImageDetails"></activity>
+        <activity android:name=".controller.ViewCaptureImageActivity" />
         <activity android:name=".controller.ViewNoteActivity"></activity>
         <activity android:name=".controller.ViewCaptureImageActivity" />
         <activity android:name=".controller.CameraActivity" />
