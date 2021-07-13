@@ -10,5 +10,7 @@ public final class Constants {
     public static final String FIRST_NOTEBOOK_NAME = "My First Notebook";
     public static final String WELCOME_NOTE_TITLE = "Welcome to Note App";
     public static final String WELCOME_NOTE_CONTENT = "Let's begin our journey!";
+    public static final String REGISTER_ERROR = "REGISTER ERROR";
+    public static final String LOGIN_ERROR = "LOGIN ERROR";
 
 }

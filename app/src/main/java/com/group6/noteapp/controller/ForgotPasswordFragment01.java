@@ -15,6 +15,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthException;
 import com.group6.noteapp.R;
 import com.group6.noteapp.util.ValidationUtils;
 import com.group6.noteapp.view.NoteAppDialog;
@@ -133,18 +134,24 @@ public class ForgotPasswordFragment01 extends Fragment {
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull @NotNull Exception e) {
-                        progressDialog.dismiss();
                         Log.e("error", e.getMessage());
+
+                        progressDialog.dismiss();
 
                         NoteAppDialog dialog = new NoteAppDialog(getActivity());
 
-                        if (e.getMessage().equalsIgnoreCase("There is no user record corresponding to this identifier. "
-                                + "The user may have been deleted.")){
-                            dialog.setupOKDialog("Email Not Sent",
-                                    "There is no account associated with this email address.");
-                        } else {
-                            dialog.setupOKDialog("Email Not Sent",
-                                    "An error occurred while we send you instructions. Please try again!");
+                        switch (((FirebaseAuthException) e).getErrorCode()){
+                            case "ERROR_USER_NOT_FOUND":
+                                dialog.setupOKDialog("Email Not Sent",
+                                        "There is no account associated with this email address.");
+
+                                break;
+
+                            default:
+                                dialog.setupOKDialog("Email Not Sent",
+                                        "An error occurred while we try to send you instructions. Please try again!");
+
+                                break;
                         }
 
                         dialog.create().show();

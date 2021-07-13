@@ -36,6 +36,7 @@ import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthException;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.firestore.DocumentReference;
@@ -44,6 +45,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.group6.noteapp.R;
 import com.group6.noteapp.model.Notebook;
 import com.group6.noteapp.model.User;
+import com.group6.noteapp.util.Constants;
 import com.group6.noteapp.util.ValidationUtils;
 import com.group6.noteapp.view.NoteAppDialog;
 import com.group6.noteapp.view.NoteAppProgressDialog;
@@ -256,7 +258,7 @@ public class LoginFragment extends Fragment {
         }
     }
 
-    public void loginWithEmailAndPassword(String email, String password){
+    public void loginWithEmailAndPassword(String email, String password) {
         firebaseAuth.signInWithEmailAndPassword(email, password)
                 .addOnSuccessListener(new OnSuccessListener<AuthResult>() {
                     @Override
@@ -276,8 +278,38 @@ public class LoginFragment extends Fragment {
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull @NotNull Exception e) {
-                        inputLogEmail.setError(" ");
-                        inputLogPassword.setError("Your email or password is incorrect.");
+                        Log.e(Constants.LOGIN_ERROR, "Login error", e);
+
+                        NoteAppDialog dialog = new NoteAppDialog(getActivity());
+                        switch (((FirebaseAuthException) e).getErrorCode()) {
+                            case "ERROR_USER_NOT_FOUND":
+                            case "ERROR_WRONG_PASSWORD":
+                                inputLogEmail.setError(" ");
+                                inputLogPassword.setError("Your email or password is incorrect.");
+
+                                break;
+
+                            case "ERROR_USER_DISABLED":
+                                dialog.setupOKDialog("Login Failed",
+                                        "Your account has been disabled by an admin!");
+                                dialog.create().show();
+
+                                break;
+
+                            case "ERROR_USER_TOKEN_EXPIRED":
+                                dialog.setupOKDialog("Login Failed",
+                                        "Your credentials has been changed. Please log in again!");
+                                dialog.create().show();
+
+                                break;
+
+                            default:
+                                dialog.setupOKDialog("Login Failed",
+                                        "Sorry, an unexpected error occurred. Please try log in again!");
+                                dialog.create().show();
+
+                                break;
+                        }
 
                         progressDialog.dismiss();
                     }
@@ -336,11 +368,12 @@ public class LoginFragment extends Fragment {
 
                             userInfoDoc.get().addOnCompleteListener(
                                     new OnCompleteListener<DocumentSnapshot>() {
-                                        @Override public void onComplete(
+                                        @Override
+                                        public void onComplete(
                                                 @NonNull @NotNull Task<DocumentSnapshot> task) {
-                                            if(task.isSuccessful()) {
+                                            if (task.isSuccessful()) {
                                                 DocumentSnapshot document = task.getResult();
-                                                if(!document.exists()){
+                                                if (!document.exists()) {
                                                     addNewUser(user, userInfoDoc);
                                                 }
                                             }
@@ -374,11 +407,12 @@ public class LoginFragment extends Fragment {
 
                             userInfoDoc.get().addOnCompleteListener(
                                     new OnCompleteListener<DocumentSnapshot>() {
-                                        @Override public void onComplete(
+                                        @Override
+                                        public void onComplete(
                                                 @NonNull @NotNull Task<DocumentSnapshot> task) {
-                                            if(task.isSuccessful()) {
+                                            if (task.isSuccessful()) {
                                                 DocumentSnapshot document = task.getResult();
-                                                if(!document.exists()){
+                                                if (!document.exists()) {
                                                     addNewUser(user, userInfoDoc);
                                                 }
                                             } else {
@@ -397,12 +431,13 @@ public class LoginFragment extends Fragment {
     }
 
 
-    private void addNewUser(FirebaseUser user, DocumentReference userInfoDoc){
+    private void addNewUser(FirebaseUser user, DocumentReference userInfoDoc) {
         User newUser = new User();
         newUser.setFullName(user.getDisplayName());
         userInfoDoc.set(newUser)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override public void onSuccess(Void unused) {
+                    @Override
+                    public void onSuccess(Void unused) {
                         Log.d(TAG, "DocumentSnapshot written with ID: " + user.getUid());
 
                         Notebook defaultNotebook = new Notebook();
