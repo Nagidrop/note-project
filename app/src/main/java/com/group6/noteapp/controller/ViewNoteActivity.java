@@ -31,6 +31,7 @@ public class ViewNoteActivity extends AppCompatActivity {
                 onBackPressed();
             }
         });
+        setSupportActionBar(toolbar);
 
         TextInputLayout txtInputNoteTitle = findViewById(R.id.txtInputNoteTitle);
         TextInputLayout txtInputNoteContent = findViewById(R.id.txtInputNoteContent);
@@ -51,6 +52,7 @@ public class ViewNoteActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
 
         switch (item.getItemId()){
+            case R.id.nav
 
             case R.id.nav_undo:
                 Toast.makeText(this, "Click Undo Icon.", Toast.LENGTH_SHORT).show();
