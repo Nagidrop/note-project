@@ -3,11 +3,13 @@ package com.group6.noteapp.controller;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.android.material.textview.MaterialTextView;
 import com.group6.noteapp.R;
@@ -21,6 +23,14 @@ public class ViewNoteActivity extends AppCompatActivity {
         setContentView(R.layout.activity_view_note);
 
         Note note = (Note) getIntent().getParcelableExtra("note");
+
+        MaterialToolbar toolbar = findViewById(R.id.noteToolbar);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+            }
+        });
 
         TextInputLayout txtInputNoteTitle = findViewById(R.id.txtInputNoteTitle);
         TextInputLayout txtInputNoteContent = findViewById(R.id.txtInputNoteContent);
@@ -41,6 +51,7 @@ public class ViewNoteActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
 
         switch (item.getItemId()){
+
             case R.id.nav_undo:
                 Toast.makeText(this, "Click Undo Icon.", Toast.LENGTH_SHORT).show();
 
