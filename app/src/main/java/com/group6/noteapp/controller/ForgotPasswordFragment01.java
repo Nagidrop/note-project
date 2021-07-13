@@ -1,6 +1,7 @@
 package com.group6.noteapp.controller;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -101,7 +102,7 @@ public class ForgotPasswordFragment01 extends Fragment {
                 if (isInputValid){
                     progressDialog = new NoteAppProgressDialog(getActivity());
                     progressDialog.setUpDialog("Just a moment...",
-                            "Please wait while we connect you to Note App.");
+                            "Please wait while we attempt to send you an email with instructions.");
                     progressDialog.show();
 
                     clearInputErrors(inputResetPassEmail);
@@ -133,10 +134,19 @@ public class ForgotPasswordFragment01 extends Fragment {
                     @Override
                     public void onFailure(@NonNull @NotNull Exception e) {
                         progressDialog.dismiss();
+                        Log.e("error", e.getMessage());
 
                         NoteAppDialog dialog = new NoteAppDialog(getActivity());
-                        dialog.setupOKDialog("Email Not Sent",
-                                "An error occurred while we send you instructions. Please try again!");
+
+                        if (e.getMessage().equalsIgnoreCase("There is no user record corresponding to this identifier. "
+                                + "The user may have been deleted.")){
+                            dialog.setupOKDialog("Email Not Sent",
+                                    "There is no account associated with this email address.");
+                        } else {
+                            dialog.setupOKDialog("Email Not Sent",
+                                    "An error occurred while we send you instructions. Please try again!");
+                        }
+
                         dialog.create().show();
                     }
                 });

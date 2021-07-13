@@ -10,13 +10,13 @@
     android:orientation="vertical">
 
     <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/imgProfilePicture"
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:padding="1dp"
         android:layout_marginTop="24dp"
         android:layout_gravity="center_horizontal|center_vertical"
         android:background="@color/transparent"
-        android:src="@drawable/img_default_avatar"
         app:shapeAppearanceOverlay="@style/circleImageView"
         app:strokeColor="?android:colorPrimary"
         app:strokeWidth="2dp">
@@ -34,7 +34,7 @@
         android:layout_gravity="center_horizontal"
         android:ellipsize="end"
         android:maxLines="2"
-        android:text="@string/header_title"
+        android:text="@string/user_full_name"
         android:textAppearance="?attr/textAppearanceHeadline6" />
 
     <com.google.android.material.textview.MaterialTextView
@@ -47,7 +47,7 @@
         android:layout_gravity="center_horizontal"
         android:ellipsize="end"
         android:maxLines="1"
-        android:text="@string/header_text"
+        android:text="@string/user_email"
         android:textAppearance="?attr/textAppearanceBody2"
         android:textColor="@color/material_on_surface_emphasis_medium" />
 

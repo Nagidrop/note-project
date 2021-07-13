@@ -1,5 +1,7 @@
 package com.group6.noteapp.controller;
 
+import android.content.ContentResolver;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.InputType;
 import android.util.Log;
@@ -24,11 +26,14 @@ import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.group6.noteapp.util.Constants;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 import com.group6.noteapp.R;
 import com.group6.noteapp.model.Note;
 import com.group6.noteapp.model.Notebook;
 import com.group6.noteapp.model.User;
+import com.group6.noteapp.util.Constants;
 import com.group6.noteapp.util.ValidationUtils;
 import com.group6.noteapp.view.NoteAppDialog;
 import com.group6.noteapp.view.NoteAppProgressDialog;
@@ -178,9 +183,16 @@ public class RegisterFragment02 extends Fragment {
                             .addOnFailureListener(new OnFailureListener() {
                                 @Override
                                 public void onFailure(@NonNull @NotNull Exception e) {
+                                    progressDialog.dismiss();
+
                                     NoteAppDialog dialog = new NoteAppDialog(getActivity());
-                                    dialog.setupOKDialog("Registration Failed",
-                                            "An error occurred during your account setup. Please try register again!");
+                                    if (e.getMessage().equalsIgnoreCase("The email address is already in use by another account.")){
+                                        dialog.setupOKDialog("Registration Failed",
+                                                "Email address is already in use by another account. Please use a different one.");
+                                    } else {
+                                        dialog.setupOKDialog("Registration Failed",
+                                                "An error occurred during your account setup. Please try register again!");
+                                    }
                                     dialog.create().show();
                                 }
                             });
@@ -268,6 +280,8 @@ public class RegisterFragment02 extends Fragment {
                     public void onFailure(@NonNull @NotNull Exception e) {
                         progressDialog.dismiss();
 
+                        Log.e("error", e.getMessage());
+
                         NoteAppDialog dialog = new NoteAppDialog(getActivity());
                         dialog.setupOKDialog("Registration Failed",
                                 "An error occurred during your account setup. Please try register again!");
@@ -280,54 +294,87 @@ public class RegisterFragment02 extends Fragment {
     }
 
     private void setUpUserInfo(User newUser, FirebaseUser firebaseUser, FirebaseFirestore db) {
-        UserProfileChangeRequest profileSetup = new UserProfileChangeRequest.Builder()
-                .setDisplayName(newUser.getFullName())
-                .build();
+        FirebaseStorage storage = FirebaseStorage.getInstance();
+        StorageReference storageRef = storage.getReference();
 
-        firebaseUser.updateProfile(profileSetup)
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
+        Uri profilePic = Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE
+                + "://" + getResources().getResourcePackageName(R.drawable.img_profile_pic)
+                + '/' + getResources().getResourceTypeName(R.drawable.img_profile_pic)
+                + '/' + getResources().getResourceEntryName(R.drawable.img_profile_pic));
+        // Create a reference to 'images/mountains.jpg'
+        final StorageReference profilePictureRef = storageRef.child("images/" + firebaseUser.getUid() + "/profilePicture.png");
+
+        Log.e("error", profilePic.toString());
+        profilePictureRef.putFile(profilePic)
+                .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                     @Override
-                    public void onSuccess(Void unused) {
-                        DocumentReference userInfoDoc = db.collection("users").document(firebaseUser.getUid());
+                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                        UserProfileChangeRequest profileSetup = new UserProfileChangeRequest.Builder()
+                                .setDisplayName(newUser.getFullName())
+                                .build();
 
-                        userInfoDoc.set(newUser)
+                        firebaseUser.updateProfile(profileSetup)
                                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                                     @Override
-                                    public void onSuccess(Void aVoid) {
-                                        Log.d(TAG, "DocumentSnapshot written with ID: " + firebaseUser.getUid());
+                                    public void onSuccess(Void unused) {
+                                        DocumentReference userInfoDoc = db.collection("users").document(firebaseUser.getUid());
 
-                                        addDefaultNotebook(userInfoDoc, firebaseUser);
+                                        userInfoDoc.set(newUser)
+                                                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                    @Override
+                                                    public void onSuccess(Void aVoid) {
+                                                        Log.d(TAG, "DocumentSnapshot written with ID: " + firebaseUser.getUid());
+
+                                                        addDefaultNotebook(userInfoDoc, firebaseUser);
+                                                    }
+                                                })
+                                                .addOnFailureListener(new OnFailureListener() {
+                                                    @Override
+                                                    public void onFailure(@NonNull @NotNull Exception e) {
+                                                        Log.w(TAG, "Error adding document", e);
+                                                        progressDialog.dismiss();
+                                                        // handle error
+                                                        String error = e.getMessage();
+
+                                                        NoteAppDialog dialog = new NoteAppDialog(getActivity());
+                                                        if (error.equalsIgnoreCase("The email address is already in use by another account.")) {
+                                                            dialog.setupOKDialog("Registration Failed",
+                                                                    "Email address is already in use. Please use a different one!");
+                                                        } else {
+                                                            dialog.setupOKDialog("Registration Failed",
+                                                                    "An unknown error occurred!\nError message:\n\"" + error + "\"");
+                                                        }
+                                                        dialog.create().show();
+                                                    }
+                                                });
                                     }
                                 })
                                 .addOnFailureListener(new OnFailureListener() {
                                     @Override
                                     public void onFailure(@NonNull @NotNull Exception e) {
-                                        Log.w(TAG, "Error adding document", e);
                                         progressDialog.dismiss();
-                                        // handle error
-                                        String error = e.getMessage();
+
+                                        Log.e("error", e.getMessage());
 
                                         NoteAppDialog dialog = new NoteAppDialog(getActivity());
-                                        if (error.equalsIgnoreCase("The email address is already in use by another account.")) {
-                                            dialog.setupOKDialog("Registration Failed",
-                                                    "Email address is already in use. Please use a different one!");
-                                        } else {
-                                            dialog.setupOKDialog("Registration Failed",
-                                                    "An unknown error occurred!\nError message:\n\"" + error + "\"");
-                                        }
+                                        dialog.setupOKDialog("Registration Failed",
+                                                "An error occurred during your account setup. Please try register again!");
                                         dialog.create().show();
                                     }
                                 });
                     }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull @NotNull Exception e) {
-                        NoteAppDialog dialog = new NoteAppDialog(getActivity());
-                        dialog.setupOKDialog("Registration Failed",
-                                "An error occurred during your account setup. Please try register again!");
-                        dialog.create().show();
-                    }
-                });
+                }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull @NotNull Exception e) {
+                progressDialog.dismiss();
+
+                Log.e("error", e.getMessage());
+
+                NoteAppDialog dialog = new NoteAppDialog(getActivity());
+                dialog.setupOKDialog("Registration Failed",
+                        "An error occurred during your account setup. Please try register again!");
+                dialog.create().show();
+            }
+        });
     }
 }

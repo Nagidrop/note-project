@@ -8,9 +8,11 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkCapabilities;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.Html;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.Animation;
@@ -21,13 +23,19 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
+import com.bumptech.glide.Glide;
 import com.facebook.login.LoginManager;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.imageview.ShapeableImageView;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.textview.MaterialTextView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 import com.group6.noteapp.R;
 import com.group6.noteapp.view.NoteAppDialog;
 
@@ -62,8 +70,9 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        firebaseAuth = FirebaseAuth.getInstance();
-        user = firebaseAuth.getCurrentUser();
+        FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+        FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
+
         setContentView(R.layout.activity_main);
 
         // -----------------------------
@@ -80,7 +89,8 @@ public class MainActivity extends AppCompatActivity {
         fabCapture = findViewById(R.id.fabCapture);
 
         fabMenu.setOnClickListener(new View.OnClickListener() {
-            @Override public void onClick(View v) {
+            @Override
+            public void onClick(View v) {
                 fabMenuOnClick();
             }
         });
@@ -92,14 +102,33 @@ public class MainActivity extends AppCompatActivity {
         DrawerLayout drawerLayout = findViewById(R.id.drawerLayout);
         NavigationView navigationView = findViewById(R.id.navigationView);
         View navHeader = navigationView.getHeaderView(0);
-        MaterialTextView txtNavFullname = navHeader.findViewById(R.id.txtNavFullname);
+        MaterialTextView txtNavFullName = navHeader.findViewById(R.id.txtNavFullname);
         MaterialTextView txtNavEmail = navHeader.findViewById(R.id.txtNavEmail);
-        txtNavFullname.setText(Html.fromHtml(getString(R.string.header_title, user.getDisplayName())));
-        txtNavEmail.setText(getString(R.string.header_text, user.getEmail()));
+        ShapeableImageView imgProfilePicture = navHeader.findViewById(R.id.imgProfilePicture);
+
+        FirebaseStorage storage = FirebaseStorage.getInstance();
+        StorageReference profileRef = storage.getReference()
+                .child("images/" + firebaseUser.getUid() + "/profilePicture.png");
+        profileRef.getDownloadUrl()
+                .addOnSuccessListener(new OnSuccessListener<Uri>() {
+                    @Override
+                    public void onSuccess(Uri uri) {
+                        Glide.with(MainActivity.this).load(uri).into(imgProfilePicture);
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull @NotNull Exception e) {
+                        Log.e("error", e.getMessage());
+                    }
+                });
+        txtNavFullName.setText(Html.fromHtml(getString(R.string.user_full_name, firebaseUser.getDisplayName())));
+        txtNavEmail.setText(getString(R.string.user_email, firebaseUser.getEmail()));
 
         // Set navigation icon click event to show navigation drawer
         topAppBar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override public void onClick(View v) {
+            @Override
+            public void onClick(View v) {
                 drawerLayout.open();
             }
         });
@@ -134,7 +163,8 @@ public class MainActivity extends AppCompatActivity {
         // Capture Image
         // -----------------------------
         fabCapture.setOnClickListener(new View.OnClickListener() {
-            @Override public void onClick(View v) {
+            @Override
+            public void onClick(View v) {
                 if (hasPermissions(MainActivity.this, PERMISSIONS)) {
                     fabMenuOnClick();
                     enableCamera();
@@ -148,7 +178,8 @@ public class MainActivity extends AppCompatActivity {
         // Recording
         // -----------------------------
         fabRecord.setOnClickListener(new View.OnClickListener() {
-            @Override public void onClick(View v) {
+            @Override
+            public void onClick(View v) {
                 if (hasPermissions(MainActivity.this, PERMISSIONS)
                 ) {
                     fabMenuOnClick();
