@@ -42,7 +42,7 @@
         app:layout_constraintTop_toBottomOf="@+id/appBarLayout">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:paddingTop="10dp"
+            android:paddingTop="5dp"
             android:paddingBottom="5dp"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -64,7 +64,7 @@
         android:drawablePadding="5dp"
         android:text="@string/note_title"
         android:textAppearance="@style/TextAppearance.MyTheme.Body3"
-        android:textColor="@color/grey_disabled"
+        android:textColor="@color/black_50"
         android:textSize="14dp"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
@@ -99,6 +99,7 @@
         app:layout_constraintTop_toBottomOf="@+id/horizontal_line">
 
         <com.google.android.material.textfield.TextInputEditText
+            android:paddingTop="18dp"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:hint="@string/note_title"
