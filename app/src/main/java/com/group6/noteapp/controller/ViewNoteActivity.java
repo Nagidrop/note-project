@@ -20,8 +20,7 @@ public class ViewNoteActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_note);
 
-        Note note = (Note) getIntent().getSerializableExtra("note");
-//        Note note = (Note) getIntent().getExtras().getSerializable("note");
+        Note note = (Note) getIntent().getParcelableExtra("note");
 
         TextInputLayout txtInputNoteTitle = findViewById(R.id.txtInputNoteTitle);
         TextInputLayout txtInputNoteContent = findViewById(R.id.txtInputNoteContent);
@@ -29,7 +28,6 @@ public class ViewNoteActivity extends AppCompatActivity {
 
         txtInputNoteTitle.getEditText().setText(note.getTitle());
         txtInputNoteContent.getEditText().setText(note.getContent());
-        txtNotebook.setText(note.getNotebook().getTitle());
     }
 
     @Override

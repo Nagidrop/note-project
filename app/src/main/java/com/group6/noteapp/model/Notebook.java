@@ -3,13 +3,14 @@
  */
 package com.group6.noteapp.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.ServerTimestamp;
 
-import java.io.Serializable;
-
 /* Notebook Object */
-public class Notebook implements Serializable {
+public class Notebook implements Parcelable {
 
     /* Object Properties */
     private String title;               // Notebook's title
@@ -28,6 +29,24 @@ public class Notebook implements Serializable {
     }
 
     /* Getters and Setters */
+
+    protected Notebook(Parcel in) {
+        title = in.readString();
+        createdDate = in.readParcelable(Timestamp.class.getClassLoader());
+        isDeleted = in.readByte() != 0;
+    }
+
+    public static final Creator<Notebook> CREATOR = new Creator<Notebook>() {
+        @Override
+        public Notebook createFromParcel(Parcel in) {
+            return new Notebook(in);
+        }
+
+        @Override
+        public Notebook[] newArray(int size) {
+            return new Notebook[size];
+        }
+    };
 
     public String getTitle() {
         return title;
@@ -51,5 +70,17 @@ public class Notebook implements Serializable {
 
     public void setDeleted(boolean deleted) {
         isDeleted = deleted;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(title);
+        dest.writeParcelable(createdDate, flags);
+        dest.writeByte((byte) (isDeleted ? 1 : 0));
     }
 }

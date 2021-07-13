@@ -72,11 +72,7 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteViewHolder> {
             @Override
             public void onClick(View v) {
                 Intent viewEditNoteIntent = new Intent(context, ViewNoteActivity.class);
-
-//                Bundle noteData = new Bundle();
-//                noteData.putSerializable("note", note);
-//
-//                viewEditNoteIntent.putExtras(noteData);
+                ;
                 viewEditNoteIntent.putExtra("note", note);
 
                 context.startActivity(viewEditNoteIntent);
