@@ -20,9 +20,10 @@
         android:roundIcon="@mipmap/ic_note_app_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.MyApp">
-        <activity android:name=".controller.ViewCaptureImageActivity"></activity>
+        <activity android:name=".controller.ViewImageDetails"></activity>
+        <activity android:name=".controller.ViewCaptureImageActivity" />
         <activity android:name=".controller.CameraActivity" />
-        <activity android:name=".view.AudioListFragment"></activity>
+        <activity android:name=".view.AudioListFragment" />
         <activity android:name=".controller.RecordActivity" />
         <activity android:name=".controller.CameraActivity" />
         <activity android:name=".controller.MainActivity" />
