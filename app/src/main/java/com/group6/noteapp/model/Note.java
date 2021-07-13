@@ -13,6 +13,7 @@ public class Note implements Serializable {
 
     /* Object Properties */
     private String id;              // Note's doc ID
+    private Notebook notebook;      // The notebook in which the note is in
     private String title;           // Note's title
     private String content;         // Note's content
     private boolean isDeleted;      // Is the note in trash?
@@ -25,8 +26,10 @@ public class Note implements Serializable {
     public Note() {
     }
 
-    public Note(String id, String title, String content, boolean isDeleted, Timestamp createdDate, Timestamp updatedDate) {
+    public Note(String id, Notebook notebook, String title, String content,
+                boolean isDeleted, Timestamp createdDate, Timestamp updatedDate) {
         this.id = id;
+        this.notebook = notebook;
         this.title = title;
         this.content = content;
         this.isDeleted = isDeleted;
@@ -43,6 +46,15 @@ public class Note implements Serializable {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    @Exclude
+    public Notebook getNotebook() {
+        return notebook;
+    }
+
+    public void setNotebook(Notebook notebook) {
+        this.notebook = notebook;
     }
 
     public String getTitle() {

@@ -52,20 +52,18 @@
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/txtNotebook"
-        android:drawableLeft="@drawable/ic_notebook_20"
-        android:drawablePadding="5dp"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="14dp"
         android:layout_marginTop="10dp"
-        android:layout_marginBottom="10dp"
+        android:drawableLeft="@drawable/ic_notebook_20"
+        android:drawablePadding="5dp"
         android:text="@string/note_title"
-        android:textStyle="bold"
         android:textAppearance="@style/TextAppearance.MyTheme.Body3"
         android:textColor="@color/grey_disabled"
         android:textSize="14dp"
+        android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/txtInputNoteTitle" />
 
     <View
