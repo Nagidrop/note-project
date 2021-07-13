@@ -20,6 +20,7 @@
     <string name="login_title">LOGIN</string>
     <string name="login_with">Login with</string>
     <string name="logout">Logout</string>
+    <string name="menu">Menu</string>
     <string name="next">Next</string>
     <string name="no_account">No account? Register here</string>
     <string name="note">Note</string>
@@ -36,6 +37,10 @@
     <string name="register_guide">Basic information</string>
     <string name="step_one_of_two">1/2</string>
     <string name="step_two_of_two">2/2</string>
+    <string name="note_title">Note Title</string>
+    <string name="note_book_title">Note Title</string>
+    <string name="undo">Undo</string>
+    <string name="redo">Redo</string>
     <string name="save">Save</string>
     <string name="submit">Submit</string>
     <string name="system">System</string>

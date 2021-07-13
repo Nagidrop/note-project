@@ -6,17 +6,104 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".controller.ViewNoteActivity">
+
     <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appBarLayout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/topAppBar"
             style="@style/Widget.MaterialComponents.Toolbar.Surface"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            app:navigationIcon="@drawable/ic_baseline_menu_24"
-            app:title="@string/all_notes"
-            app:titleTextAppearance="@style/TextAppearance.MyTheme.Headline6" />
+            app:navigationIcon="@drawable/ic_back_24">
+        </com.google.android.material.appbar.MaterialToolbar>
+
     </com.google.android.material.appbar.AppBarLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/txtInputNoteTitle"
+        style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/note_title"
+        android:letterSpacing="0.0178571429"
+        android:textAppearance="@style/TextAppearance.MyTheme.Body1"
+        android:textColor="@color/black_65"
+        android:textStyle="bold"
+        app:boxBackgroundColor="@color/white_50"
+        app:boxStrokeColor="@color/white_50"
+        app:boxStrokeWidth="0dp"
+        app:boxStrokeWidthFocused="0dp"
+        app:counterMaxLength="255"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/appBarLayout">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:inputType="textMultiLine"/>
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/txtNotebook"
+        android:drawableLeft="@drawable/ic_notebook_20"
+        android:drawablePadding="5dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="14dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:text="@string/note_title"
+        android:textStyle="bold"
+        android:textAppearance="@style/TextAppearance.MyTheme.Body3"
+        android:textColor="@color/grey_disabled"
+        android:textSize="14dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txtInputNoteTitle" />
+
+    <View
+        android:id="@+id/horizontal_line"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="7dp"
+        android:background="@color/grey_disabled"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txtNotebook" />
+<!--    </com.google.android.material.textview.MaterialTextView>-->
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/txtInputNoteContent"
+        style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:letterSpacing="0.0178571429"
+        android:textAppearance="@style/TextAppearance.MyTheme.Body2"
+        android:textColor="@color/black_65"
+        android:textStyle="bold"
+        app:hintEnabled="false"
+        app:boxBackgroundColor="@color/white_50"
+        app:boxStrokeColor="@color/white_50"
+        app:boxStrokeWidth="0dp"
+        app:boxStrokeWidthFocused="0dp"
+        app:counterMaxLength="255"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/horizontal_line">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:hint="@string/note_title"
+            android:inputType="textMultiLine"
+            android:gravity="top|start"/>
+    </com.google.android.material.textfield.TextInputLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
