@@ -202,7 +202,7 @@ public class RegisterFragment02 extends Fragment {
 
                                             break;
                                     }
-                                    
+
                                     dialog.create().show();
                                 }
                             });

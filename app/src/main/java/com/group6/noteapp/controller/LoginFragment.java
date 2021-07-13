@@ -292,21 +292,20 @@ public class LoginFragment extends Fragment {
                             case "ERROR_USER_DISABLED":
                                 dialog.setupOKDialog("Login Failed",
                                         "Your account has been disabled by an admin!");
-
                                 dialog.create().show();
+
                                 break;
 
                             case "ERROR_USER_TOKEN_EXPIRED":
                                 dialog.setupOKDialog("Login Failed",
                                         "Your credentials has been changed. Please log in again!");
-
                                 dialog.create().show();
+
                                 break;
 
                             default:
                                 dialog.setupOKDialog("Login Failed",
                                         "Sorry, an unexpected error occurred. Please try log in again!");
-
                                 dialog.create().show();
 
                                 break;
