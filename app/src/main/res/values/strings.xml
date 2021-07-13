@@ -26,7 +26,7 @@
     <string name="notebooks">Notebooks</string>
     <string name="or">OR</string>
     <string name="password">Password</string>
-<!--    <string name="profile_picture">%1$s</string>-->
+    <!--    <string name="profile_picture">%1$s</string>-->
     <string name="re_password">Re-enter Password</string>
     <string name="register">Register</string>
     <string name="reset_pass">Reset Password</string>
