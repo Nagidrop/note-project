@@ -8,14 +8,16 @@ import com.google.firebase.firestore.Exclude;
 import com.google.firebase.firestore.IgnoreExtraProperties;
 import com.google.firebase.firestore.ServerTimestamp;
 
-/* Note Object */
+/**
+ * Note Object
+ */
 @IgnoreExtraProperties
 public class Note implements Parcelable {
 
     /* Object Properties */
-    private String id;              // Note's doc ID
-    private Notebook notebook;      // The notebook in which the note is in
-    private int position;           // Position in adapter
+    private String id;              // Note Document ID
+    private Notebook notebook;      // The notebook which the note is in
+    private int position;           // Note position in adapter's note list
     private String title;           // Note's title
     private String content;         // Note's content
     private boolean isDeleted;      // Is the note in trash?
@@ -25,9 +27,23 @@ public class Note implements Parcelable {
     private Timestamp updatedDate;  // Note's updated date
 
     /* Constructors */
+
+    /**
+     * No args constructor
+     */
     public Note() {
     }
 
+    /**
+     * All args constructor
+     * @param id            Note Document ID
+     * @param notebook      The notebook which the note is in
+     * @param title         Note's title
+     * @param content       Note's content
+     * @param isDeleted     Is the note in trash?
+     * @param createdDate   Note's created date
+     * @param updatedDate   Note's updated date
+     */
     public Note(String id, Notebook notebook, String title, String content,
                 boolean isDeleted, Timestamp createdDate, Timestamp updatedDate) {
         this.id = id;
@@ -41,30 +57,7 @@ public class Note implements Parcelable {
 
     /* Getters and Setters */
 
-    protected Note(Parcel in) {
-        id = in.readString();
-        notebook = in.readParcelable(Notebook.class.getClassLoader());
-        position = in.readInt();
-        title = in.readString();
-        content = in.readString();
-        isDeleted = in.readByte() != 0;
-        createdDate = in.readParcelable(Timestamp.class.getClassLoader());
-        updatedDate = in.readParcelable(Timestamp.class.getClassLoader());
-    }
-
-    public static final Creator<Note> CREATOR = new Creator<Note>() {
-        @Override
-        public Note createFromParcel(Parcel in) {
-            return new Note(in);
-        }
-
-        @Override
-        public Note[] newArray(int size) {
-            return new Note[size];
-        }
-    };
-
-    @Exclude
+    @Exclude    // ignore from Firebase-related operations
     public String getId() {
         return id;
     }
@@ -73,7 +66,7 @@ public class Note implements Parcelable {
         this.id = id;
     }
 
-    @Exclude
+    @Exclude    // ignore from Firebase-related operations
     public Notebook getNotebook() {
         return notebook;
     }
@@ -129,6 +122,31 @@ public class Note implements Parcelable {
     public void setUpdatedDate(Timestamp updatedDate) {
         this.updatedDate = updatedDate;
     }
+
+
+    /* Parcelable implementation */
+    protected Note(Parcel in) {
+        id = in.readString();
+        notebook = in.readParcelable(Notebook.class.getClassLoader());
+        position = in.readInt();
+        title = in.readString();
+        content = in.readString();
+        isDeleted = in.readByte() != 0;
+        createdDate = in.readParcelable(Timestamp.class.getClassLoader());
+        updatedDate = in.readParcelable(Timestamp.class.getClassLoader());
+    }
+
+    public static final Creator<Note> CREATOR = new Creator<Note>() {
+        @Override
+        public Note createFromParcel(Parcel in) {
+            return new Note(in);
+        }
+
+        @Override
+        public Note[] newArray(int size) {
+            return new Note[size];
+        }
+    };
 
     /**
      * Describe the kinds of special objects contained in this Parcelable

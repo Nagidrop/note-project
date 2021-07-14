@@ -1,8 +1,5 @@
 package com.group6.noteapp.controller;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -12,6 +9,9 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -23,7 +23,6 @@ import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -32,8 +31,6 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.group6.noteapp.R;
 import com.group6.noteapp.model.Note;
-import com.group6.noteapp.model.Notebook;
-import com.group6.noteapp.util.Constants;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -43,7 +40,6 @@ import java.io.IOException;
 public class ViewImageDetails extends AppCompatActivity {
     private static final String TAG = "ViewImageDetails"; // Tag for logging
 
-
     private FirebaseStorage storage;
     private FirebaseAuth mAuth;
     private FirebaseUser user;
@@ -51,7 +47,6 @@ public class ViewImageDetails extends AppCompatActivity {
     private MaterialButton btnChangeName;
     private ShapeableImageView viewImage;
     private TextInputLayout imageName;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

@@ -19,7 +19,6 @@ import com.group6.noteapp.R;
  * create an instance of this fragment.
  */
 public class RegisterFragment03 extends Fragment {
-    private View inflatedView;
     private String regEmail;
 
     // TODO: Rename parameter arguments, choose names that match
@@ -64,7 +63,7 @@ public class RegisterFragment03 extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        inflatedView = inflater.inflate(R.layout.fragment_register03, container, false);
+        View inflatedView = inflater.inflate(R.layout.fragment_register03, container, false);
 
         TextView txtRegisterSuccess = inflatedView.findViewById(R.id.txtRegisterSuccess);
         txtRegisterSuccess.setText(Html.fromHtml(getString(R.string.email_sent_reg, regEmail)));

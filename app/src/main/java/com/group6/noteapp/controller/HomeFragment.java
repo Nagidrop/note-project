@@ -34,14 +34,6 @@ import java.util.ArrayList;
  */
 public class HomeFragment extends Fragment {
 
-    private View inflatedView;
-    private FirebaseAuth firebaseAuth;
-    private FirebaseUser firebaseUser;
-    private FirebaseFirestore db;
-    private ArrayList<Note> notebookList;
-    private ArrayList<Note> noteList;
-    private NoteAdapter noteAdapter;
-
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -86,12 +78,12 @@ public class HomeFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        inflatedView = inflater.inflate(R.layout.fragment_home, container, false);
+        View inflatedView = inflater.inflate(R.layout.fragment_home, container, false);
 
-        firebaseAuth = FirebaseAuth.getInstance();
-        firebaseUser = firebaseAuth.getCurrentUser();
+        FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+        FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
 
-        db = FirebaseFirestore.getInstance();
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
 
         CollectionReference notebookDocRef = db.collection("users").document(firebaseUser.getUid())
                 .collection("notebooks");
@@ -110,7 +102,7 @@ public class HomeFragment extends Fragment {
                             public void onComplete(@NonNull @NotNull Task<QuerySnapshot> task) {
                                 Log.d("noteerror", "Error getting documents: ");
                                 if (task.isSuccessful()) {
-                                    noteList = new ArrayList<>();
+                                    ArrayList<Note> noteList = new ArrayList<>();
                                     for (DocumentSnapshot document : task.getResult().getDocuments()) {
                                         Note note = document.toObject(Note.class);
                                         note.setId(document.getId());
@@ -121,7 +113,7 @@ public class HomeFragment extends Fragment {
                                     
                                     RecyclerView rvNote = inflatedView.findViewById(R.id.recyclerView);
 
-                                    noteAdapter = NoteAdapter.getInstance(getActivity(), noteList);
+                                    NoteAdapter noteAdapter = NoteAdapter.getInstance(getActivity(), noteList);
                                     rvNote.setAdapter(noteAdapter);
                                     rvNote.setLayoutManager(new LinearLayoutManager(getActivity()));
                                 } else {

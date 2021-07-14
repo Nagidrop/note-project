@@ -30,8 +30,6 @@ import org.jetbrains.annotations.NotNull;
  */
 public class ForgotPasswordFragment01 extends Fragment {
 
-    View inflatedView;
-    TextInputLayout inputResetPassEmail;
     NoteAppProgressDialog progressDialog;
 
     // TODO: Rename parameter arguments, choose names that match
@@ -77,14 +75,14 @@ public class ForgotPasswordFragment01 extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        inflatedView = inflater.inflate(R.layout.fragment_forgot_password01, container, false);
+        View inflatedView = inflater.inflate(R.layout.fragment_forgot_password01, container, false);
         //get text Input text layout
         MaterialButton btnSubmit = inflatedView.findViewById(R.id.btnForgotSubmit);
 
         btnSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                inputResetPassEmail = inflatedView.findViewById(R.id.textInputForgotEmail);
+                TextInputLayout inputResetPassEmail = inflatedView.findViewById(R.id.textInputForgotEmail);
                 String resetPassEmail = inputResetPassEmail.getEditText().getText().toString();
 
                 clearInputErrors(inputResetPassEmail);

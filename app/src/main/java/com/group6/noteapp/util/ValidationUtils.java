@@ -5,6 +5,9 @@ package com.group6.noteapp.util;
 
 import android.text.TextUtils;
 
+/**
+ * Validate input fields
+ */
 public final class ValidationUtils {
     private static final String passwordRegex = "^[A-Za-z\\d$&+,:;=?@#|'<>.^*()%!-]{8,}$";  // minimum 8 characters
     private static final String fullNameRegex = "^([a-zA-Zàáãạảăắằẳẵặâấầẩẫậèéẹẻẽêềếểễệđìíĩỉị" +

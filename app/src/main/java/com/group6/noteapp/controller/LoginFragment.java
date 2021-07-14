@@ -41,7 +41,6 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthException;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
-import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -60,8 +59,6 @@ import com.group6.noteapp.view.NoteAppProgressDialog;
 
 import org.jetbrains.annotations.NotNull;
 
-import static android.content.ContentValues.TAG;
-
 /**
  * A simple {@link Fragment} subclass.
  * Use the {@link LoginFragment#newInstance} factory method to
@@ -71,7 +68,6 @@ public class LoginFragment extends Fragment {
     private static final int RC_SIGN_IN = 696969;
     private static final String TAG = "LoginFragment"; // Tag for logging
 
-    private View inflatedView;
     private MaterialButton btnLogin;
     private TextInputLayout inputLogEmail;
     private TextInputLayout inputLogPassword;
@@ -138,7 +134,7 @@ public class LoginFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        inflatedView = inflater.inflate(R.layout.fragment_login, container, false);
+        View inflatedView = inflater.inflate(R.layout.fragment_login, container, false);
 
         // Get firestore instance
 

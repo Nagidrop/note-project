@@ -51,10 +51,8 @@ public class MainActivity extends AppCompatActivity {
             Manifest.permission.READ_EXTERNAL_STORAGE
     };
 
-
     private BroadcastReceiver MyReceiver = null;
-    private FirebaseAuth firebaseAuth;
-    private FirebaseUser firebaseUser;
+
     private MenuItem previousItem;
     private Animation rotateClose;
     private Animation rotateOpen;
@@ -73,8 +71,8 @@ public class MainActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_main);
 
-        this.firebaseAuth = FirebaseAuth.getInstance();
-        this.firebaseUser = firebaseAuth.getCurrentUser();
+        FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+        FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
 
         // -----------------------------
         // Floating button
@@ -160,6 +158,15 @@ public class MainActivity extends AppCompatActivity {
         previousItem = navigationView.getMenu().getItem(0).getSubMenu().getItem(0);
         previousItem.setChecked(true);
 
+        fabNote.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent createNoteIntent = new Intent(MainActivity.this, ViewEditNoteActivity.class);
+
+                startActivity(createNoteIntent);
+            }
+        });
+
         // -----------------------------
         // Capture Image
         // -----------------------------
@@ -181,8 +188,7 @@ public class MainActivity extends AppCompatActivity {
         fabRecord.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (hasPermissions(MainActivity.this, PERMISSIONS)
-                ) {
+                if (hasPermissions(MainActivity.this, PERMISSIONS)) {
                     fabMenuOnClick();
                     enableRecord();
                 } else {
@@ -346,7 +352,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void logOut() {
-        firebaseAuth.signOut();
+        FirebaseAuth.getInstance().signOut();
         LoginManager.getInstance().logOut();
         Intent intent = new Intent(MainActivity.this, LoginActivity.class);
         intent.setFlags(

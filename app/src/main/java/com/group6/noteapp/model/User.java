@@ -6,7 +6,9 @@ import android.os.Parcelable;
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.ServerTimestamp;
 
-/* User Object */
+/**
+ * User Object
+ */
 public class User implements Parcelable {
 
     /* Object Properties */
@@ -17,9 +19,20 @@ public class User implements Parcelable {
     private Timestamp createdDate;      // User's account creation date
 
     /* Constructors */
+
+    /**
+     * No args constructor
+     */
     public User() {
     }
 
+    /**
+     * All args constructor
+     * @param fullName      User's full name
+     * @param address       User's address
+     * @param birthdate     User's birth date
+     * @param createdDate   User's account creation date
+     */
     public User(String fullName, String address, String birthdate, Timestamp createdDate) {
         this.fullName = fullName;
         this.address = address;
@@ -28,25 +41,6 @@ public class User implements Parcelable {
     }
 
     /* Getters and Setters */
-
-    protected User(Parcel in) {
-        fullName = in.readString();
-        address = in.readString();
-        birthdate = in.readString();
-        createdDate = in.readParcelable(Timestamp.class.getClassLoader());
-    }
-
-    public static final Creator<User> CREATOR = new Creator<User>() {
-        @Override
-        public User createFromParcel(Parcel in) {
-            return new User(in);
-        }
-
-        @Override
-        public User[] newArray(int size) {
-            return new User[size];
-        }
-    };
 
     public String getFullName() {
         return fullName;
@@ -79,6 +73,27 @@ public class User implements Parcelable {
     public void setCreatedDate(Timestamp createdDate) {
         this.createdDate = createdDate;
     }
+
+    /* Parcelable implementation */
+
+    protected User(Parcel in) {
+        fullName = in.readString();
+        address = in.readString();
+        birthdate = in.readString();
+        createdDate = in.readParcelable(Timestamp.class.getClassLoader());
+    }
+
+    public static final Creator<User> CREATOR = new Creator<User>() {
+        @Override
+        public User createFromParcel(Parcel in) {
+            return new User(in);
+        }
+
+        @Override
+        public User[] newArray(int size) {
+            return new User[size];
+        }
+    };
 
     /**
      * Describe the kinds of special objects contained in this Parcelable

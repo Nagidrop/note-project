@@ -20,8 +20,6 @@ import com.group6.noteapp.util.ValidationUtils;
  */
 public class RegisterFragment01 extends Fragment {
 
-    private View inflatedView;
-
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -68,7 +66,7 @@ public class RegisterFragment01 extends Fragment {
                              Bundle savedInstanceState) {
 
         // Inflate the layout for this fragment
-        inflatedView = inflater.inflate(R.layout.fragment_register01, container, false);
+        View inflatedView = inflater.inflate(R.layout.fragment_register01, container, false);
 
         /* Get EditText Views */
         TextInputLayout inputRegEmail = inflatedView.findViewById(R.id.textInputRegEmail);

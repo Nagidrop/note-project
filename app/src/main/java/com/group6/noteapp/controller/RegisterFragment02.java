@@ -50,7 +50,6 @@ import static android.content.ContentValues.TAG;
  */
 public class RegisterFragment02 extends Fragment {
 
-    private View inflatedView;
     private NoteAppProgressDialog progressDialog;
 
     // TODO: Rename parameter arguments, choose names that match
@@ -98,7 +97,7 @@ public class RegisterFragment02 extends Fragment {
                              Bundle savedInstanceState) {
 
         // Inflate the layout for this fragment
-        inflatedView = inflater.inflate(R.layout.fragment_register02, container, false);
+        View inflatedView = inflater.inflate(R.layout.fragment_register02, container, false);
         /* Get EditText Views */
 
         TextInputLayout inputRegFullName = inflatedView.findViewById(R.id.textInputRegFullName);
