@@ -114,7 +114,8 @@ public class ViewEditNoteActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.nav_undo:
-//                Toast.makeText(this, "Click Undo Icon.", Toast.LENGTH_SHORT).show();
+//                TextInputLayout txtInputNoteContent = findViewById(R.id.txtInputNoteContent);
+//                txtInputNoteContent.getEditText()
 
                 break;
 
