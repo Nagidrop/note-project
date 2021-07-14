@@ -2,6 +2,7 @@ package com.group6.noteapp.controller;
 
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -29,8 +30,6 @@ import com.group6.noteapp.view.NoteAppProgressDialog;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.util.HashMap;
-
 public class ViewEditNoteActivity extends AppCompatActivity {
     private String savedNoteTitle;
     private String savedNoteContent;
@@ -50,8 +49,8 @@ public class ViewEditNoteActivity extends AppCompatActivity {
         MaterialTextView txtNotebook = findViewById(R.id.txtNotebook);
         FloatingActionButton fabSave = findViewById(R.id.fabSave);
 
-        txtInputNoteTitle.getEditText().setText(note.getTitle());
-        txtInputNoteContent.getEditText().setText(note.getContent());
+        txtInputNoteTitle.getEditText().setText(savedNoteTitle);
+        txtInputNoteContent.getEditText().setText(savedNoteContent);
         txtNotebook.setText(note.getNotebook().getTitle());
 
         MaterialToolbar toolbar = findViewById(R.id.noteToolbar);
@@ -76,7 +75,9 @@ public class ViewEditNoteActivity extends AppCompatActivity {
                                  */
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
-                                    saveNote(note, noteTitle, noteContent);
+                                    note.setTitle(noteTitle);
+                                    note.setContent(noteContent);
+                                    saveNote(note, true);
                                 }
                             });
 
@@ -93,7 +94,9 @@ public class ViewEditNoteActivity extends AppCompatActivity {
                 String noteContent = txtInputNoteContent.getEditText().getText().toString();
 
                 if (isUnsaved(noteTitle, noteContent)){
-                    saveNote(note, noteTitle, noteContent);
+                    note.setTitle(noteTitle);
+                    note.setContent(noteContent);
+                    saveNote(note, false);
                 } else {
                     Toast.makeText(ViewEditNoteActivity.this, "Note not changed.", Toast.LENGTH_SHORT).show();
                 }
@@ -111,7 +114,8 @@ public class ViewEditNoteActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.nav_undo:
-//                Toast.makeText(this, "Click Undo Icon.", Toast.LENGTH_SHORT).show();
+//                TextInputLayout txtInputNoteContent = findViewById(R.id.txtInputNoteContent);
+//                txtInputNoteContent.getEditText()
 
                 break;
 
@@ -136,7 +140,7 @@ public class ViewEditNoteActivity extends AppCompatActivity {
         return false;
     }
 
-    private void saveNote(Note note, String noteTitle, String noteContent){
+    private void saveNote(Note note, boolean isBackPressed){
         NoteAppProgressDialog progressDialog = new NoteAppProgressDialog(ViewEditNoteActivity.this);
         progressDialog.setUpDialog("Just a moment...",
                 "Please wait while we update your note.");
@@ -150,26 +154,41 @@ public class ViewEditNoteActivity extends AppCompatActivity {
                 .collection("notebooks").document(note.getNotebook().getId())
                 .collection("notes").document(note.getId());
 
-        HashMap<String, String> noteDataMap = new HashMap<>();
-        noteDataMap.put("title", noteTitle);
-        noteDataMap.put("content", noteContent);
-        noteDataMap.put("updatedDate", Timestamp.now().toString());
+        Timestamp updatedDate = Timestamp.now();
+
+        note.setTitle(TextUtils.isEmpty(note.getTitle()) ? "Untitled Note" : note.getTitle());
+        note.setUpdatedDate(updatedDate);
 
         noteRef.update(
-                "title", noteTitle,
-                "content", noteContent,
-                "updatedDate", Timestamp.now())
+                "title", note.getTitle(),
+                "content", note.getContent(),
+                "updatedDate", updatedDate)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void unused) {
                         progressDialog.dismiss();
 
-                        savedNoteTitle = noteTitle;
-                        savedNoteContent = noteContent;
+                        TextInputLayout txtInputNoteTitle = findViewById(R.id.txtInputNoteTitle);
+                        TextInputLayout txtInputNoteContent = findViewById(R.id.txtInputNoteContent);
+
+                        savedNoteTitle = note.getTitle();
+                        savedNoteContent = note.getContent();
+
+                        txtInputNoteTitle.getEditText().setText(savedNoteTitle);
+                        txtInputNoteContent.getEditText().setText(savedNoteContent);
+
+                        NoteAdapter noteAdapter = NoteAdapter.getExistingInstance();
+                        noteAdapter.getNotes().set(note.getPosition(), note);
+                        noteAdapter.notifyItemChanged(note.getPosition());
 
                         NoteAppDialog dialog = new NoteAppDialog(ViewEditNoteActivity.this);
-                        dialog.setupOKDialog("Update Successful",
-                                "Note has been updated.");
+                        if (isBackPressed) {
+                            dialog.setupReturnOKDialog("Update Successful",
+                                    "Note has been updated.", ViewEditNoteActivity.this);
+                        } else {
+                            dialog.setupOKDialog("Update Successful",
+                                    "Note has been updated.");
+                        }
                         dialog.create().show();
                     }
                 })
@@ -177,6 +196,8 @@ public class ViewEditNoteActivity extends AppCompatActivity {
                     @Override
                     public void onFailure(@NonNull @NotNull Exception e) {
                         Log.e("error", e.getMessage(), e);
+
+                        progressDialog.dismiss();
 
                         NoteAppDialog dialog = new NoteAppDialog(ViewEditNoteActivity.this);
                         dialog.setupOKDialog("Update Failed",

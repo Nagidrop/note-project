@@ -8,8 +8,6 @@ import com.google.firebase.firestore.Exclude;
 import com.google.firebase.firestore.IgnoreExtraProperties;
 import com.google.firebase.firestore.ServerTimestamp;
 
-import java.io.Serializable;
-
 /* Note Object */
 @IgnoreExtraProperties
 public class Note implements Parcelable {
@@ -17,6 +15,7 @@ public class Note implements Parcelable {
     /* Object Properties */
     private String id;              // Note's doc ID
     private Notebook notebook;      // The notebook in which the note is in
+    private int position;           // Position in adapter
     private String title;           // Note's title
     private String content;         // Note's content
     private boolean isDeleted;      // Is the note in trash?
@@ -45,6 +44,7 @@ public class Note implements Parcelable {
     protected Note(Parcel in) {
         id = in.readString();
         notebook = in.readParcelable(Notebook.class.getClassLoader());
+        position = in.readInt();
         title = in.readString();
         content = in.readString();
         isDeleted = in.readByte() != 0;
@@ -80,6 +80,14 @@ public class Note implements Parcelable {
 
     public void setNotebook(Notebook notebook) {
         this.notebook = notebook;
+    }
+
+    public int getPosition() {
+        return position;
+    }
+
+    public void setPosition(int position) {
+        this.position = position;
     }
 
     public String getTitle() {
@@ -148,6 +156,7 @@ public class Note implements Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(id);
         dest.writeParcelable(notebook, flags);
+        dest.writeInt(position);
         dest.writeString(title);
         dest.writeString(content);
         dest.writeByte((byte) (isDeleted ? 1 : 0));

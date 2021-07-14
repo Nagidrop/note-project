@@ -21,6 +21,7 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteViewHolder> {
 
     private Context context;                                // activity context
     private ArrayList<Note> notes;                          // list of notes
+    private static NoteAdapter noteAdapter;                 // singleton instance of note adapter
 
     /**
      * Constructor
@@ -28,9 +29,21 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteViewHolder> {
      * @param context activity context
      * @param notes   list of notes
      */
-    public NoteAdapter(Context context, ArrayList<Note> notes) {
+    private NoteAdapter(Context context, ArrayList<Note> notes) {
         this.context = context;
         this.notes = notes;
+    }
+
+    public static synchronized NoteAdapter getInstance(Context context, ArrayList<Note> notes) {
+        if (noteAdapter == null) {
+            noteAdapter = new NoteAdapter(context, notes);
+        }
+
+        return noteAdapter;
+    }
+
+    public static synchronized NoteAdapter getExistingInstance() {
+        return noteAdapter;
     }
 
     /**
@@ -63,15 +76,16 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteViewHolder> {
 
         SimpleDateFormat dateFormat = new SimpleDateFormat("E, dd MMM yyyy h:mm aa");
 
-        String createdDate = dateFormat.format(note.getCreatedDate().toDate());
-        createdDate.replace("am", "AM").replace("pm","PM");
-        holder.getNoteCreatedDate().setText(createdDate);           // set note created date
+        String updatedDate = dateFormat.format(note.getUpdatedDate().toDate());
+        updatedDate.replace("am", "AM").replace("pm","PM");
+        holder.getNoteUpdatedDate().setText(updatedDate);           // set note updated date
 
         // card view onclick
         holder.getNoteCardView().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent viewEditNoteIntent = new Intent(context, ViewEditNoteActivity.class);
+                note.setPosition(position);
                 viewEditNoteIntent.putExtra("note", note);
 
                 context.startActivity(viewEditNoteIntent);
