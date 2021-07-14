@@ -158,6 +158,9 @@ public class MainActivity extends AppCompatActivity {
         previousItem = navigationView.getMenu().getItem(0).getSubMenu().getItem(0);
         previousItem.setChecked(true);
 
+        // -----------------------------
+        // Text Note
+        // -----------------------------
         fabNote.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -168,7 +171,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
         // -----------------------------
-        // Capture Image
+        // Image Note
         // -----------------------------
         fabCapture.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -183,7 +186,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
         // -----------------------------
-        // Recording
+        // Audio Note
         // -----------------------------
         fabRecord.setOnClickListener(new View.OnClickListener() {
             @Override

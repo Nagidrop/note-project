@@ -109,4 +109,18 @@ public final class ValidationUtils {
 
         return 0;
     }
+
+    /**
+     * Validate if image name input is valid
+     * @param imageName image name string to validate
+     * @return  0 if valid
+     *          1 if empty
+     */
+    public static int validateImageName(String imageName){
+        if (imageName.isEmpty()){
+            return 1;
+        }
+
+        return 0;
+    }
 }

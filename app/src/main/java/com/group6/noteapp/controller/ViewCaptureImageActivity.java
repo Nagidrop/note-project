@@ -163,10 +163,6 @@ public class ViewCaptureImageActivity extends AppCompatActivity {
                                                         @Override public void onSuccess(
                                                                 DocumentReference documentReference) {
                                                             Toast.makeText(ViewCaptureImageActivity.this, "Add Note Successful!!", Toast.LENGTH_SHORT).show();
-                                                            NoteAdapter noteAdapter = NoteAdapter.getExistingInstance();
-                                                            noteAdapter.getNotes().add(imageNote);
-                                                            noteAdapter.notifyDataSetChanged();
-
                                                             toMainActivity();
                                                         }
                                                     }).addOnFailureListener(

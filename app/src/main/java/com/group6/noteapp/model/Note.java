@@ -4,6 +4,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.google.firebase.Timestamp;
+import com.google.firebase.firestore.DocumentId;
 import com.google.firebase.firestore.Exclude;
 import com.google.firebase.firestore.IgnoreExtraProperties;
 import com.google.firebase.firestore.ServerTimestamp;
@@ -15,9 +16,9 @@ import com.google.firebase.firestore.ServerTimestamp;
 public class Note implements Parcelable {
 
     /* Object Properties */
+    @DocumentId
     private String id;              // Note Document ID
     private Notebook notebook;      // The notebook which the note is in
-    private int position;           // Note position in adapter's note list
     private String title;           // Note's title
     private String content;         // Note's content
     private boolean isDeleted;      // Is the note in trash?
@@ -57,7 +58,6 @@ public class Note implements Parcelable {
 
     /* Getters and Setters */
 
-    @Exclude    // ignore from Firebase-related operations
     public String getId() {
         return id;
     }
@@ -73,14 +73,6 @@ public class Note implements Parcelable {
 
     public void setNotebook(Notebook notebook) {
         this.notebook = notebook;
-    }
-
-    public int getPosition() {
-        return position;
-    }
-
-    public void setPosition(int position) {
-        this.position = position;
     }
 
     public String getTitle() {
@@ -128,7 +120,6 @@ public class Note implements Parcelable {
     protected Note(Parcel in) {
         id = in.readString();
         notebook = in.readParcelable(Notebook.class.getClassLoader());
-        position = in.readInt();
         title = in.readString();
         content = in.readString();
         isDeleted = in.readByte() != 0;
@@ -174,7 +165,6 @@ public class Note implements Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(id);
         dest.writeParcelable(notebook, flags);
-        dest.writeInt(position);
         dest.writeString(title);
         dest.writeString(content);
         dest.writeByte((byte) (isDeleted ? 1 : 0));
