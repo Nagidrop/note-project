@@ -32,16 +32,10 @@ P
  app/src/main/AndroidManifest.xml,8\c\8c55c3ccc257e5907959013f99656e4c8ec3903e
 }
 Mapp/src/main/java/com/group6/noteapp/controller/ForgotPasswordFragment02.java,5\3\53ae6f9c783d48329c5b86ed4a8245eab90d5c63
-w
-Gapp/src/main/java/com/group6/noteapp/controller/DatePickerFragment.java,4\a\4a18202bb2d03719cc1dd3555811066675d890f6
 @
 app/build.gradle,f\4\f4a01d6a4fcb971362ec00a83903fd3902f52164
 <
 build.gradle,f\0\f07866736216be0ee2aba49e392191aeae700a35
-s
-Capp/src/main/java/com/group6/noteapp/controller/CameraActivity.java,6\3\638e68466573718ebe8db06559a40577842b3487
-q
-Aapp/src/main/java/com/group6/noteapp/controller/HomeFragment.java,7\6\76245912de1e89ae20be64d68262cd415ad4a605
 w
 Gapp/src/main/java/com/group6/noteapp/controller/RegisterFragment01.java,c\a\ca32a263d95c8fd47bf5413e5c179cba70832311
 d

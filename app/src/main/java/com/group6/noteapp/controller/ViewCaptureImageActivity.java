@@ -156,9 +156,7 @@ public class ViewCaptureImageActivity extends AppCompatActivity {
                                                         @Override public void onSuccess(
                                                                 DocumentReference documentReference) {
                                                             Toast.makeText(ViewCaptureImageActivity.this, "Add Note Successful!!", Toast.LENGTH_SHORT).show();
-                                                            Intent intent = new Intent(ViewCaptureImageActivity.this, MainActivity.class);
-                                                            intent.setFlags(intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-                                                            startActivity(intent);
+                                                            toMainActivity();
                                                         }
                                                     }).addOnFailureListener(
                                                     new OnFailureListener() {
@@ -184,5 +182,11 @@ public class ViewCaptureImageActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    private void toMainActivity() {
+        Intent intent = new Intent(ViewCaptureImageActivity.this, LoginActivity.class);
+        intent.setFlags(intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
     }
 }
