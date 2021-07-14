@@ -15,12 +15,11 @@
             android:id="@+id/textTimeRecord"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="184dp"
-            android:layout_marginTop="6dp"
-            android:layout_marginEnd="194dp"
+            android:layout_marginStart="189dp"
+            android:layout_marginTop="24dp"
+            android:layout_marginEnd="189dp"
             android:text="Time"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/record_timer" />
 
@@ -39,93 +38,122 @@
 
         <Button
             android:id="@+id/btnPlay"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="84dp"
-            android:layout_marginBottom="134dp"
+            android:layout_width="117dp"
+            android:layout_height="63dp"
             android:text="Play"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.21"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.895" />
 
         <Button
             android:id="@+id/btnSaveRecord"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="260dp"
-            android:layout_marginBottom="132dp"
+            android:layout_width="117dp"
+            android:layout_height="63dp"
+            android:layout_marginStart="55dp"
+            android:layout_marginEnd="60dp"
             android:text="Save"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/btnPlay"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.894" />
+
+        <Button
+            android:id="@+id/btnRecording"
+            android:layout_width="115dp"
+            android:layout_height="64dp"
+            android:text="Record"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.737" />
+
+        <Button
+            android:id="@+id/btnReset"
+            android:layout_width="100dp"
+            android:layout_height="63dp"
+            android:layout_marginTop="52dp"
+            android:layout_marginEnd="60dp"
+            android:layout_marginBottom="47dp"
+            android:text="Reset"
+            app:layout_constraintBottom_toTopOf="@+id/btnRecording"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textInputRecordName"
+            app:layout_constraintVertical_bias="0.488" />
+
+        <Button
+            android:id="@+id/btnStop"
+            android:layout_width="100dp"
+            android:layout_height="63dp"
+            android:layout_marginStart="60dp"
+            android:layout_marginTop="52dp"
+            android:layout_marginBottom="47dp"
+            android:text="Stop"
+            app:layout_constraintBottom_toTopOf="@+id/btnRecording"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textInputRecordName"
+            app:layout_constraintVertical_bias="0.488" />
+
+        <SeekBar
+            android:id="@+id/seekBar"
+            android:layout_width="259dp"
+            android:layout_height="21dp"
+            android:layout_marginStart="84dp"
+            android:layout_marginTop="13dp"
+            android:layout_marginEnd="81dp"
+            android:layout_marginBottom="38dp"
+            app:layout_constraintBottom_toTopOf="@+id/textInputRecordName"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textTimeRecord" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline39"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.5" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline40"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.15" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline41"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.85" />
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/textInputRecordName"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-            android:layout_width="315dp"
-            android:layout_height="63dp"
-            android:layout_marginStart="52dp"
-            android:layout_marginTop="50dp"
-            android:layout_marginEnd="44dp"
+            android:layout_width="302dp"
+            android:layout_height="91dp"
+            android:layout_marginStart="60dp"
+            android:layout_marginTop="38dp"
+            android:layout_marginEnd="60dp"
             android:ems="10"
-
             android:hint="@string/record_name"
             android:textColorHint="?android:colorPrimary"
             app:boxStrokeColor="?android:colorPrimary"
             app:errorEnabled="true"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textTimeRecord">
+            app:layout_constraintTop_toBottomOf="@+id/seekBar">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:inputType="textPersonName" />
         </com.google.android.material.textfield.TextInputLayout>
-
-        <Button
-            android:id="@+id/btnRecording"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="43dp"
-            android:layout_marginTop="33dp"
-            android:text="Record"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textInputRecordName" />
-
-        <Button
-            android:id="@+id/btnReset"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="38dp"
-            android:layout_marginBottom="126dp"
-            android:text="Reset"
-            app:layout_constraintBottom_toTopOf="@+id/btnSaveRecord"
-            app:layout_constraintEnd_toEndOf="parent" />
-
-        <Button
-            android:id="@+id/btnStop"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="34dp"
-            android:layout_marginEnd="25dp"
-            android:layout_marginBottom="123dp"
-            android:text="Stop"
-            app:layout_constraintBottom_toTopOf="@+id/btnPlay"
-            app:layout_constraintEnd_toStartOf="@+id/btnReset"
-            app:layout_constraintTop_toBottomOf="@+id/textInputRecordName"
-            app:layout_constraintVertical_bias="0.0" />
-
-        <SeekBar
-            android:id="@+id/seekBar"
-            android:layout_width="246dp"
-            android:layout_height="23dp"
-            android:layout_marginStart="84dp"
-            android:layout_marginTop="7dp"
-            android:layout_marginEnd="81dp"
-            android:layout_marginBottom="20dp"
-            app:layout_constraintBottom_toTopOf="@+id/textInputRecordName"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textTimeRecord" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
