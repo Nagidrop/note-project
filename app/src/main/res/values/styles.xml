@@ -52,6 +52,12 @@
         <item name="android:minHeight">48dp</item>
     </style>
 
+<!--    <style name="Widget.MyTheme.TextInputLayout.FilledBox" parent="Widget.MaterialComponents.TextInputLayout.FilledBox">-->
+<!--        <item name="android:textAppearance">@style/TextAppearance.MyTheme.Body2</item>-->
+<!--        <item name="android:textStyle">bold</item>-->
+<!--        <item name="android:textColor">@color/black_65</item>-->
+<!--    </style>-->
+
     <style name="datePickerTheme" parent="ThemeOverlay.AppCompat.Dialog">
         <item name="colorAccent">@color/purple_500</item>                   <!--header background-->
 <!--        <item name="android:windowBackground">@color/purple_500</item>     &lt;!&ndash;calendar background&ndash;&gt;-->

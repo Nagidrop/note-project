@@ -1,6 +1,7 @@
 package com.group6.noteapp.controller;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -70,7 +71,10 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteViewHolder> {
         holder.getNoteCardView().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // do something
+                Intent viewEditNoteIntent = new Intent(context, ViewNoteActivity.class);
+                viewEditNoteIntent.putExtra("note", note);
+
+                context.startActivity(viewEditNoteIntent);
             }
         });
     }

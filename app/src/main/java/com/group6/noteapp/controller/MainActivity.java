@@ -54,7 +54,7 @@ public class MainActivity extends AppCompatActivity {
 
     private BroadcastReceiver MyReceiver = null;
     private FirebaseAuth firebaseAuth;
-    private FirebaseUser user;
+    private FirebaseUser firebaseUser;
     private MenuItem previousItem;
     private Animation rotateClose;
     private Animation rotateOpen;
@@ -70,10 +70,11 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
-        FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
 
         setContentView(R.layout.activity_main);
+
+        this.firebaseAuth = FirebaseAuth.getInstance();
+        this.firebaseUser = firebaseAuth.getCurrentUser();
 
         // -----------------------------
         // Floating button

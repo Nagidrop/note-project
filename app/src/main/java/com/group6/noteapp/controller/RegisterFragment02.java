@@ -114,7 +114,6 @@ public class RegisterFragment02 extends Fragment {
                 openDatePicker(inputRegBirthdateEditText);
             }
         });
-
         inputRegBirthdateEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {

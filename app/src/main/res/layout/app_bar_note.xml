@@ -6,11 +6,13 @@
 
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:elevation="0dp">
 
         <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/topAppBar"
             style="@style/Widget.MaterialComponents.Toolbar.Surface"
+            android:elevation="0dp"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             app:navigationIcon="@drawable/ic_baseline_menu_24"
@@ -25,8 +27,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|right"
-        android:layout_marginEnd="21dp"
-        android:layout_marginBottom="21dp"
+        android:layout_margin="16dp"
         android:clickable="true"
         app:fabCustomSize="60dp"
         android:contentDescription="@string/fab_content_desc"
@@ -37,8 +38,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|right"
-        android:layout_marginEnd="26dp"
-        android:layout_marginBottom="243dp"
+        android:layout_marginEnd="19dp"
+        android:layout_marginBottom="230dp"
         android:visibility="invisible"
         android:clickable="true"
         app:fabCustomSize="50dp"
@@ -50,8 +51,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|right"
-        android:layout_marginBottom="172dp"
-        android:layout_marginEnd="26dp"
+        android:layout_marginBottom="162dp"
+        android:layout_marginEnd="19dp"
         android:clickable="true"
         android:visibility="invisible"
         app:fabCustomSize="50dp"
@@ -63,8 +64,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|right"
-        android:layout_marginBottom="101dp"
-        android:layout_marginEnd="26dp"
+        android:layout_marginBottom="94dp"
+        android:layout_marginEnd="19dp"
         app:fabCustomSize="50dp"
         android:visibility="invisible"
         android:clickable="true"
