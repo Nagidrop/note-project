@@ -25,13 +25,13 @@ public class ViewNoteActivity extends AppCompatActivity {
         Note note = (Note) getIntent().getParcelableExtra("note");
 
         MaterialToolbar toolbar = findViewById(R.id.noteToolbar);
+        setSupportActionBar(toolbar);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 onBackPressed();
             }
         });
-        setSupportActionBar(toolbar);
 
         TextInputLayout txtInputNoteTitle = findViewById(R.id.txtInputNoteTitle);
         TextInputLayout txtInputNoteContent = findViewById(R.id.txtInputNoteContent);
