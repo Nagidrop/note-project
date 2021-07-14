@@ -123,8 +123,8 @@ public class MainActivity extends AppCompatActivity {
                         Log.e("error", e.getMessage());
                     }
                 });
-        txtNavFullName.setText(Html.fromHtml(getString(R.string.user_full_name, firebaseUser.getDisplayName())));
-        txtNavEmail.setText(getString(R.string.user_email, firebaseUser.getEmail()));
+        txtNavFullName.setText(Html.fromHtml(getString(R.string.header_title, firebaseUser.getDisplayName())));
+        txtNavEmail.setText(getString(R.string.header_text, firebaseUser.getEmail()));
 
         // Set navigation icon click event to show navigation drawer
         topAppBar.setNavigationOnClickListener(new View.OnClickListener() {

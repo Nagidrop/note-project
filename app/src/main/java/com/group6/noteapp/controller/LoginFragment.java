@@ -383,7 +383,7 @@ public class LoginFragment extends Fragment {
                                             if (task.isSuccessful()) {
                                                 DocumentSnapshot document = task.getResult();
                                                 if (!document.exists()) {
-                                                    addNewUser(user, userInfoDoc);
+                                                    setUpUserInfo(user, userInfoDoc);
                                                 }
                                             }
                                         }
@@ -422,7 +422,7 @@ public class LoginFragment extends Fragment {
                                             if (task.isSuccessful()) {
                                                 DocumentSnapshot document = task.getResult();
                                                 if (!document.exists()) {
-                                                    addNewUser(user, userInfoDoc);
+                                                    setUpUserInfo(user, userInfoDoc);
                                                 }
                                             } else {
                                                 Log.d(TAG, "get failed with ", task.getException());
@@ -452,8 +452,9 @@ public class LoginFragment extends Fragment {
                         Notebook defaultNotebook = new Notebook();
                         defaultNotebook.setTitle("My First Notebook");
 
-                        DocumentReference userDefaultNotebookDoc = userInfoDoc.collection("notebooks")
-                                .document(defaultNotebook.getTitle());
+                        DocumentReference userDefaultNotebookDoc =
+                                userInfoDoc.collection("notebooks")
+                                        .document(defaultNotebook.getTitle());
                         userDefaultNotebookDoc.set(defaultNotebook);
                     }
                 });
@@ -503,13 +504,16 @@ public class LoginFragment extends Fragment {
 
         Note welcomeNote2 = new Note();
         welcomeNote2.setTitle("Test note - delete at release");
-        welcomeNote2.setContent("I don't know what you did, Fry, but once again, you screwed up! Now all the planets are gonna start cracking wise about our mamas. When will that be? Uh, is the puppy mechanical in any way? She also liked to shut up!\n" +
-                "\n" +
-                "Who am I making this out to? Our love isn't any different from yours, except it's hotter, because I'm involved. Okay, it's 500 dollars, you have no choice of carrier, the battery can't hold the charge and the reception isn't very…");
+        welcomeNote2.setContent(
+                "I don't know what you did, Fry, but once again, you screwed up! Now all the planets are gonna start cracking wise about our mamas. When will that be? Uh, is the puppy mechanical in any way? She also liked to shut up!\n" +
+                        "\n" +
+                        "Who am I making this out to? Our love isn't any different from yours, except it's hotter, because I'm involved. Okay, it's 500 dollars, you have no choice of carrier, the battery can't hold the charge and the reception isn't very…");
 
         Note welcomeNote3 = new Note();
-        welcomeNote3.setTitle("Test note but intentionally exceeds longer than two lines title - delete at release");
-        welcomeNote3.setContent("When I was first asked to make a film about my nephew, Hubert Farnsworth, I thought \"Why should I?\" Then later, Leela made the film. But if I did make it, you can bet there would have been more topless women on motorcycles. Roll film! You are the last hope of the universe.");
+        welcomeNote3.setTitle(
+                "Test note but intentionally exceeds longer than two lines title - delete at release");
+        welcomeNote3.setContent(
+                "When I was first asked to make a film about my nephew, Hubert Farnsworth, I thought \"Why should I?\" Then later, Leela made the film. But if I did make it, you can bet there would have been more topless women on motorcycles. Roll film! You are the last hope of the universe.");
 
         CollectionReference userNoteCollection = userDefNotebookDoc.collection("notes");
         userNoteCollection.add(welcomeNote)
@@ -540,7 +544,7 @@ public class LoginFragment extends Fragment {
         userNoteCollection.add(welcomeNote3);
     }
 
-    private void setUpUserInfo(User newUser, FirebaseUser firebaseUser, FirebaseFirestore db) {
+    private void setUpUserInfo(FirebaseUser firebaseUser, DocumentReference userInfoDoc) {
         FirebaseStorage storage = FirebaseStorage.getInstance();
         StorageReference storageRef = storage.getReference();
 
@@ -549,61 +553,14 @@ public class LoginFragment extends Fragment {
                 + '/' + getResources().getResourceTypeName(R.drawable.img_profile_pic)
                 + '/' + getResources().getResourceEntryName(R.drawable.img_profile_pic));
 
-        final StorageReference profilePictureRef = storageRef.child("images/" + firebaseUser.getUid() + "/profilePicture.png");
+        final StorageReference profilePictureRef =
+                storageRef.child(firebaseUser.getUid() + "/images/" + "/profilePicture.png");
 
         profilePictureRef.putFile(profilePic)
                 .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                     @Override
                     public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                        UserProfileChangeRequest profileSetup = new UserProfileChangeRequest.Builder()
-                                .setDisplayName(newUser.getFullName())
-                                .build();
-
-                        firebaseUser.updateProfile(profileSetup)
-                                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                    @Override
-                                    public void onSuccess(Void unused) {
-                                        DocumentReference userInfoDoc = db.collection("users").document(firebaseUser.getUid());
-
-                                        userInfoDoc.set(newUser)
-                                                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                                    @Override
-                                                    public void onSuccess(Void aVoid) {
-                                                        Log.d(TAG, "DocumentSnapshot written with ID: " + firebaseUser.getUid());
-
-                                                        addDefaultNotebook(userInfoDoc, firebaseUser);
-                                                    }
-                                                })
-                                                .addOnFailureListener(new OnFailureListener() {
-                                                    @Override
-                                                    public void onFailure(@NonNull @NotNull Exception e) {
-                                                        Log.e(Constants.REGISTER_ERROR, "Error updating user info", e);
-
-                                                        progressDialog.dismiss();
-                                                        // handle error
-                                                        String error = e.getMessage();
-
-                                                        NoteAppDialog dialog = new NoteAppDialog(getActivity());
-                                                        dialog.setupOKDialog("Registration Failed",
-                                                                "An unknown error occurred!\nError message:\n\"" + error + "\"");
-                                                        dialog.create().show();
-                                                    }
-                                                });
-                                    }
-                                })
-                                .addOnFailureListener(new OnFailureListener() {
-                                    @Override
-                                    public void onFailure(@NonNull @NotNull Exception e) {
-                                        Log.e(Constants.REGISTER_ERROR, "Error updating display name", e);
-
-                                        progressDialog.dismiss();
-
-                                        NoteAppDialog dialog = new NoteAppDialog(getActivity());
-                                        dialog.setupOKDialog("Registration Failed",
-                                                "An error occurred during your account setup. Please try register again!");
-                                        dialog.create().show();
-                                    }
-                                });
+                        addDefaultNotebook(userInfoDoc, firebaseUser);
                     }
                 }).addOnFailureListener(new OnFailureListener() {
             @Override
