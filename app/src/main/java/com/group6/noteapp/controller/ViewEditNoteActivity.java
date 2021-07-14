@@ -42,18 +42,22 @@ public class ViewEditNoteActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_edit_note);
 
-        Note note = (Note) getIntent().getParcelableExtra("note") == null ? new Note() : (Note) getIntent().getParcelableExtra("note");
-        Notebook notebook;
+        Note note;
+
+        if (getIntent().getParcelableExtra("note") == null) {
+            note = new Note();
+        } else {
+            note = getIntent().getParcelableExtra("note");
+        }
+
+        if (note.getNotebook() == null) {
+            Notebook notebook = new Notebook();
+            notebook.setTitle("My First Notebook");
+            note.setNotebook(notebook);
+        }
 
         savedNoteTitle = note.getTitle();
         savedNoteContent = note.getContent();
-
-        if (note.getNotebook() != null) {
-            notebook = note.getNotebook();
-        } else {
-            notebook = NoteAdapter.getExistingInstance().getNotes().get(0).getNotebook();
-            note.setNotebook(notebook);
-        }
 
         TextInputLayout txtInputNoteTitle = findViewById(R.id.txtInputNoteTitle);
         TextInputLayout txtInputNoteContent = findViewById(R.id.txtInputNoteContent);
@@ -62,7 +66,7 @@ public class ViewEditNoteActivity extends AppCompatActivity {
 
         txtInputNoteTitle.getEditText().setText(savedNoteTitle);
         txtInputNoteContent.getEditText().setText(savedNoteContent);
-        txtNotebook.setText(notebook.getTitle());
+        txtNotebook.setText(note.getNotebook().getTitle());
 
         MaterialToolbar toolbar = findViewById(R.id.noteToolbar);
         setSupportActionBar(toolbar);
@@ -179,10 +183,6 @@ public class ViewEditNoteActivity extends AppCompatActivity {
                             txtInputNoteTitle.getEditText().setText(savedNoteTitle);
                             txtInputNoteContent.getEditText().setText(savedNoteContent);
 
-                            NoteAdapter noteAdapter = NoteAdapter.getExistingInstance();
-                            noteAdapter.getNotes().set(note.getPosition(), note);
-                            noteAdapter.notifyItemChanged(note.getPosition());
-
                             NoteAppDialog dialog = new NoteAppDialog(ViewEditNoteActivity.this);
                             if (isBackPressed) {
                                 dialog.setUpReturnOKDialog("Update Successful",
@@ -213,7 +213,7 @@ public class ViewEditNoteActivity extends AppCompatActivity {
             progressDialog.show();
 
             CollectionReference notesCollectionRef = db.collection("users").document(firebaseUser.getUid())
-                    .collection("notebooks").document(note.getNotebook().getId())
+                    .collection("notebooks").document(firebaseUser.getUid())
                     .collection("notes");
 
             note.setTitle(TextUtils.isEmpty(note.getTitle()) ? "Untitled Note" : note.getTitle());
@@ -238,10 +238,6 @@ public class ViewEditNoteActivity extends AppCompatActivity {
 
                                             txtInputNoteTitle.getEditText().setText(savedNoteTitle);
                                             txtInputNoteContent.getEditText().setText(savedNoteContent);
-
-                                            NoteAdapter noteAdapter = NoteAdapter.getExistingInstance();
-                                            noteAdapter.getNotes().add(newNote);
-                                            noteAdapter.notifyItemInserted(noteAdapter.getItemCount() - 1);
 
                                             NoteAppDialog dialog = new NoteAppDialog(ViewEditNoteActivity.this);
                                             if (isBackPressed) {

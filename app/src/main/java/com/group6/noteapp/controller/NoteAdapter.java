@@ -1,3 +1,6 @@
+/**
+ * Quan Duc Loc CE140037
+ */
 package com.group6.noteapp.controller;
 
 import android.content.Context;
@@ -7,77 +10,43 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
 
+import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
+import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.group6.noteapp.R;
 import com.group6.noteapp.model.Note;
+import com.group6.noteapp.model.Notebook;
 import com.group6.noteapp.view.NoteViewHolder;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.List;
 
-public class NoteAdapter extends RecyclerView.Adapter<NoteViewHolder> {
-
-    private Context context;                                // activity context
-    private ArrayList<Note> notes;                          // list of notes
-    private static NoteAdapter noteAdapter;                 // singleton instance of note adapter
+public class NoteAdapter extends FirestoreRecyclerAdapter<Note, NoteViewHolder> {
+    private Context context;
+    private Notebook notebook;
 
     /**
-     * Constructor
+     * Create a new RecyclerView adapter that listens to a Firestore Query.  See {@link
+     * FirestoreRecyclerOptions} for configuration options.
      *
-     * @param context activity context
-     * @param notes   list of notes
+     * @param options
      */
-    private NoteAdapter(Context context, ArrayList<Note> notes) {
+    public NoteAdapter(@NonNull @NotNull FirestoreRecyclerOptions<Note> options, Context context, Notebook notebook) {
+        super(options);
         this.context = context;
-        this.notes = notes;
+        this.notebook = notebook;
     }
 
-    public static synchronized NoteAdapter getInstance(Context context, ArrayList<Note> notes) {
-        if (noteAdapter == null) {
-            noteAdapter = new NoteAdapter(context, notes);
-        }
-
-        return noteAdapter;
-    }
-
-    public static synchronized NoteAdapter getExistingInstance() {
-        return noteAdapter;
-    }
-
-    /**
-     * Create new view holder when there are no existing ones that can be reused
-     *
-     * @param parent   view group
-     * @param viewType view type
-     * @return the view holder
-     */
-    @NonNull
     @Override
-    public NoteViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        LayoutInflater inflater = LayoutInflater.from(context);
-        View noteView = inflater.inflate(R.layout.recycler_note_item, parent, false);
-
-        return new NoteViewHolder(noteView);
-    }
-
-    /**
-     * Display items of the adapter
-     *
-     * @param holder
-     * @param position
-     */
-    @Override
-    public void onBindViewHolder(@NonNull NoteViewHolder holder, int position) {
-        Note note = notes.get(position);                            // get note from position
-        holder.getNoteTitle().setText(note.getTitle());             // set note title
-        holder.getNoteContent().setText(note.getContent());         // set note content
+    protected void onBindViewHolder(@NonNull @NotNull NoteViewHolder holder, int position, @NonNull @NotNull Note model) {
+        holder.getNoteTitle().setText(model.getTitle());             // set note title
+        holder.getNoteContent().setText(model.getContent());         // set note content
 
         SimpleDateFormat dateFormat = new SimpleDateFormat("E, dd MMM yyyy h:mm aa");
 
-        String updatedDate = dateFormat.format(note.getUpdatedDate().toDate());
-        updatedDate.replace("am", "AM").replace("pm","PM");
+        String updatedDate = dateFormat.format(model.getUpdatedDate().toDate());
+        updatedDate.replace("am", "AM").replace("pm", "PM");
         holder.getNoteUpdatedDate().setText(updatedDate);           // set note updated date
 
         // card view onclick
@@ -86,30 +55,21 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteViewHolder> {
             public void onClick(View v) {
                 Intent viewEditNoteIntent = new Intent(context, ViewEditNoteActivity.class);
 
-                note.setPosition(position);
-                viewEditNoteIntent.putExtra("note", note);
+                model.setNotebook(notebook);
+                viewEditNoteIntent.putExtra("note", model);
 
                 context.startActivity(viewEditNoteIntent);
             }
         });
     }
 
-    /**
-     * Get amount of notes in list
-     *
-     * @return the amount of notes in list
-     */
+    @NonNull
+    @NotNull
     @Override
-    public int getItemCount() {
-        return notes == null ? 0 : notes.size();
-    }
+    public NoteViewHolder onCreateViewHolder(@NonNull @NotNull ViewGroup parent, int viewType) {
+        LayoutInflater inflater = LayoutInflater.from(context);
+        View noteView = inflater.inflate(R.layout.recycler_note_item, parent, false);
 
-    /**
-     * Return note list which the adapter uses
-     *
-     * @return list of notes
-     */
-    public List<Note> getNotes() {
-        return notes;
+        return new NoteViewHolder(noteView);
     }
 }

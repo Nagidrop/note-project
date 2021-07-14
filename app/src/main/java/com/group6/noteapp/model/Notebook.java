@@ -7,7 +7,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.google.firebase.Timestamp;
-import com.google.firebase.firestore.Exclude;
+import com.google.firebase.firestore.DocumentId;
 import com.google.firebase.firestore.IgnoreExtraProperties;
 import com.google.firebase.firestore.ServerTimestamp;
 
@@ -18,6 +18,7 @@ import com.google.firebase.firestore.ServerTimestamp;
 public class Notebook implements Parcelable {
 
     /* Object Properties */
+    @DocumentId
     private String id;                  // Notebook Document ID
     private String title;               // Notebook's title
     @ServerTimestamp
@@ -48,7 +49,6 @@ public class Notebook implements Parcelable {
 
     /* Getters and Setters */
 
-    @Exclude    // ignore from Firebase-related operations
     public String getId() {
         return id;
     }
