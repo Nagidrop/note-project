@@ -5,6 +5,7 @@ package com.group6.noteapp.controller;
 
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +14,7 @@ import androidx.annotation.NonNull;
 
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.group6.noteapp.R;
 import com.group6.noteapp.model.Note;
 import com.group6.noteapp.model.Notebook;
@@ -46,7 +48,6 @@ public class NoteAdapter extends FirestoreRecyclerAdapter<Note, NoteViewHolder> 
         SimpleDateFormat dateFormat = new SimpleDateFormat("E, dd MMM yyyy h:mm aa");
 
         String updatedDate = dateFormat.format(model.getUpdatedDate().toDate());
-        updatedDate.replace("am", "AM").replace("pm", "PM");
         holder.getNoteUpdatedDate().setText(updatedDate);           // set note updated date
 
         // card view onclick
@@ -71,5 +72,10 @@ public class NoteAdapter extends FirestoreRecyclerAdapter<Note, NoteViewHolder> 
         View noteView = inflater.inflate(R.layout.recycler_note_item, parent, false);
 
         return new NoteViewHolder(noteView);
+    }
+
+    @Override
+    public void onError(FirebaseFirestoreException e) {
+       Log.e("note adapter error", e.getMessage(), e);
     }
 }

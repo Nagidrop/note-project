@@ -36,13 +36,14 @@ import org.jetbrains.annotations.NotNull;
 public class ViewEditNoteActivity extends AppCompatActivity {
     private String savedNoteTitle;
     private String savedNoteContent;
+    private TextInputLayout txtInputNoteTitle;
+    private TextInputLayout txtInputNoteContent;
+    private Note note;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_edit_note);
-
-        Note note;
 
         if (getIntent().getParcelableExtra("note") == null) {
             note = new Note();
@@ -58,9 +59,9 @@ public class ViewEditNoteActivity extends AppCompatActivity {
 
         savedNoteTitle = note.getTitle();
         savedNoteContent = note.getContent();
+        txtInputNoteTitle = findViewById(R.id.txtInputNoteTitle);
+        txtInputNoteContent = findViewById(R.id.txtInputNoteContent);
 
-        TextInputLayout txtInputNoteTitle = findViewById(R.id.txtInputNoteTitle);
-        TextInputLayout txtInputNoteContent = findViewById(R.id.txtInputNoteContent);
         MaterialTextView txtNotebook = findViewById(R.id.txtNotebook);
         FloatingActionButton fabSave = findViewById(R.id.fabSave);
 
@@ -73,33 +74,7 @@ public class ViewEditNoteActivity extends AppCompatActivity {
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String noteTitle = txtInputNoteTitle.getEditText().getText().toString();
-                String noteContent = txtInputNoteContent.getEditText().getText().toString();
-
-                if (isUnsaved(noteTitle, noteContent)) {
-                    NoteAppDialog dialog = new NoteAppDialog(ViewEditNoteActivity.this);
-
-                    dialog.setupConfirmationDialog("Unsaved Changes",
-                            "Do you want to save changes to note?");
-                    dialog.setPositiveButton("Yes",
-                            new DialogInterface.OnClickListener() {
-                                /**
-                                 * Log the current user out
-                                 * @param dialog
-                                 * @param which
-                                 */
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    note.setTitle(noteTitle);
-                                    note.setContent(noteContent);
-                                    saveNote(note, true);
-                                }
-                            });
-
-                    dialog.create().show();
-                } else {
-                    onBackPressed();
-                }
+                onBackPressed();
             }
         });
         fabSave.setOnClickListener(new View.OnClickListener() {
@@ -271,6 +246,37 @@ public class ViewEditNoteActivity extends AppCompatActivity {
                             dialog.create().show();
                         }
                     });
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        String noteTitle = txtInputNoteTitle.getEditText().getText().toString();
+        String noteContent = txtInputNoteContent.getEditText().getText().toString();
+
+        if (isUnsaved(noteTitle, noteContent)) {
+            NoteAppDialog dialog = new NoteAppDialog(ViewEditNoteActivity.this);
+
+            dialog.setupReturnConfirmationDialog("Unsaved Changes",
+                    "Do you want to save changes to note?", this);
+            dialog.setPositiveButton("Yes",
+                    new DialogInterface.OnClickListener() {
+                        /**
+                         * Log the current user out
+                         * @param dialog
+                         * @param which
+                         */
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            note.setTitle(noteTitle);
+                            note.setContent(noteContent);
+                            saveNote(note, true);
+                        }
+                    });
+
+            dialog.create().show();
+        } else {
+            finish();
         }
     }
 }
