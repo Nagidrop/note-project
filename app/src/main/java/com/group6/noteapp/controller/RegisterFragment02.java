@@ -43,13 +43,18 @@ import org.jetbrains.annotations.NotNull;
 
 import static android.content.ContentValues.TAG;
 
-
+/**
+ * Register Fragment step 2 of 2
+ */
 public class RegisterFragment02 extends Fragment {
 
-    private NoteAppProgressDialog progressDialog;
-    private String regEmail;
-    private String regPassword;
+    private NoteAppProgressDialog progressDialog;   // progress dialog
+    private String regEmail;                        // register email    (from register step 1 of 2)
+    private String regPassword;                     // register password (from register step 1 of 2)
 
+    /**
+     * Constructor
+     */
     public RegisterFragment02() {
         // Required empty public constructor
     }
@@ -66,11 +71,10 @@ public class RegisterFragment02 extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
         // Inflate the layout for this fragment
         View inflatedView = inflater.inflate(R.layout.fragment_register02, container, false);
-        /* Get EditText Views */
 
+        /* Get EditText Views */
         TextInputLayout inputRegFullName = inflatedView.findViewById(R.id.textInputRegFullName);
         TextInputLayout inputRegBirthdate = inflatedView.findViewById(R.id.textInputRegBirthdate);
         TextInputEditText inputRegBirthdateEditText = inflatedView.findViewById(R.id.textInputRegBirthdateEditText);
@@ -146,7 +150,7 @@ public class RegisterFragment02 extends Fragment {
                                     newUser.setBirthdate(regBirthdate);
                                     newUser.setAddress(regAddress);
 
-                                    setUpUserInfo(newUser, firebaseUser, db);
+                                    setupUserInfo(newUser, firebaseUser, db);
                                 }
                             })
                             .addOnFailureListener(new OnFailureListener() {
@@ -182,12 +186,23 @@ public class RegisterFragment02 extends Fragment {
         return inflatedView;
     }
 
+    /**
+     * Open Date Picker Dialog
+     * @param inputRegBirthdateEditText birthdate input edittext
+     */
     public void openDatePicker(TextInputEditText inputRegBirthdateEditText) {
         DialogFragment dialogFragment = new DatePickerFragment(inputRegBirthdateEditText);
         dialogFragment.show(getActivity().getSupportFragmentManager(), "datePicker");
     }
 
+    /**
+     * Clear input fields' errors
+     *
+     * @param inputRegFullName      full name input layout
+     * @param inputRegAddress       address input layout
+     */
     private void clearInputErrors(TextInputLayout inputRegFullName, TextInputLayout inputRegAddress) {
+        /* Set errors to disabled and then enable them again for quick clears */
         inputRegFullName.setErrorEnabled(false);
         inputRegAddress.setErrorEnabled(false);
 
@@ -195,17 +210,28 @@ public class RegisterFragment02 extends Fragment {
         inputRegAddress.setErrorEnabled(true);
     }
 
-    private void setUpUserInfo(User newUser, FirebaseUser firebaseUser, FirebaseFirestore db) {
+    /**
+     * Setup user info for newly created account
+     * @param newUser           newly created user
+     * @param firebaseUser      Firebase user obj
+     * @param db                Firestore obj
+     */
+    private void setupUserInfo(User newUser, FirebaseUser firebaseUser, FirebaseFirestore db) {
+
+        /* Get storage and storage reference */
         FirebaseStorage storage = FirebaseStorage.getInstance();
         StorageReference storageRef = storage.getReference();
 
+        // profile picture URI points to project's drawable profile image
         Uri profilePic = Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE
                 + "://" + getResources().getResourcePackageName(R.drawable.img_profile_pic)
                 + '/' + getResources().getResourceTypeName(R.drawable.img_profile_pic)
                 + '/' + getResources().getResourceEntryName(R.drawable.img_profile_pic));
 
+        // profile picture storage reference
         final StorageReference profilePictureRef = storageRef.child(firebaseUser.getUid()  + "/images/profilePicture.png");
 
+        // upload field
         profilePictureRef.putFile(profilePic)
                 .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                     @Override

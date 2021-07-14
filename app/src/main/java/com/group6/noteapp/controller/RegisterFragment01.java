@@ -13,9 +13,14 @@ import com.google.android.material.textfield.TextInputLayout;
 import com.group6.noteapp.R;
 import com.group6.noteapp.util.ValidationUtils;
 
+/**
+ * Register Fragment step 1 of 2
+ */
 public class RegisterFragment01 extends Fragment {
 
-
+    /**
+     * Constructor
+     */
     public RegisterFragment01() {
         // Required empty public constructor
     }
@@ -32,24 +37,26 @@ public class RegisterFragment01 extends Fragment {
         // Inflate the layout for this fragment
         View inflatedView = inflater.inflate(R.layout.fragment_register01, container, false);
 
-        /* Get EditText Views */
+        /* Get TextInputLayout Views */
         TextInputLayout inputRegEmail = inflatedView.findViewById(R.id.textInputRegEmail);
         TextInputLayout inputRegPassword = inflatedView.findViewById(R.id.textInputRegPassword);
         TextInputLayout inputRegConfirmPassword = inflatedView.findViewById(R.id.textInputRegRePassword);
 
+        /* Get Button View and set On Click Listener */
         MaterialButton btnNext = inflatedView.findViewById(R.id.btnNext01);
 
         btnNext.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                /* Create local variables to store the EditText Views' current values */
-
+                /* Create local variables to store the Input Views' current values */
                 String regEmail = inputRegEmail.getEditText().getText().toString().trim();
                 String regPassword = inputRegPassword.getEditText().getText().toString().trim();
                 String regConfirmPassword = inputRegConfirmPassword.getEditText().getText().toString().trim();
 
+                // clear input errors before validation
                 clearInputErrors(inputRegEmail, inputRegPassword, inputRegConfirmPassword);
 
+                /* Validate input fields and set errors according to validation results */
                 boolean isInputValid = true;
                 int validateEmailResult = ValidationUtils.validateEmail(regEmail);
                 int validatePasswordResult = ValidationUtils.validatePasswordReg(regPassword, regConfirmPassword);
@@ -73,9 +80,12 @@ public class RegisterFragment01 extends Fragment {
                     inputRegConfirmPassword.setError("Password confirmation doesn't match.");
                 }
 
+                // if all input fields are valid
                 if (isInputValid) {
+                    // clear input errors again (for better UI)
                     clearInputErrors(inputRegEmail, inputRegPassword, inputRegConfirmPassword);
 
+                    /* Create Register Fragment step 2 of 2 and pass register data to it */
                     RegisterFragment02 registerFragment02 = new RegisterFragment02();
 
                     Bundle regData = new Bundle();
@@ -84,6 +94,7 @@ public class RegisterFragment01 extends Fragment {
 
                     registerFragment02.setArguments(regData);
 
+                    // navigate to Register Fragment step 2 of 2
                     NavHostFragment.findNavController(RegisterFragment01.this)
                             .navigate(R.id.action_registerFragment01_to_registerFragment02, regData);
                 }
@@ -93,8 +104,16 @@ public class RegisterFragment01 extends Fragment {
         return inflatedView;
     }
 
+    /**
+     * Clear input fields' errors
+     *
+     * @param inputRegEmail           email input layout
+     * @param inputRegPassword        password input layout
+     * @param inputRegConfirmPassword confirm password input layout
+     */
     private void clearInputErrors(TextInputLayout inputRegEmail, TextInputLayout inputRegPassword,
                                   TextInputLayout inputRegConfirmPassword) {
+        /* Set errors to disabled and then enable them again for quick clears */
         inputRegEmail.setErrorEnabled(false);
         inputRegPassword.setErrorEnabled(false);
         inputRegConfirmPassword.setErrorEnabled(false);
