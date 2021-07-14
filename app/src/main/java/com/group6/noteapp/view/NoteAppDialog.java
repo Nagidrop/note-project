@@ -75,7 +75,7 @@ public class NoteAppDialog extends MaterialAlertDialogBuilder {
                     public void onClick(DialogInterface dialog,
                                         int which) {
                         dialog.dismiss();
-                        ((Activity) activityContext).onBackPressed();
+                        ((Activity) activityContext).finish();
                     }
                 });
         this.type = "OKDialog";             // set the dialog type for use with create
@@ -103,6 +103,32 @@ public class NoteAppDialog extends MaterialAlertDialogBuilder {
                     }
                 });
         this.type = "ConfirmationDialog";   // set the dialog type for use with create
+    }
+
+    /**
+     * Set up dialog with confirmation yes-no buttons (for unsaved back actions)
+     * @param title             dialog's title
+     * @param message           dialog's message
+     * @param activityContext   activity context
+     */
+    public void setupReturnConfirmationDialog(String title, String message, Context activityContext) {
+        this.setTitle(title);
+        this.setMessage(message);
+        this.setCancelable(false);          // prevent the dialog from being canceled
+        this.setNegativeButton("No",
+                new DialogInterface.OnClickListener() {
+                    /**
+                     * Dismiss the dialog
+                     * @param dialog
+                     * @param which
+                     */
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                        ((Activity) activityContext).finish();
+                    }
+                });
+        this.type = "ReturnConfirmationDialog";   // set the dialog type for use with create
     }
 
     @NonNull
