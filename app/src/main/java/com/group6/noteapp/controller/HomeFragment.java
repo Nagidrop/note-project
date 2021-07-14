@@ -121,7 +121,7 @@ public class HomeFragment extends Fragment {
                                     
                                     RecyclerView rvNote = inflatedView.findViewById(R.id.recyclerView);
 
-                                    noteAdapter = new NoteAdapter(getActivity(), noteList);
+                                    noteAdapter = NoteAdapter.getInstance(getActivity(), noteList);
                                     rvNote.setAdapter(noteAdapter);
                                     rvNote.setLayoutManager(new LinearLayoutManager(getActivity()));
                                 } else {

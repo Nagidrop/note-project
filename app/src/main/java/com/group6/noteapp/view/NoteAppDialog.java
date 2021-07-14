@@ -3,6 +3,7 @@
  */
 package com.group6.noteapp.view;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.widget.Button;
@@ -41,6 +42,27 @@ public class NoteAppDialog extends MaterialAlertDialogBuilder {
         this.type = "OKDialog";
     }
 
+    public void setupReturnOKDialog(String title, String message, Context activityContext) {
+        this.setTitle(title);
+        this.setMessage(message);
+        this.setCancelable(false);
+        this.setPositiveButton("OK",
+                new DialogInterface.OnClickListener() {
+                    /**
+                     * Dismiss the dialog
+                     * @param dialog
+                     * @param which
+                     */
+                    @Override
+                    public void onClick(DialogInterface dialog,
+                                        int which) {
+                        dialog.dismiss();
+                        ((Activity) activityContext).onBackPressed();
+                    }
+                });
+        this.type = "OKDialog";
+    }
+
     public void setupConfirmationDialog(String title, String message) {
         this.setTitle(title);
         this.setMessage(message);
@@ -67,7 +89,7 @@ public class NoteAppDialog extends MaterialAlertDialogBuilder {
         AlertDialog alertDialog = super.create();
         alertDialog.setCanceledOnTouchOutside(false);
 
-        if (this.type.equalsIgnoreCase("ConfirmationDialog")){
+        if (this.type.equalsIgnoreCase("ConfirmationDialog")) {
             alertDialog.setOnShowListener(new DialogInterface.OnShowListener() {
                 /**
                  * Highlight the negative button by default
