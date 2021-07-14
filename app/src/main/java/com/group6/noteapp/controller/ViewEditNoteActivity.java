@@ -152,16 +152,16 @@ public class ViewEditNoteActivity extends AppCompatActivity {
     }
 
     private void saveNote(Note note, boolean isBackPressed) {
-        NoteAppProgressDialog progressDialog = new NoteAppProgressDialog(ViewEditNoteActivity.this);
-        progressDialog.setUpDialog("Just a moment...",
-                "Please wait while we update your note.");
-        progressDialog.show();
-
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
         FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
 
         if (note.getId() != null) {
+            NoteAppProgressDialog progressDialog = new NoteAppProgressDialog(ViewEditNoteActivity.this);
+            progressDialog.setUpDialog("Just a moment...",
+                    "Please wait while we update your note.");
+            progressDialog.show();
+
             DocumentReference noteRef = db.collection("users").document(firebaseUser.getUid())
                     .collection("notebooks").document(note.getNotebook().getId())
                     .collection("notes").document(note.getId());
@@ -218,6 +218,11 @@ public class ViewEditNoteActivity extends AppCompatActivity {
                         }
                     });
         } else {
+            NoteAppProgressDialog progressDialog = new NoteAppProgressDialog(ViewEditNoteActivity.this);
+            progressDialog.setUpDialog("Just a moment...",
+                    "Please wait while we add your note.");
+            progressDialog.show();
+
             CollectionReference notesCollectionRef = db.collection("users").document(firebaseUser.getUid())
                     .collection("notebooks").document(note.getNotebook().getId())
                     .collection("notes");
