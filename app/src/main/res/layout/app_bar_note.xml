@@ -15,7 +15,7 @@
             android:elevation="0dp"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            app:navigationIcon="@drawable/ic_baseline_menu_24"
+            app:navigationIcon="@drawable/ic_baseline_menu_20"
             app:title="@string/all_notes"
             app:titleTextAppearance="@style/TextAppearance.MyTheme.Headline6" />
     </com.google.android.material.appbar.AppBarLayout>
