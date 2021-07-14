@@ -266,8 +266,6 @@ public class ViewEditNoteActivity extends AppCompatActivity {
                                             Log.e("error", e.getMessage(), e);
                                         }
                                     });
-
-
                         }
                     })
                     .addOnFailureListener(new OnFailureListener() {
