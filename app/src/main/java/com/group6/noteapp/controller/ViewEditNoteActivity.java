@@ -195,7 +195,7 @@ public class ViewEditNoteActivity extends AppCompatActivity {
 
                             NoteAppDialog dialog = new NoteAppDialog(ViewEditNoteActivity.this);
                             if (isBackPressed) {
-                                dialog.setupReturnOKDialog("Update Successful",
+                                dialog.setupReturnConfirmationDialog("Update Successful",
                                         "Note has been updated.", ViewEditNoteActivity.this);
                             } else {
                                 dialog.setupOKDialog("Update Successful",
@@ -251,7 +251,7 @@ public class ViewEditNoteActivity extends AppCompatActivity {
 
                                             NoteAppDialog dialog = new NoteAppDialog(ViewEditNoteActivity.this);
                                             if (isBackPressed) {
-                                                dialog.setupReturnOKDialog("Add Successful",
+                                                dialog.setupReturnConfirmationDialog("Add Successful",
                                                         "Note has been added.", ViewEditNoteActivity.this);
                                             } else {
                                                 dialog.setupOKDialog("Add Successful",

@@ -11,21 +11,34 @@ import com.google.firebase.firestore.Exclude;
 import com.google.firebase.firestore.IgnoreExtraProperties;
 import com.google.firebase.firestore.ServerTimestamp;
 
-/* Notebook Object */
+/**
+ * Notebook Object
+ */
 @IgnoreExtraProperties
 public class Notebook implements Parcelable {
 
     /* Object Properties */
-    private String id;                  // Notebook's ID
+    private String id;                  // Notebook Document ID
     private String title;               // Notebook's title
     @ServerTimestamp
     private Timestamp createdDate;      // Notebook's created date
     private boolean isDeleted;          // Is the notebook deleted?
 
     /* Constructors */
+
+    /**
+     * No args constructor
+     */
     public Notebook() {
     }
 
+    /**
+     * All args constructor
+     * @param id            Notebook's Document ID
+     * @param title         Notebook's title
+     * @param createdDate   Notebook's created date
+     * @param isDeleted     Is the notebook deleted?
+     */
     public Notebook(String id, String title, Timestamp createdDate, boolean isDeleted) {
         this.id = id;
         this.title = title;
@@ -35,26 +48,7 @@ public class Notebook implements Parcelable {
 
     /* Getters and Setters */
 
-    protected Notebook(Parcel in) {
-        id = in.readString();
-        title = in.readString();
-        createdDate = in.readParcelable(Timestamp.class.getClassLoader());
-        isDeleted = in.readByte() != 0;
-    }
-
-    public static final Creator<Notebook> CREATOR = new Creator<Notebook>() {
-        @Override
-        public Notebook createFromParcel(Parcel in) {
-            return new Notebook(in);
-        }
-
-        @Override
-        public Notebook[] newArray(int size) {
-            return new Notebook[size];
-        }
-    };
-
-    @Exclude
+    @Exclude    // ignore from Firebase-related operations
     public String getId() {
         return id;
     }
@@ -86,6 +80,27 @@ public class Notebook implements Parcelable {
     public void setDeleted(boolean deleted) {
         isDeleted = deleted;
     }
+
+    /* Parcelable implementation */
+
+    protected Notebook(Parcel in) {
+        id = in.readString();
+        title = in.readString();
+        createdDate = in.readParcelable(Timestamp.class.getClassLoader());
+        isDeleted = in.readByte() != 0;
+    }
+
+    public static final Creator<Notebook> CREATOR = new Creator<Notebook>() {
+        @Override
+        public Notebook createFromParcel(Parcel in) {
+            return new Notebook(in);
+        }
+
+        @Override
+        public Notebook[] newArray(int size) {
+            return new Notebook[size];
+        }
+    };
 
     /**
      * Describe the kinds of special objects contained in this Parcelable
