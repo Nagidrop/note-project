@@ -167,12 +167,14 @@ public class LoginFragment extends Fragment {
             @Override
             public void onCancel() {
                 Toast.makeText(getActivity(), "Cancel !", Toast.LENGTH_LONG).show();
+                progressDialog.dismiss();
             }
 
             @Override
             public void onError(FacebookException exception) {
                 Toast.makeText(getActivity(), "Error" + exception.getMessage(), Toast.LENGTH_LONG)
                         .show();
+                progressDialog.dismiss();
             }
         });
 
