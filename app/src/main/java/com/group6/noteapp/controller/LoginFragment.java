@@ -170,6 +170,11 @@ public class LoginFragment extends Fragment {
         btnLoginFacebook.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                progressDialog = new NoteAppProgressDialog(getActivity());
+                progressDialog.setUpDialog("Just a moment...",
+                        "Please wait while we connect you to Note App.");
+                progressDialog.show();
+
                 loginButton.performClick();
             }
         });
@@ -199,6 +204,7 @@ public class LoginFragment extends Fragment {
             @Override
             public void onSuccess(LoginResult loginResult) {
 //                Toast.makeText(LoginFragment.this,"login successful!", Toast.LENGTH_LONG).show();
+
                 handleFacebookAccessToken(loginResult.getAccessToken());
             }
 
@@ -222,6 +228,12 @@ public class LoginFragment extends Fragment {
         btnGoogleLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                progressDialog = new NoteAppProgressDialog(getActivity());
+                progressDialog.setUpDialog("Just a moment...",
+                        "Please wait while we connect you to Note App.");
+                progressDialog.show();
+
                 signIn();
             }
         });
@@ -383,13 +395,17 @@ public class LoginFragment extends Fragment {
                                             if (task.isSuccessful()) {
                                                 DocumentSnapshot document = task.getResult();
                                                 if (!document.exists()) {
+                                                    progressDialog.dismiss();
+                                                    goToMainActivity();
+                                                }
+                                                else{
                                                     setUpUserInfo(user, userInfoDoc);
                                                 }
                                             }
                                         }
                                     });
 
-                            goToMainActivity();
+
                         } else {
                             // If sign in fails, display a message to the user.
                             Toast.makeText(getActivity(), "Authentication failed.",
@@ -421,7 +437,10 @@ public class LoginFragment extends Fragment {
                                                 @NonNull @NotNull Task<DocumentSnapshot> task) {
                                             if (task.isSuccessful()) {
                                                 DocumentSnapshot document = task.getResult();
-                                                if (!document.exists()) {
+                                                if (document.exists()) {
+                                                    progressDialog.dismiss();
+                                                    goToMainActivity();
+                                                }else{
                                                     setUpUserInfo(user, userInfoDoc);
                                                 }
                                             } else {
@@ -430,7 +449,7 @@ public class LoginFragment extends Fragment {
                                         }
                                     });
 
-                            goToMainActivity();
+
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "signInWithCredential:failure", task.getException());
@@ -439,26 +458,6 @@ public class LoginFragment extends Fragment {
                 });
     }
 
-
-    private void addNewUser(FirebaseUser user, DocumentReference userInfoDoc) {
-        User newUser = new User();
-        newUser.setFullName(user.getDisplayName());
-        userInfoDoc.set(newUser)
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void unused) {
-                        Log.d(TAG, "DocumentSnapshot written with ID: " + user.getUid());
-
-                        Notebook defaultNotebook = new Notebook();
-                        defaultNotebook.setTitle("My First Notebook");
-
-                        DocumentReference userDefaultNotebookDoc =
-                                userInfoDoc.collection("notebooks")
-                                        .document(defaultNotebook.getTitle());
-                        userDefaultNotebookDoc.set(defaultNotebook);
-                    }
-                });
-    }
 
     /**
      * Start google signIn intent
@@ -521,22 +520,15 @@ public class LoginFragment extends Fragment {
                     @Override
                     public void onSuccess(DocumentReference documentReference) {
                         progressDialog.dismiss();
-
-                        firebaseUser.sendEmailVerification();
-
+                        Log.d(TAG, "Add welcome Note success");
+                        goToMainActivity();
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull @NotNull Exception e) {
-                        progressDialog.dismiss();
 
                         Log.e(Constants.REGISTER_ERROR, "Error adding welcome note", e);
-
-                        NoteAppDialog dialog = new NoteAppDialog(getActivity());
-                        dialog.setupOKDialog("Registration Failed",
-                                "An error occurred during your account setup. Please try register again!");
-                        dialog.create().show();
                     }
                 });
 
@@ -554,13 +546,39 @@ public class LoginFragment extends Fragment {
                 + '/' + getResources().getResourceEntryName(R.drawable.img_profile_pic));
 
         final StorageReference profilePictureRef =
-                storageRef.child(firebaseUser.getUid() + "/images/" + "/profilePicture.png");
+                storageRef.child(firebaseUser.getUid() +  "/images/" + "profilePicture.png");
 
         profilePictureRef.putFile(profilePic)
                 .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                     @Override
                     public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                        addDefaultNotebook(userInfoDoc, firebaseUser);
+                        User newUser = new User();
+                        newUser.setFullName(firebaseUser.getDisplayName());
+
+                        userInfoDoc.set(newUser)
+                                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void aVoid) {
+                                        Log.d(TAG, "DocumentSnapshot written with ID: " + firebaseUser.getUid());
+
+                                        addDefaultNotebook(userInfoDoc, firebaseUser);
+                                    }
+                                })
+                                .addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull @NotNull Exception e) {
+                                        Log.e(Constants.REGISTER_ERROR, "Error updating user info", e);
+
+                                        progressDialog.dismiss();
+                                        // handle error
+                                        String error = e.getMessage();
+
+                                        NoteAppDialog dialog = new NoteAppDialog(getActivity());
+                                        dialog.setupOKDialog("Registration Failed",
+                                                "An unknown error occurred!\nError message:\n\"" + error + "\"");
+                                        dialog.create().show();
+                                    }
+                                });
                     }
                 }).addOnFailureListener(new OnFailureListener() {
             @Override
