@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -50,20 +49,19 @@ public class ViewNoteActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-
         switch (item.getItemId()){
             case R.id.nav_undo:
-                Toast.makeText(this, "Click Undo Icon.", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(this, "Click Undo Icon.", Toast.LENGTH_SHORT).show();
 
                 break;
 
             case R.id.nav_redo:
-                Toast.makeText(this, "Click Redo Icon.", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(this, "Click Redo Icon.", Toast.LENGTH_SHORT).show();
 
                 break;
 
             case R.id.nav_menu:
-                Toast.makeText(this, "Click Menu Icon.", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(this, "Click Menu Icon.", Toast.LENGTH_SHORT).show();
 
                 break;
         }

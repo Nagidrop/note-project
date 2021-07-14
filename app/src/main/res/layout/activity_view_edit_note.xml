@@ -21,7 +21,8 @@
             style="@style/Widget.MaterialComponents.Toolbar.Surface"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            app:navigationIcon="@drawable/ic_back_24"></com.google.android.material.appbar.MaterialToolbar>
+            app:navigationIcon="@drawable/ic_back_24"
+            app:navigationIconTint="?android:colorPrimary"/>
     </com.google.android.material.appbar.AppBarLayout>
 
     <com.google.android.material.textfield.TextInputLayout
