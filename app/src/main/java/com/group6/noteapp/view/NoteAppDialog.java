@@ -3,6 +3,7 @@
  */
 package com.group6.noteapp.view;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.widget.Button;
@@ -54,16 +55,16 @@ public class NoteAppDialog extends MaterialAlertDialogBuilder {
     }
 
     /**
-     * Set up dialog with confirmation yes-no buttons (for unsaved back actions)
+     * Set up a dialog with only OK button (for unsaved back actions)
      * @param title             dialog's title
      * @param message           dialog's message
      * @param activityContext   activity context
      */
-    public void setupReturnConfirmationDialog(String title, String message, Context activityContext) {
+    public void setUpReturnOKDialog(String title, String message, Context activityContext) {
         this.setTitle(title);
         this.setMessage(message);
-        this.setCancelable(false);                  // prevent the dialog from being canceled
-        this.setNegativeButton("No",
+        this.setCancelable(false);          // prevent the dialog from being canceled
+        this.setPositiveButton("OK",
                 new DialogInterface.OnClickListener() {
                     /**
                      * Dismiss the dialog
@@ -71,11 +72,13 @@ public class NoteAppDialog extends MaterialAlertDialogBuilder {
                      * @param which
                      */
                     @Override
-                    public void onClick(DialogInterface dialog, int which) {
+                    public void onClick(DialogInterface dialog,
+                                        int which) {
                         dialog.dismiss();
+                        ((Activity) activityContext).onBackPressed();
                     }
                 });
-        this.type = "ConfirmationReturnDialog";     // set the dialog type for use with create
+        this.type = "OKDialog";             // set the dialog type for use with create
     }
 
     /**
@@ -86,7 +89,7 @@ public class NoteAppDialog extends MaterialAlertDialogBuilder {
     public void setupConfirmationDialog(String title, String message) {
         this.setTitle(title);
         this.setMessage(message);
-        this.setCancelable(false);                  // prevent the dialog from being canceled
+        this.setCancelable(false);          // prevent the dialog from being canceled
         this.setNegativeButton("No",
                 new DialogInterface.OnClickListener() {
                     /**
@@ -99,7 +102,7 @@ public class NoteAppDialog extends MaterialAlertDialogBuilder {
                         dialog.dismiss();
                     }
                 });
-        this.type = "ConfirmationDialog";           // set the dialog type for use with create
+        this.type = "ConfirmationDialog";   // set the dialog type for use with create
     }
 
     @NonNull
