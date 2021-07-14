@@ -36,7 +36,6 @@ import org.jetbrains.annotations.NotNull;
 public class ViewEditNoteActivity extends AppCompatActivity {
     private String savedNoteTitle;
     private String savedNoteContent;
-    private Notebook notebook;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,6 +43,7 @@ public class ViewEditNoteActivity extends AppCompatActivity {
         setContentView(R.layout.activity_view_edit_note);
 
         Note note = (Note) getIntent().getParcelableExtra("note") == null ? new Note() : (Note) getIntent().getParcelableExtra("note");
+        Notebook notebook;
 
         savedNoteTitle = note.getTitle();
         savedNoteContent = note.getContent();
@@ -124,19 +124,8 @@ public class ViewEditNoteActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.nav_undo:
-//                TextInputLayout txtInputNoteContent = findViewById(R.id.txtInputNoteContent);
-//                txtInputNoteContent.getEditText()
-
-                break;
-
-            case R.id.nav_redo:
-//                Toast.makeText(this, "Click Redo Icon.", Toast.LENGTH_SHORT).show();
-
-                break;
-
             case R.id.nav_menu:
-//                Toast.makeText(this, "Click Menu Icon.", Toast.LENGTH_SHORT).show();
+
 
                 break;
         }
@@ -152,16 +141,17 @@ public class ViewEditNoteActivity extends AppCompatActivity {
     }
 
     private void saveNote(Note note, boolean isBackPressed) {
-        NoteAppProgressDialog progressDialog = new NoteAppProgressDialog(ViewEditNoteActivity.this);
-        progressDialog.setUpDialog("Just a moment...",
-                "Please wait while we update your note.");
-        progressDialog.show();
-
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
         FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
 
+        NoteAppProgressDialog progressDialog = new NoteAppProgressDialog(ViewEditNoteActivity.this);
+
         if (note.getId() != null) {
+            progressDialog.setUpDialog("Just a moment...",
+                    "Please wait while we update your note.");
+            progressDialog.show();
+
             DocumentReference noteRef = db.collection("users").document(firebaseUser.getUid())
                     .collection("notebooks").document(note.getNotebook().getId())
                     .collection("notes").document(note.getId());
@@ -195,7 +185,7 @@ public class ViewEditNoteActivity extends AppCompatActivity {
 
                             NoteAppDialog dialog = new NoteAppDialog(ViewEditNoteActivity.this);
                             if (isBackPressed) {
-                                dialog.setupReturnConfirmationDialog("Update Successful",
+                                dialog.setUpReturnOKDialog("Update Successful",
                                         "Note has been updated.", ViewEditNoteActivity.this);
                             } else {
                                 dialog.setupOKDialog("Update Successful",
@@ -218,6 +208,10 @@ public class ViewEditNoteActivity extends AppCompatActivity {
                         }
                     });
         } else {
+            progressDialog.setUpDialog("Just a moment...",
+                    "Please wait while we add your note.");
+            progressDialog.show();
+
             CollectionReference notesCollectionRef = db.collection("users").document(firebaseUser.getUid())
                     .collection("notebooks").document(note.getNotebook().getId())
                     .collection("notes");
@@ -251,7 +245,7 @@ public class ViewEditNoteActivity extends AppCompatActivity {
 
                                             NoteAppDialog dialog = new NoteAppDialog(ViewEditNoteActivity.this);
                                             if (isBackPressed) {
-                                                dialog.setupReturnConfirmationDialog("Add Successful",
+                                                dialog.setUpReturnOKDialog("Add Successful",
                                                         "Note has been added.", ViewEditNoteActivity.this);
                                             } else {
                                                 dialog.setupOKDialog("Add Successful",
