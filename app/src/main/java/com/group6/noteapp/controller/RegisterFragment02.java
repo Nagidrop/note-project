@@ -153,16 +153,16 @@ public class RegisterFragment02 extends Fragment {
                 }
 
                 if (isInputValid) {
-                    FirebaseFirestore db = FirebaseFirestore.getInstance();
-                    FirebaseAuth mAu = FirebaseAuth.getInstance();
-
-                    clearInputErrors(inputRegFullName, inputRegAddress);
-
                     /* show progress dialog*/
                     progressDialog = new NoteAppProgressDialog(getActivity());
                     progressDialog.setUpDialog("Just a moment...",
                             "Please wait while we set up your account for Note App.");
                     progressDialog.show();
+
+                    FirebaseFirestore db = FirebaseFirestore.getInstance();
+                    FirebaseAuth mAu = FirebaseAuth.getInstance();
+
+                    clearInputErrors(inputRegFullName, inputRegAddress);
 
                     mAu.createUserWithEmailAndPassword(regEmail, regPassword)
                             .addOnSuccessListener(new OnSuccessListener<AuthResult>() {

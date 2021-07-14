@@ -23,7 +23,7 @@
         <activity android:name=".controller.ViewImageDetails"></activity>
         <activity android:name=".controller.ViewCaptureImageActivity" />
         <activity
-            android:name=".controller.ViewNoteActivity"
+            android:name=".controller.ViewEditNoteActivity"
             android:label=""></activity>
         <activity android:name=".controller.CameraActivity" />
         <activity android:name=".view.AudioListFragment" />

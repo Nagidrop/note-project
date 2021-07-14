@@ -104,6 +104,7 @@ public class HomeFragment extends Fragment {
                         CollectionReference noteDocRef = document.getReference()
                                 .collection("notes");
                         Notebook notebook = document.toObject(Notebook.class);
+                        notebook.setId(document.getId());
                         noteDocRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                             @Override
                             public void onComplete(@NonNull @NotNull Task<QuerySnapshot> task) {
