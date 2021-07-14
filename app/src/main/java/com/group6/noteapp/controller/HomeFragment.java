@@ -1,5 +1,7 @@
 package com.group6.noteapp.controller;
 
+import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -8,6 +10,7 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -35,9 +38,10 @@ import java.util.ArrayList;
  * Home Fragment (Main Activity)
  */
 public class HomeFragment extends Fragment {
+    private static final String TAG = "HomeFragment";
+
     ArrayList<Note> noteList;
     NoteAdapter adapter;
-
     /**
      * Constructor
      */
@@ -55,7 +59,6 @@ public class HomeFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View inflatedView = inflater.inflate(R.layout.fragment_home, container, false);
-
         /* Set up progress dialog to tell user to wait */
         NoteAppProgressDialog progressDialog = new NoteAppProgressDialog(getActivity());
         progressDialog.setUpDialog("Just a moment...",
@@ -89,10 +92,11 @@ public class HomeFragment extends Fragment {
 
                         Query query = noteColRef.orderBy("updatedDate", Query.Direction.DESCENDING);
 
-                        FirestoreRecyclerOptions<Note> options = new FirestoreRecyclerOptions.Builder<Note>()
-                                .setQuery(query, Note.class)
-                                .setLifecycleOwner(getActivity())
-                                .build();
+                        FirestoreRecyclerOptions<Note> options =
+                                new FirestoreRecyclerOptions.Builder<Note>()
+                                        .setQuery(query, Note.class)
+                                        .setLifecycleOwner(getActivity())
+                                        .build();
 
                         adapter = new NoteAdapter(options, getActivity(), notebook);
 
@@ -100,6 +104,48 @@ public class HomeFragment extends Fragment {
                         rvNote.setHasFixedSize(true);
                         rvNote.setAdapter(adapter);
                         rvNote.setLayoutManager(new LinearLayoutManager(getActivity()));
+
+                        new ItemTouchHelper(
+                                new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT) {
+                                    @Override
+                                    public boolean onMove(@NonNull RecyclerView recyclerView,
+                                                          @NonNull
+                                                                  RecyclerView.ViewHolder viewHolder,
+                                                          @NonNull RecyclerView.ViewHolder target) {
+                                        // this method is called
+                                        // when the item is moved.
+                                        return false;
+                                    }
+
+                                    @Override
+                                    public void onSwiped(
+                                            @NonNull RecyclerView.ViewHolder viewHolder,
+                                            int direction) {
+
+                                        NoteAppDialog dialog = new NoteAppDialog(getActivity());
+                                        dialog.setupConfirmationDialog("Delete Confirmation",
+                                                "Do you want to delete this note?");
+                                        dialog.setPositiveButton("Yes",
+                                                new DialogInterface.OnClickListener() {
+                                                    /**
+                                                     * Log the current user out
+                                                     * @param dialog
+                                                     * @param which
+                                                     */
+                                                    @Override
+                                                    public void onClick(DialogInterface dialog, int which) {
+                                                        NoteAppProgressDialog progressDialog = new NoteAppProgressDialog(getActivity());
+                                                        progressDialog.setUpDialog("Just a moment...",
+                                                                "Please wait while we deleting your note.");
+                                                        progressDialog.show();
+                                                        deleteNote(db, viewHolder, firebaseUser, progressDialog);
+
+                                                    }
+                                                });
+                                        dialog.create().show();
+                                    }
+
+                                }).attachToRecyclerView(rvNote);
 
                         progressDialog.dismiss();
                     }
@@ -119,4 +165,34 @@ public class HomeFragment extends Fragment {
                 });
     }
 
+
+    /**
+     * Delete Note
+     * @param db firestore database
+     * @param viewHolder Recycler View view holder
+     * @param firebaseUser Current firebase user
+     * @param progressDialog progress dialog
+     */
+    private void deleteNote(FirebaseFirestore db, RecyclerView.ViewHolder viewHolder, FirebaseUser firebaseUser,NoteAppProgressDialog progressDialog) { ;
+        Note deleteNote = adapter.getItem(viewHolder.getAdapterPosition());
+
+        db.collection("users").document(firebaseUser.getUid())
+                .collection("notebooks").document(deleteNote.getNotebook().getId()).collection("notes")
+                .document(deleteNote.getId())
+                .delete()
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d(TAG, "onSuccess: Removed list item");
+                        progressDialog.dismiss();
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.d(TAG, "onFailure: " + e.getLocalizedMessage());
+                    }
+                });
+        adapter.notifyDataSetChanged();
+    }
 }

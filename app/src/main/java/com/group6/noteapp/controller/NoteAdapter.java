@@ -62,6 +62,7 @@ public class NoteAdapter extends FirestoreRecyclerAdapter<Note, NoteViewHolder> 
 
         String updatedDate = dateFormat.format(model.getUpdatedDate().toDate());
         holder.getNoteUpdatedDate().setText(updatedDate);           // set note updated date
+        model.setNotebook(notebook);
 
         // card view onclick
         holder.getNoteCardView().setOnClickListener(new View.OnClickListener() {
@@ -69,7 +70,6 @@ public class NoteAdapter extends FirestoreRecyclerAdapter<Note, NoteViewHolder> 
             public void onClick(View v) {
                 Intent viewEditNoteIntent = new Intent(context, ViewEditNoteActivity.class);
 
-                model.setNotebook(notebook);
                 viewEditNoteIntent.putExtra("note", model);
 
                 context.startActivity(viewEditNoteIntent);
