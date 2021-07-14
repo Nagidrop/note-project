@@ -164,12 +164,14 @@ public class LoginFragment extends Fragment {
             @Override
             public void onCancel() {
                 Toast.makeText(getActivity(), "Cancel !", Toast.LENGTH_LONG).show();
+                progressDialog.dismiss();
             }
 
             @Override
             public void onError(FacebookException exception) {
                 Toast.makeText(getActivity(), "Error" + exception.getMessage(), Toast.LENGTH_LONG)
                         .show();
+                progressDialog.dismiss();
             }
         });
 
@@ -347,7 +349,7 @@ public class LoginFragment extends Fragment {
                                                 @NonNull @NotNull Task<DocumentSnapshot> task) {
                                             if (task.isSuccessful()) {
                                                 DocumentSnapshot document = task.getResult();
-                                                if (!document.exists()) {
+                                                if (document.exists()) {
                                                     progressDialog.dismiss();
                                                     goToMainActivity();
                                                 }
