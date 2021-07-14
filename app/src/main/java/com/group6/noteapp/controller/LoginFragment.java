@@ -350,7 +350,7 @@ public class LoginFragment extends Fragment {
                                                 @NonNull @NotNull Task<DocumentSnapshot> task) {
                                             if (task.isSuccessful()) {
                                                 DocumentSnapshot document = task.getResult();
-                                                if (!document.exists()) {
+                                                if (document.exists()) {
                                                     progressDialog.dismiss();
                                                     goToMainActivity();
                                                 }
