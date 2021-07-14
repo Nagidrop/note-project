@@ -160,6 +160,15 @@ public class MainActivity extends AppCompatActivity {
         previousItem = navigationView.getMenu().getItem(0).getSubMenu().getItem(0);
         previousItem.setChecked(true);
 
+        fabNote.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent createNoteIntent = new Intent(MainActivity.this, ViewEditNoteActivity.class);
+
+                startActivity(createNoteIntent);
+            }
+        });
+
         // -----------------------------
         // Capture Image
         // -----------------------------
@@ -181,8 +190,7 @@ public class MainActivity extends AppCompatActivity {
         fabRecord.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (hasPermissions(MainActivity.this, PERMISSIONS)
-                ) {
+                if (hasPermissions(MainActivity.this, PERMISSIONS)) {
                     fabMenuOnClick();
                     enableRecord();
                 } else {
