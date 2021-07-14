@@ -12,8 +12,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:elevation="0dp"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
         <com.google.android.material.appbar.MaterialToolbar
@@ -21,8 +21,7 @@
             style="@style/Widget.MaterialComponents.Toolbar.Surface"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            app:navigationIcon="@drawable/ic_back_24">
-        </com.google.android.material.appbar.MaterialToolbar>
+            app:navigationIcon="@drawable/ic_back_24"></com.google.android.material.appbar.MaterialToolbar>
     </com.google.android.material.appbar.AppBarLayout>
 
     <com.google.android.material.textfield.TextInputLayout
@@ -31,27 +30,27 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:letterSpacing="0.0178571429"
-        app:hintEnabled="false"
         app:boxBackgroundColor="@color/white_50"
         app:boxStrokeColor="@color/white_50"
         app:boxStrokeWidth="0dp"
         app:boxStrokeWidthFocused="0dp"
         app:counterMaxLength="255"
+        app:hintEnabled="false"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/noteAppBarLayout">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:paddingTop="5dp"
-            android:paddingBottom="5dp"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_gravity="start|center_vertical"
             android:hint="@string/note_title"
             android:inputType="textMultiLine"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp"
             android:textAppearance="@style/TextAppearance.MyTheme.Body1"
             android:textColor="@color/black_65"
-            android:textStyle="bold"/>
+            android:textStyle="bold" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textview.MaterialTextView
@@ -76,8 +75,8 @@
         android:layout_height="1dp"
         android:layout_marginTop="7dp"
         android:background="@color/grey_disabled"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/txtNotebook" />
 
     <com.google.android.material.textfield.TextInputLayout
@@ -86,25 +85,40 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:letterSpacing="0.0178571429"
-        app:hintEnabled="false"
         app:boxBackgroundColor="@color/white_50"
         app:boxStrokeColor="@color/white_50"
         app:boxStrokeWidth="0dp"
         app:boxStrokeWidthFocused="0dp"
         app:counterMaxLength="255"
+        app:hintEnabled="false"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/horizontal_line">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:paddingTop="18dp"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:gravity="top|start"
             android:hint="@string/note_title"
             android:inputType="textMultiLine"
-            android:gravity="top|start"
+            android:paddingTop="18dp"
             android:textAppearance="@style/TextAppearance.MyTheme.Body2"
-            android:textColor="@color/black_87"/>
+            android:textColor="@color/black_87" />
     </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fabSave"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|right"
+        android:layout_marginEnd="21dp"
+        android:layout_marginBottom="21dp"
+        android:clickable="true"
+        android:contentDescription="@string/fab_content_desc"
+        app:tint="@color/white_87"
+        app:fabCustomSize="60dp"
+        app:srcCompat="@drawable/ic_save_24"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
 </androidx.constraintlayout.widget.ConstraintLayout>
