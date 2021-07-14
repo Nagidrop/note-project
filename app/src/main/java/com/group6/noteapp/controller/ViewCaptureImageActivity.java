@@ -35,6 +35,7 @@ import com.group6.noteapp.R;
 import com.group6.noteapp.model.Note;
 import com.group6.noteapp.model.Notebook;
 import com.group6.noteapp.util.Constants;
+import com.group6.noteapp.view.NoteAppDialog;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -126,8 +127,6 @@ public class ViewCaptureImageActivity extends AppCompatActivity {
         }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                Toast.makeText(ViewCaptureImageActivity.this, "Image Upload Successful!!", Toast.LENGTH_SHORT).show();
-
                 DocumentReference userInfoDoc = db.collection("users").document(user.getUid());
 
                 userInfoDoc.get().addOnCompleteListener(
@@ -141,7 +140,7 @@ public class ViewCaptureImageActivity extends AppCompatActivity {
                                         defaultNotebook.setTitle(Constants.FIRST_NOTEBOOK_NAME);
 
                                         DocumentReference userDefNotebookDoc = userInfoDoc.collection("notebooks")
-                                                .document(defaultNotebook.getTitle());
+                                                .document(user.getUid());
 
                                         String name = imageName.getEditText().getText().toString();
                                         if(TextUtils.isEmpty(name)){
@@ -152,10 +151,26 @@ public class ViewCaptureImageActivity extends AppCompatActivity {
                                             imageNote.setTitle(name);
                                             imageNote.setContent(uri.getLastPathSegment());
                                             CollectionReference userDefNoteCollection = userDefNotebookDoc.collection("notes");
-                                            userDefNoteCollection.add(imageNote);
-                                            Intent intent = new Intent(ViewCaptureImageActivity.this, LoginActivity.class);
-                                            intent.setFlags(intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-                                            startActivity(intent);
+                                            userDefNoteCollection.add(imageNote).addOnSuccessListener(
+                                                    new OnSuccessListener<DocumentReference>() {
+                                                        @Override public void onSuccess(
+                                                                DocumentReference documentReference) {
+                                                            Toast.makeText(ViewCaptureImageActivity.this, "Add Note Successful!!", Toast.LENGTH_SHORT).show();
+                                                            toMainActivity();
+                                                        }
+                                                    }).addOnFailureListener(
+                                                    new OnFailureListener() {
+                                                        @Override public void onFailure(
+                                                                @NonNull @NotNull Exception e) {
+                                                            Log.e("ViewCaptureImage", "Error adding new note", e);
+
+                                                            NoteAppDialog dialog = new NoteAppDialog(ViewCaptureImageActivity.this);
+                                                            dialog.setupOKDialog("Add Failed",
+                                                                    "An error occurred during your account setup. Please try register again!");
+                                                            dialog.create().show();
+                                                        }
+                                                    });
+
                                         }
 
                                     }
@@ -167,5 +182,11 @@ public class ViewCaptureImageActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    private void toMainActivity() {
+        Intent intent = new Intent(ViewCaptureImageActivity.this, LoginActivity.class);
+        intent.setFlags(intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
     }
 }

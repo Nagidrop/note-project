@@ -34,7 +34,7 @@
         android:layout_gravity="center_horizontal"
         android:ellipsize="end"
         android:maxLines="2"
-        android:text="@string/user_full_name"
+        android:text="@string/header_title"
         android:textAppearance="?attr/textAppearanceHeadline6" />
 
     <com.google.android.material.textview.MaterialTextView
@@ -47,7 +47,7 @@
         android:layout_gravity="center_horizontal"
         android:ellipsize="end"
         android:maxLines="1"
-        android:text="@string/user_email"
+        android:text="@string/header_text"
         android:textAppearance="?attr/textAppearanceBody2"
         android:textColor="@color/material_on_surface_emphasis_medium" />
 

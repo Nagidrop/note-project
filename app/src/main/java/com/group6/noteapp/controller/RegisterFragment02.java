@@ -309,13 +309,13 @@ public class RegisterFragment02 extends Fragment {
         Notebook defaultNotebook = new Notebook();
         defaultNotebook.setTitle(Constants.FIRST_NOTEBOOK_NAME);
 
-        CollectionReference userNotebookCol = userInfoDoc.collection("notebooks");
+        DocumentReference userDefNotebookDoc = userInfoDoc.collection("notebooks").document(firebaseUser.getUid());
 
-        userNotebookCol.add(defaultNotebook)
-                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+        userDefNotebookDoc.set(defaultNotebook)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
-                    public void onSuccess(DocumentReference documentReference) {
-                        addWelcomeNote(documentReference, firebaseUser);
+                    public void onSuccess(Void unused) {
+                        addWelcomeNote(userDefNotebookDoc, firebaseUser);
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {

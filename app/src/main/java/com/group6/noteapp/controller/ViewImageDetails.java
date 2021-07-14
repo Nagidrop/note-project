@@ -11,6 +11,7 @@ import android.media.ExifInterface;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.View;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -19,6 +20,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.imageview.ShapeableImageView;
 import com.google.android.material.textfield.TextInputLayout;
+import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
@@ -64,16 +66,50 @@ public class ViewImageDetails extends AppCompatActivity {
         viewImage = (ShapeableImageView) findViewById(R.id.imgView);
         btnChangeName = (MaterialButton) findViewById(R.id.btnChangeImageName);
         imageName = findViewById(R.id.textInputChangeImageName);
-        String noteId = getIntent().getExtras().getString("noteId");
 
-        loadImage(noteId);
+        Note note = (Note) getIntent().getParcelableExtra("note");
+
+        btnChangeName = findViewById(R.id.btnChangeImageName);
+
+        btnChangeName.setOnClickListener(new View.OnClickListener() {
+            @Override public void onClick(View v) {
+                changeImageName(note);
+            }
+        });
+
+        loadImage(note);
 
     }
 
-    private void loadImage(String noteId) {
+    /**
+     * Change current image name and save to database
+     */
+    private void changeImageName(Note note) {
+        String name = imageName.getEditText().getText().toString();
+
+        if(TextUtils.isEmpty(name)){
+            imageName.setErrorEnabled(true);
+            imageName.setError("Please enter Image Name!");
+        }else{
+
+            note.setTitle(name);
+
+            DocumentReference noteRef = db.collection("users").document(user.getUid())
+                    .collection("notebooks").document(note.getNotebook().getId())
+                    .collection("notes").document(note.getId());
+
+            noteRef.update("title", note.getTitle(),
+                    "updatedDate", Timestamp.now());
+            Intent intent = new Intent(ViewImageDetails.this, LoginActivity.class);
+            intent.setFlags(intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
+        }
+    }
+
+    private void loadImage(Note note) {
         DocumentReference notebookDocRef = db.collection("users").document(user.getUid())
-                .collection("notebooks").document(Constants.FIRST_NOTEBOOK_NAME).collection("notes")
-                .document(noteId);
+                .collection("notebooks").document(note.getNotebook().getId()).collection("notes")
+                .document(note.getId());
 
         notebookDocRef.get().addOnCompleteListener(
                 new OnCompleteListener<DocumentSnapshot>() {
@@ -95,8 +131,10 @@ public class ViewImageDetails extends AppCompatActivity {
                                                         FileDownloadTask.TaskSnapshot taskSnapshot) {
                                                     int angle = 0;
                                                     try {
-                                                        ExifInterface ei = new ExifInterface(tempImage.getPath());
-                                                        int orientation = ei.getAttributeInt(ExifInterface.TAG_ORIENTATION,
+                                                        ExifInterface ei = new ExifInterface(
+                                                                tempImage.getPath());
+                                                        int orientation = ei.getAttributeInt(
+                                                                ExifInterface.TAG_ORIENTATION,
                                                                 ExifInterface.ORIENTATION_NORMAL);
 
                                                         switch (orientation) {
@@ -114,8 +152,10 @@ public class ViewImageDetails extends AppCompatActivity {
                                                         e.printStackTrace();
                                                     }
 
-                                                    Bitmap bitmap = BitmapFactory.decodeFile(tempImage.getAbsolutePath());
-                                                    viewImage.setImageBitmap(RotateBitmap(bitmap, angle));
+                                                    Bitmap bitmap = BitmapFactory.decodeFile(
+                                                            tempImage.getAbsolutePath());
+                                                    viewImage.setImageBitmap(
+                                                            RotateBitmap(bitmap, angle));
                                                 }
                                             }).addOnFailureListener(new OnFailureListener() {
                                         @Override
