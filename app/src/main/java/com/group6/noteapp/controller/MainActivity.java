@@ -109,7 +109,7 @@ public class MainActivity extends AppCompatActivity {
 
         FirebaseStorage storage = FirebaseStorage.getInstance();
         StorageReference profileRef = storage.getReference()
-                .child("images/" + firebaseUser.getUid() + "/profilePicture.png");
+                .child(firebaseUser.getUid() + "/images/profilePicture.png");
         profileRef.getDownloadUrl()
                 .addOnSuccessListener(new OnSuccessListener<Uri>() {
                     @Override

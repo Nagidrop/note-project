@@ -7,12 +7,16 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.google.firebase.Timestamp;
+import com.google.firebase.firestore.Exclude;
+import com.google.firebase.firestore.IgnoreExtraProperties;
 import com.google.firebase.firestore.ServerTimestamp;
 
 /* Notebook Object */
+@IgnoreExtraProperties
 public class Notebook implements Parcelable {
 
     /* Object Properties */
+    private String id;                  // Notebook's ID
     private String title;               // Notebook's title
     @ServerTimestamp
     private Timestamp createdDate;      // Notebook's created date
@@ -22,7 +26,8 @@ public class Notebook implements Parcelable {
     public Notebook() {
     }
 
-    public Notebook(String title, Timestamp createdDate, boolean isDeleted) {
+    public Notebook(String id, String title, Timestamp createdDate, boolean isDeleted) {
+        this.id = id;
         this.title = title;
         this.createdDate = createdDate;
         this.isDeleted = isDeleted;
@@ -31,6 +36,7 @@ public class Notebook implements Parcelable {
     /* Getters and Setters */
 
     protected Notebook(Parcel in) {
+        id = in.readString();
         title = in.readString();
         createdDate = in.readParcelable(Timestamp.class.getClassLoader());
         isDeleted = in.readByte() != 0;
@@ -47,6 +53,15 @@ public class Notebook implements Parcelable {
             return new Notebook[size];
         }
     };
+
+    @Exclude
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 
     public String getTitle() {
         return title;
@@ -72,13 +87,31 @@ public class Notebook implements Parcelable {
         isDeleted = deleted;
     }
 
+    /**
+     * Describe the kinds of special objects contained in this Parcelable
+     * instance's marshaled representation. For example, if the object will
+     * include a file descriptor in the output of {@link #writeToParcel(Parcel, int)},
+     * the return value of this method must include the
+     * {@link #CONTENTS_FILE_DESCRIPTOR} bit.
+     *
+     * @return a bitmask indicating the set of special object types marshaled
+     * by this Parcelable object instance.
+     */
     @Override
     public int describeContents() {
         return 0;
     }
 
+    /**
+     * Flatten this object in to a Parcel.
+     *
+     * @param dest  The Parcel in which the object should be written.
+     * @param flags Additional flags about how the object should be written.
+     *              May be 0 or {@link #PARCELABLE_WRITE_RETURN_VALUE}.
+     */
     @Override
     public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(id);
         dest.writeString(title);
         dest.writeParcelable(createdDate, flags);
         dest.writeByte((byte) (isDeleted ? 1 : 0));

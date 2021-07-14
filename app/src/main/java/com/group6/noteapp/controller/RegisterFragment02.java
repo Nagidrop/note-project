@@ -153,16 +153,16 @@ public class RegisterFragment02 extends Fragment {
                 }
 
                 if (isInputValid) {
-                    FirebaseFirestore db = FirebaseFirestore.getInstance();
-                    FirebaseAuth mAu = FirebaseAuth.getInstance();
-
-                    clearInputErrors(inputRegFullName, inputRegAddress);
-
                     /* show progress dialog*/
                     progressDialog = new NoteAppProgressDialog(getActivity());
                     progressDialog.setUpDialog("Just a moment...",
                             "Please wait while we set up your account for Note App.");
                     progressDialog.show();
+
+                    FirebaseFirestore db = FirebaseFirestore.getInstance();
+                    FirebaseAuth mAu = FirebaseAuth.getInstance();
+
+                    clearInputErrors(inputRegFullName, inputRegAddress);
 
                     mAu.createUserWithEmailAndPassword(regEmail, regPassword)
                             .addOnSuccessListener(new OnSuccessListener<AuthResult>() {
@@ -223,6 +223,86 @@ public class RegisterFragment02 extends Fragment {
 
         inputRegFullName.setErrorEnabled(true);
         inputRegAddress.setErrorEnabled(true);
+    }
+
+    private void setUpUserInfo(User newUser, FirebaseUser firebaseUser, FirebaseFirestore db) {
+        FirebaseStorage storage = FirebaseStorage.getInstance();
+        StorageReference storageRef = storage.getReference();
+
+        Uri profilePic = Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE
+                + "://" + getResources().getResourcePackageName(R.drawable.img_profile_pic)
+                + '/' + getResources().getResourceTypeName(R.drawable.img_profile_pic)
+                + '/' + getResources().getResourceEntryName(R.drawable.img_profile_pic));
+
+        final StorageReference profilePictureRef = storageRef.child(firebaseUser.getUid()  + "/images/profilePicture.png");
+
+        profilePictureRef.putFile(profilePic)
+                .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                        UserProfileChangeRequest profileSetup = new UserProfileChangeRequest.Builder()
+                                .setDisplayName(newUser.getFullName())
+                                .build();
+
+                        firebaseUser.updateProfile(profileSetup)
+                                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void unused) {
+                                        DocumentReference userInfoDoc = db.collection("users").document(firebaseUser.getUid());
+
+                                        userInfoDoc.set(newUser)
+                                                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                    @Override
+                                                    public void onSuccess(Void aVoid) {
+                                                        Log.d(TAG, "DocumentSnapshot written with ID: " + firebaseUser.getUid());
+
+                                                        addDefaultNotebook(userInfoDoc, firebaseUser);
+                                                    }
+                                                })
+                                                .addOnFailureListener(new OnFailureListener() {
+                                                    @Override
+                                                    public void onFailure(@NonNull @NotNull Exception e) {
+                                                        Log.e(Constants.REGISTER_ERROR, "Error updating user info", e);
+
+                                                        progressDialog.dismiss();
+                                                        // handle error
+                                                        String error = e.getMessage();
+
+                                                        NoteAppDialog dialog = new NoteAppDialog(getActivity());
+                                                        dialog.setupOKDialog("Registration Failed",
+                                                                "An unknown error occurred!\nError message:\n\"" + error + "\"");
+                                                        dialog.create().show();
+                                                    }
+                                                });
+                                    }
+                                })
+                                .addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull @NotNull Exception e) {
+                                        Log.e(Constants.REGISTER_ERROR, "Error updating display name", e);
+
+                                        progressDialog.dismiss();
+
+                                        NoteAppDialog dialog = new NoteAppDialog(getActivity());
+                                        dialog.setupOKDialog("Registration Failed",
+                                                "An error occurred during your account setup. Please try register again!");
+                                        dialog.create().show();
+                                    }
+                                });
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull @NotNull Exception e) {
+                Log.e(Constants.REGISTER_ERROR, "Error uploading profile picture", e);
+
+                progressDialog.dismiss();
+
+                NoteAppDialog dialog = new NoteAppDialog(getActivity());
+                dialog.setupOKDialog("Registration Failed",
+                        "An error occurred during your account setup. Please try register again!");
+                dialog.create().show();
+            }
+        });
     }
 
     private void addDefaultNotebook(DocumentReference userInfoDoc, FirebaseUser firebaseUser) {
@@ -300,85 +380,5 @@ public class RegisterFragment02 extends Fragment {
 
         userNoteCollection.add(welcomeNote2);
         userNoteCollection.add(welcomeNote3);
-    }
-
-    private void setUpUserInfo(User newUser, FirebaseUser firebaseUser, FirebaseFirestore db) {
-        FirebaseStorage storage = FirebaseStorage.getInstance();
-        StorageReference storageRef = storage.getReference();
-
-        Uri profilePic = Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE
-                + "://" + getResources().getResourcePackageName(R.drawable.img_profile_pic)
-                + '/' + getResources().getResourceTypeName(R.drawable.img_profile_pic)
-                + '/' + getResources().getResourceEntryName(R.drawable.img_profile_pic));
-
-        final StorageReference profilePictureRef = storageRef.child("images/" + firebaseUser.getUid() + "/profilePicture.png");
-
-        profilePictureRef.putFile(profilePic)
-                .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                    @Override
-                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                        UserProfileChangeRequest profileSetup = new UserProfileChangeRequest.Builder()
-                                .setDisplayName(newUser.getFullName())
-                                .build();
-
-                        firebaseUser.updateProfile(profileSetup)
-                                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                    @Override
-                                    public void onSuccess(Void unused) {
-                                        DocumentReference userInfoDoc = db.collection("users").document(firebaseUser.getUid());
-
-                                        userInfoDoc.set(newUser)
-                                                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                                    @Override
-                                                    public void onSuccess(Void aVoid) {
-                                                        Log.d(TAG, "DocumentSnapshot written with ID: " + firebaseUser.getUid());
-
-                                                        addDefaultNotebook(userInfoDoc, firebaseUser);
-                                                    }
-                                                })
-                                                .addOnFailureListener(new OnFailureListener() {
-                                                    @Override
-                                                    public void onFailure(@NonNull @NotNull Exception e) {
-                                                        Log.e(Constants.REGISTER_ERROR, "Error updating user info", e);
-
-                                                        progressDialog.dismiss();
-                                                        // handle error
-                                                        String error = e.getMessage();
-
-                                                        NoteAppDialog dialog = new NoteAppDialog(getActivity());
-                                                        dialog.setupOKDialog("Registration Failed",
-                                                                "An unknown error occurred!\nError message:\n\"" + error + "\"");
-                                                        dialog.create().show();
-                                                    }
-                                                });
-                                    }
-                                })
-                                .addOnFailureListener(new OnFailureListener() {
-                                    @Override
-                                    public void onFailure(@NonNull @NotNull Exception e) {
-                                        Log.e(Constants.REGISTER_ERROR, "Error updating display name", e);
-
-                                        progressDialog.dismiss();
-
-                                        NoteAppDialog dialog = new NoteAppDialog(getActivity());
-                                        dialog.setupOKDialog("Registration Failed",
-                                                "An error occurred during your account setup. Please try register again!");
-                                        dialog.create().show();
-                                    }
-                                });
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull @NotNull Exception e) {
-                Log.e(Constants.REGISTER_ERROR, "Error uploading profile picture", e);
-
-                progressDialog.dismiss();
-
-                NoteAppDialog dialog = new NoteAppDialog(getActivity());
-                dialog.setupOKDialog("Registration Failed",
-                        "An error occurred during your account setup. Please try register again!");
-                dialog.create().show();
-            }
-        });
     }
 }
