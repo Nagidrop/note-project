@@ -144,7 +144,6 @@ public class ViewCaptureImageActivity extends AppCompatActivity {
 
                                         String name = imageName.getEditText().getText().toString();
                                         if(TextUtils.isEmpty(name)){
-                                            imageName.setErrorEnabled(true);
                                             imageName.setError("Please enter Image Name!");
                                         }else{
                                             Note imageNote = new Note();
@@ -156,7 +155,8 @@ public class ViewCaptureImageActivity extends AppCompatActivity {
                                                         @Override public void onSuccess(
                                                                 DocumentReference documentReference) {
                                                             Toast.makeText(ViewCaptureImageActivity.this, "Add Note Successful!!", Toast.LENGTH_SHORT).show();
-                                                            toMainActivity();
+//                                                            toMainActivity();
+                                                            onBackPressed();
                                                         }
                                                     }).addOnFailureListener(
                                                     new OnFailureListener() {
@@ -172,7 +172,6 @@ public class ViewCaptureImageActivity extends AppCompatActivity {
                                                     });
 
                                         }
-
                                     }
                                 } else {
                                     Log.d(TAG, "get failed with ", task.getException());
@@ -185,7 +184,7 @@ public class ViewCaptureImageActivity extends AppCompatActivity {
     }
 
     private void toMainActivity() {
-        Intent intent = new Intent(ViewCaptureImageActivity.this, LoginActivity.class);
+        Intent intent = new Intent(ViewCaptureImageActivity.this, MainActivity.class);
         intent.setFlags(intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
     }

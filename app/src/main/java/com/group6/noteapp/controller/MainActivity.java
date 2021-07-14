@@ -51,10 +51,8 @@ public class MainActivity extends AppCompatActivity {
             Manifest.permission.READ_EXTERNAL_STORAGE
     };
 
-
     private BroadcastReceiver MyReceiver = null;
-    private FirebaseAuth firebaseAuth;
-    private FirebaseUser firebaseUser;
+
     private MenuItem previousItem;
     private Animation rotateClose;
     private Animation rotateOpen;
@@ -73,8 +71,8 @@ public class MainActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_main);
 
-        this.firebaseAuth = FirebaseAuth.getInstance();
-        this.firebaseUser = firebaseAuth.getCurrentUser();
+        FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+        FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
 
         // -----------------------------
         // Floating button
@@ -354,7 +352,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void logOut() {
-        firebaseAuth.signOut();
+        FirebaseAuth.getInstance().signOut();
         LoginManager.getInstance().logOut();
         Intent intent = new Intent(MainActivity.this, LoginActivity.class);
         intent.setFlags(

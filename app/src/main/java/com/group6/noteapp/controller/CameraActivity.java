@@ -1,5 +1,12 @@
 package com.group6.noteapp.controller;
 
+import android.content.Intent;
+import android.os.Bundle;
+import android.os.Environment;
+import android.util.Size;
+import android.view.View;
+import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.camera.core.CameraSelector;
@@ -12,16 +19,6 @@ import androidx.camera.lifecycle.ProcessCameraProvider;
 import androidx.camera.view.PreviewView;
 import androidx.core.content.ContextCompat;
 import androidx.lifecycle.LifecycleOwner;
-
-import android.content.Intent;
-import android.os.Bundle;
-import android.os.Environment;
-import android.os.Handler;
-import android.util.Size;
-import android.view.OrientationEventListener;
-import android.view.View;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.common.util.concurrent.ListenableFuture;
@@ -131,7 +128,6 @@ public class CameraActivity extends AppCompatActivity {
     }
 
     public String getBatchDirectoryName() {
-
         String imagePath = "";
         imagePath = Environment.getExternalStorageDirectory().toString() + "/";
         File dir = new File(imagePath);

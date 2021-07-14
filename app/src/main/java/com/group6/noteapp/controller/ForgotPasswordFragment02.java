@@ -19,7 +19,6 @@ import com.group6.noteapp.R;
  * create an instance of this fragment.
  */
 public class ForgotPasswordFragment02 extends Fragment {
-    private View inflatedView;
     private String email;
 
     // TODO: Rename parameter arguments, choose names that match
@@ -65,7 +64,7 @@ public class ForgotPasswordFragment02 extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        inflatedView = inflater.inflate(R.layout.fragment_forgot_password02, container, false);
+        View inflatedView = inflater.inflate(R.layout.fragment_forgot_password02, container, false);
 
         TextView txtForgotPassword = inflatedView.findViewById(R.id.txtForgotPassword);
         txtForgotPassword.setText(Html.fromHtml(getString(R.string.email_sent_forgot_pass, email)));
