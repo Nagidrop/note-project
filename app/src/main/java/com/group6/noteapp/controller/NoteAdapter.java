@@ -76,9 +76,9 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteViewHolder> {
 
         SimpleDateFormat dateFormat = new SimpleDateFormat("E, dd MMM yyyy h:mm aa");
 
-        String createdDate = dateFormat.format(note.getCreatedDate().toDate());
-        createdDate.replace("am", "AM").replace("pm","PM");
-        holder.getNoteCreatedDate().setText(createdDate);           // set note created date
+        String updatedDate = dateFormat.format(note.getUpdatedDate().toDate());
+        updatedDate.replace("am", "AM").replace("pm","PM");
+        holder.getNoteUpdatedDate().setText(updatedDate);           // set note updated date
 
         // card view onclick
         holder.getNoteCardView().setOnClickListener(new View.OnClickListener() {

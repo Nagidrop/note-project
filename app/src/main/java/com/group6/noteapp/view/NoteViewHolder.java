@@ -18,7 +18,7 @@ import com.group6.noteapp.R;
 public class NoteViewHolder extends RecyclerView.ViewHolder {
     private final MaterialTextView noteTitle;           // note title
     private final MaterialTextView noteContent;         // note content
-    private final MaterialTextView noteCreatedDate;     // note created date
+    private final MaterialTextView noteUpdatedDate;     // note updated date
     private final MaterialCardView noteCardView;        // note card view
 
     /**
@@ -31,7 +31,7 @@ public class NoteViewHolder extends RecyclerView.ViewHolder {
 
         noteTitle = noteView.findViewById(R.id.txtNoteTitle);
         noteContent = noteView.findViewById(R.id.txtNoteContent);
-        noteCreatedDate = noteView.findViewById(R.id.txtNoteCreatedDate);
+        noteUpdatedDate = noteView.findViewById(R.id.txtNoteUpdatedDate);
         noteCardView = noteView.findViewById(R.id.cardView);
     }
 
@@ -44,8 +44,8 @@ public class NoteViewHolder extends RecyclerView.ViewHolder {
         return noteContent;
     }
 
-    public MaterialTextView getNoteCreatedDate() {
-        return noteCreatedDate;
+    public MaterialTextView getNoteUpdatedDate() {
+        return noteUpdatedDate;
     }
 
     public MaterialCardView getNoteCardView() {return noteCardView;}
