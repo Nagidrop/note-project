@@ -22,6 +22,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.imageview.ShapeableImageView;
 import com.google.android.material.textfield.TextInputLayout;
+import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
@@ -36,6 +37,7 @@ import com.group6.noteapp.model.Note;
 import com.group6.noteapp.model.Notebook;
 import com.group6.noteapp.util.Constants;
 import com.group6.noteapp.view.NoteAppDialog;
+import com.group6.noteapp.view.NoteAppProgressDialog;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -53,6 +55,7 @@ public class ViewCaptureImageActivity extends AppCompatActivity {
     private FirebaseUser user;
     private FirebaseFirestore db;
     private TextInputLayout imageName;
+    private NoteAppProgressDialog progressDialog;
 
     String path = "";
 
@@ -99,11 +102,20 @@ public class ViewCaptureImageActivity extends AppCompatActivity {
 
             btnSave.setOnClickListener(new View.OnClickListener() {
                 @Override public void onClick(View v) {
-                    saveImageToStorage(Uri.fromFile(image));
+                    String name = imageName.getEditText().getText().toString();
+                    if(TextUtils.isEmpty(name)){
+                        imageName.setErrorEnabled(true);
+                        imageName.setError("Please enter Image Name!");
+                    }else {
+                        progressDialog = new NoteAppProgressDialog(ViewCaptureImageActivity.this);
+                        progressDialog.setUpDialog("Just a moment...",
+                                "Please wait while we saving your note.");
+                        progressDialog.show();
+                        saveImageToStorage(Uri.fromFile(image),name);
+                    }
                 }
             });
         }
-
     }
 
     public static Bitmap RotateBitmap(Bitmap source, float angle) {
@@ -113,7 +125,7 @@ public class ViewCaptureImageActivity extends AppCompatActivity {
                 .createBitmap(source, 0, 0, source.getWidth(), source.getHeight(), matrix, true);
     }
 
-    public void saveImageToStorage(Uri uri){
+    public void saveImageToStorage(Uri uri, String imageName){
         StorageReference storageRef = storage.getReference();
         StorageReference imageReference = storageRef.child(user.getUid()+"/images/"+ uri.getLastPathSegment());
         UploadTask uploadTask = imageReference.putFile(uri);
@@ -141,21 +153,20 @@ public class ViewCaptureImageActivity extends AppCompatActivity {
 
                                         DocumentReference userDefNotebookDoc = userInfoDoc.collection("notebooks")
                                                 .document(user.getUid());
-
-                                        String name = imageName.getEditText().getText().toString();
-                                        if(TextUtils.isEmpty(name)){
-                                            imageName.setErrorEnabled(true);
-                                            imageName.setError("Please enter Image Name!");
-                                        }else{
                                             Note imageNote = new Note();
-                                            imageNote.setTitle(name);
+                                            imageNote.setTitle(imageName);
                                             imageNote.setContent(uri.getLastPathSegment());
+                                            imageNote.setUpdatedDate(Timestamp.now());
                                             CollectionReference userDefNoteCollection = userDefNotebookDoc.collection("notes");
                                             userDefNoteCollection.add(imageNote).addOnSuccessListener(
                                                     new OnSuccessListener<DocumentReference>() {
                                                         @Override public void onSuccess(
                                                                 DocumentReference documentReference) {
                                                             Toast.makeText(ViewCaptureImageActivity.this, "Add Note Successful!!", Toast.LENGTH_SHORT).show();
+                                                            NoteAdapter noteAdapter = NoteAdapter.getExistingInstance();
+                                                            noteAdapter.getNotes().add(imageNote);
+                                                            noteAdapter.notifyDataSetChanged();
+
                                                             toMainActivity();
                                                         }
                                                     }).addOnFailureListener(
@@ -170,9 +181,6 @@ public class ViewCaptureImageActivity extends AppCompatActivity {
                                                             dialog.create().show();
                                                         }
                                                     });
-
-                                        }
-
                                     }
                                 } else {
                                     Log.d(TAG, "get failed with ", task.getException());
@@ -185,8 +193,10 @@ public class ViewCaptureImageActivity extends AppCompatActivity {
     }
 
     private void toMainActivity() {
-        Intent intent = new Intent(ViewCaptureImageActivity.this, LoginActivity.class);
+        progressDialog.dismiss();
+        Intent intent = new Intent(ViewCaptureImageActivity.this, MainActivity.class);
         intent.setFlags(intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+        finish();
         startActivity(intent);
     }
 }

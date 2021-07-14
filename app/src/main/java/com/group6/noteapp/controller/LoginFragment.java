@@ -80,9 +80,6 @@ public class LoginFragment extends Fragment {
     private CallbackManager callbackManager;
     private NoteAppProgressDialog progressDialog;
     private GoogleSignInClient mGoogleSignInClient;
-    private GoogleApiClient mGoogleApiClient;
-    private MaterialTextView mStatusTextView;
-    private ProgressDialog mProgressDialog;
     private FirebaseFirestore db;
 
 
