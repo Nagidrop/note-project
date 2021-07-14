@@ -46,7 +46,8 @@
             android:layout_height="match_parent"
             android:layout_gravity="start|center_vertical"
             android:hint="@string/note_title"
-            android:inputType="textMultiLine"
+            android:singleLine="false"
+            android:inputType="textMultiLine|textCapSentences"
             android:paddingTop="5dp"
             android:paddingBottom="5dp"
             android:textAppearance="@style/TextAppearance.MyTheme.Body1"
@@ -102,7 +103,7 @@
             android:layout_height="match_parent"
             android:gravity="top|start"
             android:hint="@string/note_title"
-            android:inputType="textMultiLine"
+            android:inputType="textMultiLine|textCapSentences"
             android:paddingTop="18dp"
             android:textAppearance="@style/TextAppearance.MyTheme.Body2"
             android:textColor="@color/black_87" />
