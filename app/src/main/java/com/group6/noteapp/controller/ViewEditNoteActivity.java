@@ -33,61 +33,81 @@ import com.group6.noteapp.view.NoteAppProgressDialog;
 
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * Activity for viewing and editing note
+ */
 public class ViewEditNoteActivity extends AppCompatActivity {
-    private String savedNoteTitle;
-    private String savedNoteContent;
-    private TextInputLayout txtInputNoteTitle;
-    private TextInputLayout txtInputNoteContent;
-    private Note note;
+    private String savedNoteTitle;                  // Saved note title (to check if note title not saved)
+    private String savedNoteContent;                // Saved note title (to check if note content not saved)
+    private TextInputLayout txtInputNoteTitle;      // Note Title Text Input Layout
+    private TextInputLayout txtInputNoteContent;    // Note Content Text Input Layout
+    private Note note;                              // Note object with data to add or update
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_edit_note);
 
+        // If user add new note
         if (getIntent().getParcelableExtra("note") == null) {
             note = new Note();
         } else {
+            // If user update existing note
             note = getIntent().getParcelableExtra("note");
         }
 
+        // Check if user add new note and then add new notebook
         if (note.getNotebook() == null) {
+            // Set notebook title as first notebook
             Notebook notebook = new Notebook();
             notebook.setTitle("My First Notebook");
             note.setNotebook(notebook);
         }
 
+        /* Set saved data as current data */
         savedNoteTitle = note.getTitle();
         savedNoteContent = note.getContent();
+
+        /* Get TextInputLayout, Text Views and Button */
         txtInputNoteTitle = findViewById(R.id.txtInputNoteTitle);
         txtInputNoteContent = findViewById(R.id.txtInputNoteContent);
-
         MaterialTextView txtNotebook = findViewById(R.id.txtNotebook);
         FloatingActionButton fabSave = findViewById(R.id.fabSave);
 
+        /* Set data to display to user */
         txtInputNoteTitle.getEditText().setText(savedNoteTitle);
         txtInputNoteContent.getEditText().setText(savedNoteContent);
         txtNotebook.setText(note.getNotebook().getTitle());
 
+        /* Get Toolbar and set Action Bar as the Toolbar */
         MaterialToolbar toolbar = findViewById(R.id.noteToolbar);
         setSupportActionBar(toolbar);
+
+        // Set navigation button to perform on back action
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 onBackPressed();
             }
         });
+
+        // Set Save button's on click
         fabSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                /* Get current note title and content */
                 String noteTitle = txtInputNoteTitle.getEditText().getText().toString();
                 String noteContent = txtInputNoteContent.getEditText().getText().toString();
 
+                // Check if content is unsaved, if true then continue to save the note
                 if (isUnsaved(noteTitle, noteContent)) {
                     note.setTitle(noteTitle);
                     note.setContent(noteContent);
+
+                    // Proceed to save note
                     saveNote(note, false);
                 } else {
+                    // If content is saved (not changed), display toast message to user
                     Toast.makeText(ViewEditNoteActivity.this, "Note not changed.", Toast.LENGTH_SHORT).show();
                 }
             }
@@ -104,7 +124,6 @@ public class ViewEditNoteActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.nav_menu:
-
 
                 break;
         }
