@@ -254,8 +254,9 @@ public class LoginFragment extends Fragment {
 
     /**
      * Login using email and password
-     * @param email     user's email
-     * @param password  user's password
+     *
+     * @param email    user's email
+     * @param password user's password
      */
     public void loginWithEmailAndPassword(String email, String password) {
         // Log the user in
@@ -361,6 +362,7 @@ public class LoginFragment extends Fragment {
 
     /**
      * Login using Facebook token
+     *
      * @param token user's access token
      */
     private void handleFacebookAccessToken(AccessToken token) {
@@ -372,6 +374,54 @@ public class LoginFragment extends Fragment {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with the signed-in user's information
+                            Log.d(TAG, "signInWithCredential:success");
+
+                            // User document
+                            DocumentReference userDoc = db.collection("users")
+                                    .document(firebaseAuth.getCurrentUser().getUid());
+
+                            userDoc.get().addOnCompleteListener(
+                                    new OnCompleteListener<DocumentSnapshot>() {
+                                        @Override
+                                        public void onComplete(
+                                                @NonNull @NotNull Task<DocumentSnapshot> task) {
+                                            if (task.isSuccessful()) {
+                                                DocumentSnapshot document = task.getResult();
+                                                if (document.exists()) {
+                                                    progressDialog.dismiss();
+                                                    goToMainActivity();
+                                                } else {
+                                                    setUpUserInfo(firebaseAuth.getCurrentUser(), userDoc);
+                                                }
+                                            }
+                                        }
+                                    });
+                        } else {
+                            // If sign in fails, display a message to the user.
+                            Toast.makeText(getActivity(), "Authentication failed.",
+                                    Toast.LENGTH_SHORT).show();
+                            Log.e("error", task.getException().getMessage(), task.getException());
+                        }
+                    }
+                });
+    }
+
+    /**
+     * Login using Google token
+     *
+     * @param idToken user's token
+     */
+    private void firebaseAuthWithGoogle(String idToken) {
+        /* Get Google credentials and sign in using the credentials */
+        AuthCredential credential = GoogleAuthProvider.getCredential(idToken, null);
+        firebaseAuth.signInWithCredential(credential)
+                .addOnCompleteListener(getActivity(), new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            // Sign in success, update UI with the signed-in user's information
+                            Log.d(TAG, "signInWithCredential:success");
+
                             DocumentReference userInfoDoc = db.collection("users")
                                     .document(firebaseAuth.getCurrentUser().getUid());
 
@@ -385,68 +435,25 @@ public class LoginFragment extends Fragment {
                                                 if (document.exists()) {
                                                     progressDialog.dismiss();
                                                     goToMainActivity();
-                                                }
-                                                else{
-                                                    setUpUserInfo(user, userInfoDoc);
-                                                }
-                                            }
-                                        }
-                                    });
-
-
-                        } else {
-                            // If sign in fails, display a message to the user.
-                            Toast.makeText(getActivity(), "Authentication failed.",
-                                    Toast.LENGTH_SHORT).show();
-                            Log.e("error", task.getException().getMessage(), task.getException());
-                        }
-                    }
-                });
-    }
-
-    private void firebaseAuthWithGoogle(String idToken) {
-        AuthCredential credential = GoogleAuthProvider.getCredential(idToken, null);
-        firebaseAuth.signInWithCredential(credential)
-                .addOnCompleteListener(getActivity(), new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            // Sign in success, update UI with the signed-in user's information
-                            Log.d(TAG, "signInWithCredential:success");
-                            FirebaseUser user = firebaseAuth.getCurrentUser();
-
-                            String Uid = user.getUid();
-
-                            DocumentReference userInfoDoc = db.collection("users").document(Uid);
-
-                            userInfoDoc.get().addOnCompleteListener(
-                                    new OnCompleteListener<DocumentSnapshot>() {
-                                        @Override
-                                        public void onComplete(
-                                                @NonNull @NotNull Task<DocumentSnapshot> task) {
-                                            if (task.isSuccessful()) {
-                                                DocumentSnapshot document = task.getResult();
-                                                if (document.exists()) {
-                                                    progressDialog.dismiss();
-                                                    goToMainActivity();
-                                                }else{
-                                                    setUpUserInfo(user, userInfoDoc);
+                                                } else {
+                                                    setUpUserInfo(firebaseAuth.getCurrentUser(), userInfoDoc);
                                                 }
                                             } else {
                                                 Log.d(TAG, "get failed with ", task.getException());
                                             }
                                         }
                                     });
-
-
                         } else {
                             // If sign in fails, display a message to the user.
+                            Toast.makeText(getActivity(), "Authentication failed.",
+                                    Toast.LENGTH_SHORT).show();
                             Log.w(TAG, "signInWithCredential:failure", task.getException());
+
+                            progressDialog.dismiss();
                         }
                     }
                 });
     }
-
 
     /**
      * Start google signIn intent
@@ -456,12 +463,11 @@ public class LoginFragment extends Fragment {
         startActivityForResult(signInIntent, RC_SIGN_IN);
     }
 
-
-    private void addDefaultNotebook(DocumentReference userInfoDoc, FirebaseUser firebaseUser) {
+    private void addDefaultNotebook(DocumentReference userDoc, FirebaseUser firebaseUser) {
         Notebook defaultNotebook = new Notebook();
         defaultNotebook.setTitle(Constants.FIRST_NOTEBOOK_NAME);
 
-        DocumentReference userDefNotebookDoc = userInfoDoc.collection("notebooks").document(firebaseUser.getUid());
+        DocumentReference userDefNotebookDoc = userDoc.collection("notebooks").document(firebaseUser.getUid());
 
         userDefNotebookDoc.set(defaultNotebook)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -478,14 +484,19 @@ public class LoginFragment extends Fragment {
                         Log.e(Constants.REGISTER_ERROR, "Error adding default notebook", e);
 
                         NoteAppDialog dialog = new NoteAppDialog(getActivity());
-                        dialog.setupOKDialog("Registration Failed",
+                        dialog.setupOKDialog("Log In Failed",
                                 "An error occurred during your account setup. Please try register again!");
                         dialog.create().show();
                     }
                 });
     }
 
+    /**
+     * Add welcome note for user
+     * @param userDefNotebookDoc
+     */
     private void addWelcomeNote(DocumentReference userDefNotebookDoc) {
+        /* Create new notes and set title and content */
         Note welcomeNote = new Note();
         welcomeNote.setTitle(Constants.WELCOME_NOTE_TITLE);
         welcomeNote.setContent(Constants.WELCOME_NOTE_CONTENT);
@@ -525,63 +536,81 @@ public class LoginFragment extends Fragment {
         userNoteCollection.add(welcomeNote3);
     }
 
-    private void setUpUserInfo(FirebaseUser firebaseUser, DocumentReference userInfoDoc) {
+    /**
+     * Setup user info for newly created account
+     *
+     * @param firebaseUser Firebase user obj
+     * @param userDoc      User document
+     */
+    private void setUpUserInfo(FirebaseUser firebaseUser, DocumentReference userDoc) {
+        /* Get storage and storage reference */
         FirebaseStorage storage = FirebaseStorage.getInstance();
         StorageReference storageRef = storage.getReference();
 
+        // Profile picture URI points to project's drawable profile image
         Uri profilePic = Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE
                 + "://" + getResources().getResourcePackageName(R.drawable.img_profile_pic)
                 + '/' + getResources().getResourceTypeName(R.drawable.img_profile_pic)
                 + '/' + getResources().getResourceEntryName(R.drawable.img_profile_pic));
 
+        // Profile picture storage reference
         final StorageReference profilePictureRef =
-                storageRef.child(firebaseUser.getUid() +  "/images/" + "profilePicture.png");
+                storageRef.child(firebaseUser.getUid() + "/images/" + "profilePicture.png");
 
+        // Upload profile picture
         profilePictureRef.putFile(profilePic)
+                // If upload successful
                 .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                     @Override
                     public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                        // Create new user obj and set full name
                         User newUser = new User();
                         newUser.setFullName(firebaseUser.getDisplayName());
 
-                        userInfoDoc.set(newUser)
+                        // Set up user full name
+                        userDoc.set(newUser)
+                                // If set up successful
                                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                                     @Override
                                     public void onSuccess(Void aVoid) {
                                         Log.d(TAG, "DocumentSnapshot written with ID: " + firebaseUser.getUid());
 
-                                        addDefaultNotebook(userInfoDoc, firebaseUser);
+                                        // Add default notebook for user
+                                        addDefaultNotebook(userDoc, firebaseUser);
                                     }
                                 })
+                                // If set up failed
                                 .addOnFailureListener(new OnFailureListener() {
                                     @Override
                                     public void onFailure(@NonNull @NotNull Exception e) {
                                         Log.e(Constants.REGISTER_ERROR, "Error updating user info", e);
 
                                         progressDialog.dismiss();
-                                        // handle error
-                                        String error = e.getMessage();
 
+                                        // Show dialog with error info
                                         NoteAppDialog dialog = new NoteAppDialog(getActivity());
-                                        dialog.setupOKDialog("Registration Failed",
-                                                "An unknown error occurred!\nError message:\n\"" + error + "\"");
+                                        dialog.setupOKDialog("Log In Failed",
+                                                "An unknown error occurred!\nError message:\n\"" + e.getMessage() + "\"");
                                         dialog.create().show();
                                     }
                                 });
                     }
-                }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull @NotNull Exception e) {
-                Log.e(Constants.REGISTER_ERROR, "Error uploading profile picture", e);
+                })
+                // If upload failed
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull @NotNull Exception e) {
+                        Log.e(Constants.REGISTER_ERROR, "Error uploading profile picture", e);
 
-                progressDialog.dismiss();
+                        progressDialog.dismiss();
 
-                NoteAppDialog dialog = new NoteAppDialog(getActivity());
-                dialog.setupOKDialog("Registration Failed",
-                        "An error occurred during your account setup. Please try register again!");
-                dialog.create().show();
-            }
-        });
+                        // Show dialog with error info
+                        NoteAppDialog dialog = new NoteAppDialog(getActivity());
+                        dialog.setupOKDialog("Log In Failed",
+                                "An error occurred during your account setup. Please try register again!");
+                        dialog.create().show();
+                    }
+                });
     }
 
 }
