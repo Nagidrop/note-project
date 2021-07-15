@@ -271,7 +271,7 @@ public class RegisterFragment02 extends Fragment {
 
                                         // Set up other info for user (birthdate, address, ...)
                                         userDoc.set(newUser)
-                                                // If set up successful
+                                                // If set up successfully
                                                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                                                     @Override
                                                     public void onSuccess(Void aVoid) {
