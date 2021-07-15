@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -195,6 +196,7 @@ public class HomeFragment extends Fragment {
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
+                        Toast.makeText(getActivity(), "Delete note successful", Toast.LENGTH_SHORT);
                         Log.d(TAG, "onSuccess: Removed list item");
                         progressDialog.dismiss();
                     }

@@ -42,7 +42,5 @@ w
 Gapp/src/main/java/com/group6/noteapp/controller/RegisterFragment01.java,c\a\ca32a263d95c8fd47bf5413e5c179cba70832311
 @
 app/build.gradle,f\4\f4a01d6a4fcb971362ec00a83903fd3902f52164
-}
-Mapp/src/main/java/com/group6/noteapp/controller/ForgotPasswordFragment02.java,5\3\53ae6f9c783d48329c5b86ed4a8245eab90d5c63
 l
 <app/src/main/java/com/group6/noteapp/view/NoteAppDialog.java,f\d\fda2d7d0e77fce8c97195593b379af84890807ff
