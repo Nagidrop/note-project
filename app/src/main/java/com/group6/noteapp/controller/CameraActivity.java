@@ -34,13 +34,14 @@ import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
 public class CameraActivity extends AppCompatActivity {
-    private PreviewView previewView;
-    private ListenableFuture<ProcessCameraProvider> cameraProviderFuture;
-    private FloatingActionButton fabTakeImage;
-    private ImageCapture imageCapture;
-    private Executor executor = Executors.newSingleThreadExecutor();
-    private FirebaseAuth mAuth;
-    private FirebaseUser user;
+
+    private PreviewView previewView; // Camera preview view
+    private ListenableFuture<ProcessCameraProvider> cameraProviderFuture; // Camera provider
+    private FloatingActionButton fabTakeImage; // fab Take image
+    private ImageCapture imageCapture; // Image Capture use case
+    private Executor executor = Executors.newSingleThreadExecutor(); // Executor
+    private FirebaseAuth mAuth; // Firebase auth
+    private FirebaseUser user; // firebase current user
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

@@ -128,7 +128,7 @@ public class HomeFragment extends Fragment {
                                         dialog.setPositiveButton("Yes",
                                                 new DialogInterface.OnClickListener() {
                                                     /**
-                                                     * Log the current user out
+                                                     * Delete user note
                                                      * @param dialog
                                                      * @param which
                                                      */
@@ -139,7 +139,19 @@ public class HomeFragment extends Fragment {
                                                                 "Please wait while we deleting your note.");
                                                         progressDialog.show();
                                                         deleteNote(db, viewHolder, firebaseUser, progressDialog);
-
+                                                    }
+                                                });
+                                        dialog.setNegativeButton("No",
+                                                new DialogInterface.OnClickListener() {
+                                                    /**
+                                                     *  Reset recycler view
+                                                     * @param dialog
+                                                     * @param which
+                                                     */
+                                                    @Override
+                                                    public void onClick(DialogInterface dialog,
+                                                                        int which) {
+                                                        adapter.notifyDataSetChanged();
                                                     }
                                                 });
                                         dialog.create().show();
