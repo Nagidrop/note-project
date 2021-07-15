@@ -55,15 +55,15 @@ public class MainActivity extends AppCompatActivity {
 
     private BroadcastReceiver MyReceiver = null;
 
-    private MenuItem previousItem;
-    private Animation rotateClose;
-    private Animation rotateOpen;
-    private Animation fromBottom;
-    private Animation toBottom;
-    private FloatingActionButton fabMenu;
-    private FloatingActionButton fabNote;
-    private FloatingActionButton fabRecord;
-    private FloatingActionButton fabCapture;
+    private MenuItem previousItem; // Menu previous clicked itemm
+    private Animation rotateClose; //Rotate close animation
+    private Animation rotateOpen; // Rotate open animation
+    private Animation fromBottom; // From bottom animation
+    private Animation toBottom; // To bottom animation
+    private FloatingActionButton fabMenu; // Fab menu button
+    private FloatingActionButton fabNote; // Fab note button
+    private FloatingActionButton fabRecord; // Fab record button
+    private FloatingActionButton fabCapture; // Fab capture button
     private boolean clicked; // fabMenu clicked state
 
 
@@ -95,6 +95,10 @@ public class MainActivity extends AppCompatActivity {
                 fabMenuOnClick();
             }
         });
+
+        // close fab menu
+        clicked = true;
+        fabMenuOnClick();
 
         // -----------------------------
         // Navigation drawer
