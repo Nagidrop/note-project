@@ -202,6 +202,13 @@ public class HomeFragment extends Fragment {
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
+                        progressDialog.dismiss();
+
+                        NoteAppDialog dialog = new NoteAppDialog(getActivity());
+                        dialog.setupOKDialog("Delete Note Failed",
+                                "Something went wrong while we delete your note. Please try again!");
+                        dialog.create().show();
+
                         Log.d(TAG, "onFailure: " + e.getLocalizedMessage());
                     }
                 });
