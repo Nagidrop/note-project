@@ -34,25 +34,39 @@ import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
 public class CameraActivity extends AppCompatActivity {
-    private PreviewView previewView;
-    private ListenableFuture<ProcessCameraProvider> cameraProviderFuture;
-    private FloatingActionButton fabTakeImage;
-    private ImageCapture imageCapture;
-    private Executor executor = Executors.newSingleThreadExecutor();
-    private FirebaseAuth mAuth;
-    private FirebaseUser user;
 
+    private PreviewView previewView; // Camera preview view
+    private ListenableFuture<ProcessCameraProvider> cameraProviderFuture; // Camera provider
+    private FloatingActionButton fabTakeImage; // fab Take image
+    private ImageCapture imageCapture; // Image Capture use case
+    private Executor executor = Executors.newSingleThreadExecutor(); // Executor
+    private FirebaseAuth mAuth; // Firebase auth
+    private FirebaseUser user; // firebase current user
+
+    /**
+     * Set up camera and button onclick action
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_camera);
+
+        // Get auth instance and current user
         mAuth = FirebaseAuth.getInstance();
         user = mAuth.getCurrentUser();
 
+        // Get view components
         previewView = (PreviewView) findViewById(R.id.cameraPreview);
         fabTakeImage = findViewById(R.id.fabTakeImage);
         cameraProviderFuture = ProcessCameraProvider.getInstance(this);
+
+        // Add camera provideer
         cameraProviderFuture.addListener(new Runnable() {
+
+            /**
+             * Bind camera use case
+             */
             @Override
             public void run() {
                 try {
@@ -65,18 +79,26 @@ public class CameraActivity extends AppCompatActivity {
         }, ContextCompat.getMainExecutor(this));
 
 
+        // set take Image onclick listener
         fabTakeImage.setOnClickListener(new View.OnClickListener() {
             @Override public void onClick(View v) {
-                captureImage();
+                captureImage(); // Capture image
             }
         });
     }
 
+    /**
+     * Bind camera use case to camera provider
+     * @param cameraProvider
+     */
     private void bindImageAnalysis(@NonNull ProcessCameraProvider cameraProvider) {
+
+        // Build analysis use case
         ImageAnalysis imageAnalysis =
                 new ImageAnalysis.Builder().setTargetResolution(new Size(1280, 720))
                         .setBackpressureStrategy(ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST).build();
 
+        // Build capture use case
         imageCapture =
                 new ImageCapture.Builder()
                         .setTargetRotation(previewView.getDisplay().getRotation())
@@ -90,23 +112,41 @@ public class CameraActivity extends AppCompatActivity {
                     }
                 });
 
+        // Build preview
         Preview preview = new Preview.Builder().build();
+
+        // Select back camera
         CameraSelector cameraSelector = new CameraSelector.Builder()
                 .requireLensFacing(CameraSelector.LENS_FACING_BACK).build();
         preview.setSurfaceProvider(previewView.getSurfaceProvider());
+
+        // bind use case to camera provider
         cameraProvider
                 .bindToLifecycle((LifecycleOwner) this, cameraSelector, imageCapture, imageAnalysis,
                         preview);
     }
 
+    /**
+     * Capture image
+     */
     private void captureImage() {
+        // Create file on local
         File file = new File(
                 getBatchDirectoryName() + "/" + user.getUid() +
                         System.currentTimeMillis() + ".jpg");
+
+        // Build output file option
         ImageCapture.OutputFileOptions outputFileOptions =
                 new ImageCapture.OutputFileOptions.Builder(file).build();
+
+        // take picture
         imageCapture
                 .takePicture(outputFileOptions, executor, new ImageCapture.OnImageSavedCallback() {
+
+                    /**
+                     * Image save success then toast success and to ViewCaptureImageActivity
+                     * @param outputFileResults
+                     */
                     @Override public void onImageSaved(
                             @NonNull @NotNull ImageCapture.OutputFileResults outputFileResults) {
                         runOnUiThread(new Runnable() {
@@ -127,6 +167,11 @@ public class CameraActivity extends AppCompatActivity {
                 });
     }
 
+
+    /**
+     * get local directory name
+     * @return
+     */
     public String getBatchDirectoryName() {
         String imagePath = "";
         imagePath = Environment.getExternalStorageDirectory().toString() + "/";

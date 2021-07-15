@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -127,7 +128,7 @@ public class HomeFragment extends Fragment {
                                         dialog.setPositiveButton("Yes",
                                                 new DialogInterface.OnClickListener() {
                                                     /**
-                                                     * Log the current user out
+                                                     * Delete user note
                                                      * @param dialog
                                                      * @param which
                                                      */
@@ -138,7 +139,19 @@ public class HomeFragment extends Fragment {
                                                                 "Please wait while we deleting your note.");
                                                         progressDialog.show();
                                                         deleteNote(db, viewHolder, firebaseUser, progressDialog);
-
+                                                    }
+                                                });
+                                        dialog.setNegativeButton("No",
+                                                new DialogInterface.OnClickListener() {
+                                                    /**
+                                                     *  Reset recycler view
+                                                     * @param dialog
+                                                     * @param which
+                                                     */
+                                                    @Override
+                                                    public void onClick(DialogInterface dialog,
+                                                                        int which) {
+                                                        adapter.notifyDataSetChanged();
                                                     }
                                                 });
                                         dialog.create().show();
@@ -182,6 +195,7 @@ public class HomeFragment extends Fragment {
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
+                        Toast.makeText(getActivity(), "Delete note successful", Toast.LENGTH_SHORT);
                         Log.d(TAG, "onSuccess: Removed list item");
                         progressDialog.dismiss();
                     }
@@ -189,6 +203,13 @@ public class HomeFragment extends Fragment {
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
+                        progressDialog.dismiss();
+
+                        NoteAppDialog dialog = new NoteAppDialog(getActivity());
+                        dialog.setupOKDialog("Delete Note Failed",
+                                "Something went wrong while we delete your note. Please try again!");
+                        dialog.create().show();
+
                         Log.d(TAG, "onFailure: " + e.getLocalizedMessage());
                     }
                 });
