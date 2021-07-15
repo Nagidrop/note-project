@@ -42,18 +42,17 @@ public class RegisterFragment01 extends Fragment {
         TextInputLayout inputRegPassword = inflatedView.findViewById(R.id.textInputRegPassword);
         TextInputLayout inputRegConfirmPassword = inflatedView.findViewById(R.id.textInputRegRePassword);
 
-        /* Get Button View and set On Click Listener */
+        /* Get Button and set On Click Listener */
         MaterialButton btnNext = inflatedView.findViewById(R.id.btnNext01);
-
         btnNext.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                /* Create local variables to store the Input Views' current values */
+                /* Create local variables to store the Inputs' current values */
                 String regEmail = inputRegEmail.getEditText().getText().toString().trim();
                 String regPassword = inputRegPassword.getEditText().getText().toString().trim();
                 String regConfirmPassword = inputRegConfirmPassword.getEditText().getText().toString().trim();
 
-                // clear input errors before validation
+                // Clear input errors before validation
                 clearInputErrors(inputRegEmail, inputRegPassword, inputRegConfirmPassword);
 
                 /* Validate input fields and set errors according to validation results */
@@ -80,9 +79,9 @@ public class RegisterFragment01 extends Fragment {
                     inputRegConfirmPassword.setError("Password confirmation doesn't match.");
                 }
 
-                // if all input fields are valid
+                // If all input fields are valid
                 if (isInputValid) {
-                    // clear input errors again (for better UI)
+                    // Clear input errors again (before navigating to the next fragment)
                     clearInputErrors(inputRegEmail, inputRegPassword, inputRegConfirmPassword);
 
                     /* Create Register Fragment step 2 of 2 and pass register data to it */
@@ -94,7 +93,7 @@ public class RegisterFragment01 extends Fragment {
 
                     registerFragment02.setArguments(regData);
 
-                    // navigate to Register Fragment step 2 of 2
+                    // Navigate to Register Fragment step 2 of 2
                     NavHostFragment.findNavController(RegisterFragment01.this)
                             .navigate(R.id.action_registerFragment01_to_registerFragment02, regData);
                 }
