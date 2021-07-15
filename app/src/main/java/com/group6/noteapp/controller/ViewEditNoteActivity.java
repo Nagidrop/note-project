@@ -11,6 +11,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.PopupMenu;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -105,7 +106,7 @@ public class ViewEditNoteActivity extends AppCompatActivity {
                     note.setContent(noteContent);
 
                     // Proceed to save note
-                    saveNote(note, false);
+                    saveNote(false);
                 } else {
                     // If content is saved (not changed), display toast message to user
                     Toast.makeText(ViewEditNoteActivity.this, "Note not changed.", Toast.LENGTH_SHORT).show();
@@ -124,13 +125,59 @@ public class ViewEditNoteActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.nav_menu:
+                // Creating the instance of PopupMenu
+                PopupMenu popup = new PopupMenu(ViewEditNoteActivity.this, findViewById(R.id.nav_menu));
 
+                // Inflating the Popup using xml file
+                popup.getMenuInflater()
+                        .inflate(R.menu.note_popup_menu, popup.getMenu());
+
+                // Registering popup with OnMenuItemClickListener
+                popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    public boolean onMenuItemClick(MenuItem item) {
+                        NoteAppDialog dialog = new NoteAppDialog(ViewEditNoteActivity.this);
+                        dialog.setupConfirmationDialog("Delete Confirmation",
+                                "Do you want to delete this note?");
+                        dialog.setPositiveButton("Yes",
+                                new DialogInterface.OnClickListener() {
+                                    /**
+                                     * Log the current user out
+                                     * @param dialog
+                                     * @param which
+                                     */
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        NoteAppProgressDialog progressDialog = new NoteAppProgressDialog(ViewEditNoteActivity.this);
+                                        progressDialog.setUpDialog("Just a moment...",
+                                                "Please wait while we deleting your note.");
+                                        progressDialog.show();
+
+                                        // Delete note
+                                        deleteNote(progressDialog);
+                                    }
+                                });
+                        dialog.create().show();
+
+                        return true;
+                    }
+                });
+
+                popup.show(); //showing popup menu
                 break;
         }
         return super.onOptionsItemSelected(item);
     }
 
+    /**
+     * Check if note is unsaved
+     *
+     * @param noteTitle   note title
+     * @param noteContent note content
+     * @return true if note is unsaved
+     * false if note is already saved
+     */
     private boolean isUnsaved(String noteTitle, String noteContent) {
+        // if note title or content differs from saved note
         if (!noteTitle.equals(savedNoteTitle) || !noteContent.equals(savedNoteContent)) {
             return true;
         }
@@ -138,45 +185,62 @@ public class ViewEditNoteActivity extends AppCompatActivity {
         return false;
     }
 
-    private void saveNote(Note note, boolean isBackPressed) {
+    /**
+     * Save note (for both delete and update)
+     *
+     * @param isBackPressed detect if note is saved from return action (unsaved changes)
+     */
+    private void saveNote(boolean isBackPressed) {
+        /* Firebase instances */
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
         FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
 
         NoteAppProgressDialog progressDialog = new NoteAppProgressDialog(ViewEditNoteActivity.this);
 
+        // If Note already exists, proceed to update existing note
         if (note.getId() != null) {
+            // Show progress dialog
             progressDialog.setUpDialog("Just a moment...",
                     "Please wait while we update your note.");
             progressDialog.show();
 
+            // Note document reference
             DocumentReference noteRef = db.collection("users").document(firebaseUser.getUid())
                     .collection("notebooks").document(note.getNotebook().getId())
                     .collection("notes").document(note.getId());
 
+            // Get current timestamp
             Timestamp updatedDate = Timestamp.now();
 
-            note.setTitle(TextUtils.isEmpty(note.getTitle()) ? "Untitled Note" : note.getTitle());
+            // Set note data
+            note.setTitle(TextUtils.isEmpty(note.getTitle()) ? "Untitled Note" : note.getTitle());  // Parse title to Untitled if it's empty
             note.setUpdatedDate(updatedDate);
 
+            // Update note
             noteRef.update(
                     "title", note.getTitle(),
                     "content", note.getContent(),
                     "updatedDate", updatedDate)
+                    // If update note successful
                     .addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
                         public void onSuccess(Void unused) {
                             progressDialog.dismiss();
 
+                            /* Get TextInputLayout Views */
                             TextInputLayout txtInputNoteTitle = findViewById(R.id.txtInputNoteTitle);
                             TextInputLayout txtInputNoteContent = findViewById(R.id.txtInputNoteContent);
 
+                            // Update saved data
                             savedNoteTitle = note.getTitle();
                             savedNoteContent = note.getContent();
 
+                            // Set saved data to display to user
                             txtInputNoteTitle.getEditText().setText(savedNoteTitle);
                             txtInputNoteContent.getEditText().setText(savedNoteContent);
 
+                            // Show dialog depends on back button pressed or not
                             NoteAppDialog dialog = new NoteAppDialog(ViewEditNoteActivity.this);
                             if (isBackPressed) {
                                 dialog.setUpReturnOKDialog("Update Successful",
@@ -188,6 +252,7 @@ public class ViewEditNoteActivity extends AppCompatActivity {
                             dialog.create().show();
                         }
                     })
+                    // If update note failed
                     .addOnFailureListener(new OnFailureListener() {
                         @Override
                         public void onFailure(@NonNull @NotNull Exception e) {
@@ -195,6 +260,7 @@ public class ViewEditNoteActivity extends AppCompatActivity {
 
                             progressDialog.dismiss();
 
+                            // Show dialog to notify user of error
                             NoteAppDialog dialog = new NoteAppDialog(ViewEditNoteActivity.this);
                             dialog.setupOKDialog("Update Failed",
                                     "Something went wrong while we update your note. Please try again!");
@@ -206,33 +272,44 @@ public class ViewEditNoteActivity extends AppCompatActivity {
                     "Please wait while we add your note.");
             progressDialog.show();
 
+            // "notes" collection reference
             CollectionReference notesCollectionRef = db.collection("users").document(firebaseUser.getUid())
                     .collection("notebooks").document(firebaseUser.getUid())
                     .collection("notes");
 
+            // Parse title to Untitled if it's empty
             note.setTitle(TextUtils.isEmpty(note.getTitle()) ? "Untitled Note" : note.getTitle());
 
+            // Add note to database
             notesCollectionRef.add(note)
+                    // If add note successful
                     .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                         @Override
                         public void onSuccess(DocumentReference documentReference) {
                             progressDialog.dismiss();
 
+                            // Get the added note
                             documentReference.get()
+                                    // If get added note successful
                                     .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                                         @Override
                                         public void onSuccess(DocumentSnapshot documentSnapshot) {
+                                            // Parse the new Note document snapshot to object
                                             Note newNote = documentSnapshot.toObject(Note.class);
 
+                                            /* Get TextInputLayout Views */
                                             TextInputLayout txtInputNoteTitle = findViewById(R.id.txtInputNoteTitle);
                                             TextInputLayout txtInputNoteContent = findViewById(R.id.txtInputNoteContent);
 
+                                            // Update saved data
                                             savedNoteTitle = newNote.getTitle();
                                             savedNoteContent = newNote.getContent();
 
+                                            // Set saved data to display to user
                                             txtInputNoteTitle.getEditText().setText(savedNoteTitle);
                                             txtInputNoteContent.getEditText().setText(savedNoteContent);
 
+                                            // Show dialog depends on back button pressed or not
                                             NoteAppDialog dialog = new NoteAppDialog(ViewEditNoteActivity.this);
                                             if (isBackPressed) {
                                                 dialog.setUpReturnOKDialog("Add Successful",
@@ -244,14 +321,21 @@ public class ViewEditNoteActivity extends AppCompatActivity {
                                             dialog.create().show();
                                         }
                                     })
+                                    // If get added note failed
                                     .addOnFailureListener(new OnFailureListener() {
                                         @Override
                                         public void onFailure(@NonNull @NotNull Exception e) {
                                             Log.e("error", e.getMessage(), e);
+
+                                            NoteAppDialog dialog = new NoteAppDialog(ViewEditNoteActivity.this);
+                                            dialog.setupOKDialog("Add Failed",
+                                                    "Something went wrong while we add your note. Please try again!");
+                                            dialog.create().show();
                                         }
                                     });
                         }
                     })
+                    // If add note failure
                     .addOnFailureListener(new OnFailureListener() {
                         @Override
                         public void onFailure(@NonNull @NotNull Exception e) {
@@ -268,12 +352,63 @@ public class ViewEditNoteActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Delete note from database
+     *
+     * @param progressDialog progress dialog
+     */
+    private void deleteNote(NoteAppProgressDialog progressDialog) {
+        /* Firebase instances */
+        FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        // Delete note
+        db.collection("users").document(firebaseUser.getUid())
+                .collection("notebooks").document(note.getNotebook().getId())
+                .collection("notes").document(note.getId())
+                .delete()
+                // If delete successful
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d("delete note", "onSuccess: Removed list item");
+                        progressDialog.dismiss();
+
+                        // Show dialog to notify user
+                        NoteAppDialog dialog = new NoteAppDialog(ViewEditNoteActivity.this);
+                        dialog.setUpReturnOKDialog("Delete Successful",
+                                "Note has been deleted.", ViewEditNoteActivity.this);
+                        dialog.create().show();
+                    }
+                })
+                // If delete failed
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.d("delete note", "onFailure: " + e.getLocalizedMessage());
+                        progressDialog.dismiss();
+
+                        // Show dialog to notify user
+                        NoteAppDialog dialog = new NoteAppDialog(ViewEditNoteActivity.this);
+                        dialog.setupOKDialog("Delete Failed",
+                                "Something went wrong while we delete your note. Please try again!");
+                        dialog.create().show();
+                    }
+                });
+    }
+
+    /**
+     * Override default on back behaviour to check if user doesn't save new content
+     */
     @Override
     public void onBackPressed() {
+        /* Get display data */
         String noteTitle = txtInputNoteTitle.getEditText().getText().toString();
         String noteContent = txtInputNoteContent.getEditText().getText().toString();
 
+        // If display data is unsaved
         if (isUnsaved(noteTitle, noteContent)) {
+            // Display a dialog to ask if user want to save
             NoteAppDialog dialog = new NoteAppDialog(ViewEditNoteActivity.this);
 
             dialog.setupReturnConfirmationDialog("Unsaved Changes",
@@ -289,12 +424,15 @@ public class ViewEditNoteActivity extends AppCompatActivity {
                         public void onClick(DialogInterface dialog, int which) {
                             note.setTitle(noteTitle);
                             note.setContent(noteContent);
-                            saveNote(note, true);
+
+                            // Save the note
+                            saveNote(true);
                         }
                     });
 
             dialog.create().show();
         } else {
+            // Finish activity
             finish();
         }
     }

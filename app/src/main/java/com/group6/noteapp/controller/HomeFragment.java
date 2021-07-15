@@ -1,6 +1,5 @@
 package com.group6.noteapp.controller;
 
-import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.util.Log;
@@ -33,16 +32,12 @@ import com.group6.noteapp.view.NoteAppProgressDialog;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
-
 /**
  * Home Fragment (Main Activity)
  */
 public class HomeFragment extends Fragment {
-    private static final String TAG = "HomeFragment";
-
-    ArrayList<Note> noteList;
-    NoteAdapter adapter;
+    private static final String TAG = "HomeFragment";   // Log tag
+    private NoteAdapter adapter;                        // Firestore adapter
     /**
      * Constructor
      */
@@ -60,51 +55,68 @@ public class HomeFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View inflatedView = inflater.inflate(R.layout.fragment_home, container, false);
+
         /* Set up progress dialog to tell user to wait */
         NoteAppProgressDialog progressDialog = new NoteAppProgressDialog(getActivity());
         progressDialog.setUpDialog("Just a moment...",
                 "Please wait while we get your notes from server.");
         progressDialog.show();
 
+        // Set up recycler view
         setupRecyclerView(inflatedView, progressDialog);
 
+        // Dismiss dialog after setup
         progressDialog.dismiss();
 
         return inflatedView;
     }
 
+    /**
+     * Setup recycler view to display notes
+     * @param inflatedView      the inflated view
+     * @param progressDialog    Note App progress dialog
+     */
     private void setupRecyclerView(View inflatedView, NoteAppProgressDialog progressDialog) {
         /* Firebase instances */
         FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
         FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
+        // Notebook collection reference
         CollectionReference notebookColRef = db.collection("users").document(firebaseUser.getUid())
                 .collection("notebooks");
 
+        // Get notebook from Firestore
         notebookColRef.document(firebaseUser.getUid()).get()
+                // If get notebook successful
                 .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                     @Override
                     public void onSuccess(DocumentSnapshot documentSnapshot) {
+                        // Parse notebook document to object
                         Notebook notebook = documentSnapshot.toObject(Notebook.class);
 
+                        // "notes" collection reference
                         CollectionReference noteColRef = documentSnapshot.getReference()
                                 .collection("notes");   // "notebooks" collection reference
 
+                        // Query for Firestore adapter to listen to
                         Query query = noteColRef.orderBy("updatedDate", Query.Direction.DESCENDING);
 
+                        // Options to configure the FirestoreRecyclerAdapter
                         FirestoreRecyclerOptions<Note> options =
                                 new FirestoreRecyclerOptions.Builder<Note>()
                                         .setQuery(query, Note.class)
                                         .setLifecycleOwner(getActivity())
                                         .build();
 
+                        // instantiate new adapter
                         adapter = new NoteAdapter(options, getActivity(), notebook);
 
+                        /* Set up Recycler View */
                         RecyclerView rvNote = inflatedView.findViewById(R.id.recyclerView);
-                        rvNote.setHasFixedSize(true);
-                        rvNote.setAdapter(adapter);
-                        rvNote.setLayoutManager(new LinearLayoutManager(getActivity()));
+                        rvNote.setHasFixedSize(true);   // notify recycler view that all items have same size
+                        rvNote.setAdapter(adapter);     // set adapter
+                        rvNote.setLayoutManager(new LinearLayoutManager(getActivity()));    // set layout
 
                         new ItemTouchHelper(
                                 new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT) {
@@ -118,34 +130,43 @@ public class HomeFragment extends Fragment {
                                         return false;
                                     }
 
+                                    /**
+                                     * Delete note on swipe
+                                     * @param viewHolder    view holder
+                                     * @param direction     swipe direction
+                                     */
                                     @Override
                                     public void onSwiped(
                                             @NonNull RecyclerView.ViewHolder viewHolder,
                                             int direction) {
 
+                                        // Set up delete confirmation dialog
                                         NoteAppDialog dialog = new NoteAppDialog(getActivity());
                                         dialog.setupConfirmationDialog("Delete Confirmation",
                                                 "Do you want to delete this note?");
                                         dialog.setPositiveButton("Yes",
                                                 new DialogInterface.OnClickListener() {
                                                     /**
-                                                     * Delete user note
+                                                     * Delete user note on confirmation
                                                      * @param dialog
                                                      * @param which
                                                      */
                                                     @Override
                                                     public void onClick(DialogInterface dialog, int which) {
+                                                        // Show progress dialog
                                                         NoteAppProgressDialog progressDialog = new NoteAppProgressDialog(getActivity());
                                                         progressDialog.setUpDialog("Just a moment...",
                                                                 "Please wait while we deleting your note.");
                                                         progressDialog.show();
+
+                                                        // Delete note
                                                         deleteNote(db, viewHolder, firebaseUser, progressDialog);
                                                     }
                                                 });
                                         dialog.setNegativeButton("No",
                                                 new DialogInterface.OnClickListener() {
                                                     /**
-                                                     *  Reset recycler view
+                                                     * Refresh recycler view
                                                      * @param dialog
                                                      * @param which
                                                      */
@@ -158,11 +179,12 @@ public class HomeFragment extends Fragment {
                                         dialog.create().show();
                                     }
 
-                                }).attachToRecyclerView(rvNote);
+                                }).attachToRecyclerView(rvNote);    // attach item call back to recycler view
 
                         progressDialog.dismiss();
                     }
                 })
+                // If get notebook failed
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull @NotNull Exception e) {
@@ -187,25 +209,30 @@ public class HomeFragment extends Fragment {
      * @param progressDialog progress dialog
      */
     private void deleteNote(FirebaseFirestore db, RecyclerView.ViewHolder viewHolder, FirebaseUser firebaseUser,NoteAppProgressDialog progressDialog) { ;
+        // Get note from its position in Firestore adapter
         Note deleteNote = adapter.getItem(viewHolder.getAdapterPosition());
 
         db.collection("users").document(firebaseUser.getUid())
                 .collection("notebooks").document(deleteNote.getNotebook().getId()).collection("notes")
                 .document(deleteNote.getId())
                 .delete()
+                // If delete note successful
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
-                        Toast.makeText(getActivity(), "Delete note successful", Toast.LENGTH_SHORT);
+                        // Show toast message to notify user
+                        Toast.makeText(getActivity(), "Delete note successful.", Toast.LENGTH_SHORT).show();
                         Log.d(TAG, "onSuccess: Removed list item");
                         progressDialog.dismiss();
                     }
                 })
+                // If delete note failed
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
                         progressDialog.dismiss();
 
+                        // Show dialog to notify user of error
                         NoteAppDialog dialog = new NoteAppDialog(getActivity());
                         dialog.setupOKDialog("Delete Note Failed",
                                 "Something went wrong while we delete your note. Please try again!");
@@ -214,6 +241,5 @@ public class HomeFragment extends Fragment {
                         Log.d(TAG, "onFailure: " + e.getLocalizedMessage());
                     }
                 });
-        adapter.notifyDataSetChanged();
     }
 }

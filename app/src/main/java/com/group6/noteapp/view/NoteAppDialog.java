@@ -16,7 +16,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * Note App specific implementation of AlertDialog Builder
+ * Note App specific implementation of Alert Dialog Builder
  */
 public class NoteAppDialog extends MaterialAlertDialogBuilder {
     private String type;  // type of dialog
@@ -42,7 +42,7 @@ public class NoteAppDialog extends MaterialAlertDialogBuilder {
                 new DialogInterface.OnClickListener() {
                     /**
                      * Dismiss the dialog
-                     * @param dialog
+                     * @param dialog dialog
                      * @param which
                      */
                     @Override
@@ -78,7 +78,7 @@ public class NoteAppDialog extends MaterialAlertDialogBuilder {
                         ((Activity) activityContext).finish();
                     }
                 });
-        this.type = "OKDialog";             // set the dialog type for use with create
+        this.type = "ReturnOKDialog";             // set the dialog type for use with create
     }
 
     /**
