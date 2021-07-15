@@ -60,18 +60,22 @@ import org.jetbrains.annotations.NotNull;
  * Login Fragment
  */
 public class LoginFragment extends Fragment {
-    private static final int RC_SIGN_IN = 696969; // google sign in number
-    private static final String TAG = "LoginFragment"; // Tag for logging
+    private static final int RC_SIGN_IN = 696969;       // Request code for Google sign in
+    private static final String TAG = "LoginFragment";  // Tag for logging
 
-    private MaterialButton btnLogin; // login button
-    private TextInputLayout inputLogEmail; // inputted email
-    private TextInputLayout inputLogPassword; // inputted password
-    private FirebaseAuth firebaseAuth; // Firebase auth
-    private LoginButton loginButton; // Login button
-    private CallbackManager callbackManager; // Facebook Callback manager
-    private NoteAppProgressDialog progressDialog; // Progress dialog
-    private GoogleSignInClient mGoogleSignInClient; // Google sign in client
-    private FirebaseFirestore db; // Firestore database
+    /* Text Input Layouts and Button */
+    private MaterialButton btnLogin;                    // Email and password login button
+    private TextInputLayout inputLogEmail;              // inputted email
+    private TextInputLayout inputLogPassword;           // inputted password
+    private LoginButton loginButton;                    // login button for Facebook sign in
+
+    /* Firebase instances */
+    private FirebaseAuth firebaseAuth;                  // Firebase auth
+    private FirebaseFirestore db;                       // Firestore database
+
+    private CallbackManager callbackManager;            // Callback Manager for Login Button
+    private NoteAppProgressDialog progressDialog;       // Note App progress dialog
+    private GoogleSignInClient mGoogleSignInClient;     // Signed In Google Client Obj
 
     public LoginFragment() {
         // Required empty public constructor
