@@ -56,20 +56,29 @@ import com.group6.noteapp.view.NoteAppProgressDialog;
 
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * Login Fragment
+ */
 public class LoginFragment extends Fragment {
-    private static final int RC_SIGN_IN = 696969;
-    private static final String TAG = "LoginFragment"; // Tag for logging
+    private static final int RC_SIGN_IN = 696969;       // Request code for Google sign in
+    private static final String TAG = "LoginFragment";  // Tag for logging
 
-    private MaterialButton btnLogin;
+    /* Text Input Layouts and Button */
     private TextInputLayout inputLogEmail;
     private TextInputLayout inputLogPassword;
+    private LoginButton loginButton;                    // login button for Facebook sign in
+
+    /* Firebase instances */
     private FirebaseAuth firebaseAuth;
-    private LoginButton loginButton;
-    private CallbackManager callbackManager;
-    private NoteAppProgressDialog progressDialog;
-    private GoogleSignInClient mGoogleSignInClient;
     private FirebaseFirestore db;
 
+    private CallbackManager callbackManager;            // Callback Manager for Login Button
+    private NoteAppProgressDialog progressDialog;       // Note App progress dialog
+    private GoogleSignInClient mGoogleSignInClient;     // Signed In Google Client Obj
+
+    /**
+     * Constructor
+     */
     public LoginFragment() {
         // Required empty public constructor
     }
@@ -86,6 +95,8 @@ public class LoginFragment extends Fragment {
                         .build();
 
         mGoogleSignInClient = GoogleSignIn.getClient(getActivity(), gso);
+
+        /* Get Firebase instances */
         db = FirebaseFirestore.getInstance();
         firebaseAuth = FirebaseAuth.getInstance();
     }
@@ -96,20 +107,18 @@ public class LoginFragment extends Fragment {
         // Inflate the layout for this fragment
         View inflatedView = inflater.inflate(R.layout.fragment_login, container, false);
 
-        // Get firestore instance
-
-        // Get register button
+        /* Get Register Button and set On Click Listener */
         MaterialButton btnRegister = inflatedView.findViewById(R.id.btnNoAccount);
-        // Set navigate to register button
         btnRegister.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                // Navigate to Register Fragment
                 NavHostFragment.findNavController(LoginFragment.this)
                         .navigate(R.id.action_loginFragment_to_registerFragment01);
             }
         });
 
-        // To forgot password fragment
+        /* Get Forgot Password Button and set On Click Listener */
         MaterialButton btnForgotPassword = inflatedView.findViewById(R.id.btnForgotPassword);
         btnForgotPassword.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -119,25 +128,28 @@ public class LoginFragment extends Fragment {
             }
         });
 
+        /* Get Facebook Login Button and set On Click Listener */
         MaterialButton btnLoginFacebook = inflatedView.findViewById(R.id.btnLoginFacebook);
         btnLoginFacebook.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                // Show progress dialog
                 progressDialog = new NoteAppProgressDialog(getActivity());
                 progressDialog.setUpDialog("Just a moment...",
                         "Please wait while we connect you to Note App.");
                 progressDialog.show();
 
+                // Perform click on hidden login button
                 loginButton.performClick();
             }
         });
 
-        //get TextInputlayout
+        /* Get TextInputLayout Views */
         inputLogEmail = inflatedView.findViewById(R.id.txtInputLoginEmail);
         inputLogPassword = inflatedView.findViewById(R.id.txtInputLoginPassword);
 
         //Get login button
-        btnLogin = inflatedView.findViewById(R.id.btnLogin);
+        MaterialButton btnLogin = inflatedView.findViewById(R.id.btnLogin);
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -145,7 +157,6 @@ public class LoginFragment extends Fragment {
             }
         });
 
-//        progressDialog = new ProgressDialog(getActivity());
         callbackManager = CallbackManager.Factory.create();
 
         loginButton = (LoginButton) inflatedView.findViewById(R.id.login_button);
@@ -156,8 +167,6 @@ public class LoginFragment extends Fragment {
         loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
-//                Toast.makeText(LoginFragment.this,"login successful!", Toast.LENGTH_LONG).show();
-
                 handleFacebookAccessToken(loginResult.getAccessToken());
             }
 
@@ -197,16 +206,22 @@ public class LoginFragment extends Fragment {
         return inflatedView;
     }
 
+    /**
+     * Check inputs and login using email and password
+     */
     private void checkCredentials() {
+        /* Get display data from login screen */
         String logEmail = inputLogEmail.getEditText().getText().toString();
         String logPassword = inputLogPassword.getEditText().getText().toString();
 
+        /* Clear input errors */
         inputLogEmail.setErrorEnabled(false);
         inputLogPassword.setErrorEnabled(false);
 
         inputLogEmail.setErrorEnabled(true);
         inputLogPassword.setErrorEnabled(true);
 
+        /* Validate input fields and set errors according to validation results */
         boolean isInputValid = true;
         int emailValidateResult = ValidationUtils.validateEmail(logEmail);
         int passwordValidateResult = ValidationUtils.validatePasswordLog(logPassword);
@@ -224,26 +239,38 @@ public class LoginFragment extends Fragment {
             inputLogPassword.setError("Password must not be empty.");
         }
 
+        // If all input fields are valid
         if (isInputValid) {
+            // Show progress dialog
             progressDialog = new NoteAppProgressDialog(getActivity());
             progressDialog.setUpDialog("Just a moment...",
                     "Please wait while we connect you to Note App.");
             progressDialog.show();
 
+            // Proceed to login
             loginWithEmailAndPassword(logEmail, logPassword);
         }
     }
 
+    /**
+     * Login using email and password
+     * @param email     user's email
+     * @param password  user's password
+     */
     public void loginWithEmailAndPassword(String email, String password) {
+        // Log the user in
         firebaseAuth.signInWithEmailAndPassword(email, password)
+                // If login successful
                 .addOnSuccessListener(new OnSuccessListener<AuthResult>() {
                     @Override
                     public void onSuccess(AuthResult authResult) {
                         progressDialog.dismiss();
 
+                        // Check if user email is verified
                         if (authResult.getUser().isEmailVerified()) {
                             goToMainActivity();
                         } else {
+                            // Show dialog to notify user
                             NoteAppDialog dialog = new NoteAppDialog(getActivity());
                             dialog.setupOKDialog("Login Failed",
                                     "Please verify your email address before logging in!");
@@ -251,11 +278,13 @@ public class LoginFragment extends Fragment {
                         }
                     }
                 })
+                // If login failed
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull @NotNull Exception e) {
                         Log.e(Constants.LOGIN_ERROR, "Login error", e);
 
+                        // Show dialog depends on exception
                         NoteAppDialog dialog = new NoteAppDialog(getActivity());
                         switch (((FirebaseAuthException) e).getErrorCode()) {
                             case "ERROR_USER_NOT_FOUND":
@@ -321,14 +350,21 @@ public class LoginFragment extends Fragment {
         }
     }
 
+    /**
+     * Go to main screen (activity)
+     */
     private void goToMainActivity() {
         Intent intent = new Intent(getActivity(), MainActivity.class);
         intent.setFlags(intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
     }
 
+    /**
+     * Login using Facebook token
+     * @param token user's access token
+     */
     private void handleFacebookAccessToken(AccessToken token) {
-
+        /* Get Facebook credentials and sign in using the credentials */
         AuthCredential credential = FacebookAuthProvider.getCredential(token.getToken());
         firebaseAuth.signInWithCredential(credential)
                 .addOnCompleteListener(getActivity(), new OnCompleteListener<AuthResult>() {
@@ -336,11 +372,8 @@ public class LoginFragment extends Fragment {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with the signed-in user's information
-                            FirebaseUser user = firebaseAuth.getCurrentUser();
-
-                            String Uid = user.getUid();
-
-                            DocumentReference userInfoDoc = db.collection("users").document(Uid);
+                            DocumentReference userInfoDoc = db.collection("users")
+                                    .document(firebaseAuth.getCurrentUser().getUid());
 
                             userInfoDoc.get().addOnCompleteListener(
                                     new OnCompleteListener<DocumentSnapshot>() {
@@ -434,7 +467,7 @@ public class LoginFragment extends Fragment {
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void unused) {
-                        addWelcomeNote(userDefNotebookDoc, firebaseUser);
+                        addWelcomeNote(userDefNotebookDoc);
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
@@ -452,7 +485,7 @@ public class LoginFragment extends Fragment {
                 });
     }
 
-    private void addWelcomeNote(DocumentReference userDefNotebookDoc, FirebaseUser firebaseUser) {
+    private void addWelcomeNote(DocumentReference userDefNotebookDoc) {
         Note welcomeNote = new Note();
         welcomeNote.setTitle(Constants.WELCOME_NOTE_TITLE);
         welcomeNote.setContent(Constants.WELCOME_NOTE_CONTENT);

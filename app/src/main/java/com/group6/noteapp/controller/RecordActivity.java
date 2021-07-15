@@ -1,8 +1,6 @@
 package com.group6.noteapp.controller;
 
 import android.app.ProgressDialog;
-import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;
@@ -182,14 +180,17 @@ public class RecordActivity extends AppCompatActivity implements View.OnClickLis
         //Start timer from 0
         timer.setBase(SystemClock.elapsedRealtime());
         timer.start();
+
         //initialize filename variable with date and time at the end to ensure the new file wont overwrite previous file
         fileName += "Recording_" + formatter.format(now) + ".3gp";
+
         //Setup Media Recorder for recording
         recorder = new MediaRecorder();
         recorder.setAudioSource(MediaRecorder.AudioSource.MIC);
         recorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
         recorder.setOutputFile(fileName);
         recorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
+
         try {
             recorder.prepare();
         } catch (IOException e) {
@@ -201,8 +202,8 @@ public class RecordActivity extends AppCompatActivity implements View.OnClickLis
 
     private void stopRecording() {
         //Stop Timer, very obvious
-
         timer.stop();
+
         //Stop media recorder and set it to null for further use to record new audio
         recorder.stop();
         recorder.reset();
