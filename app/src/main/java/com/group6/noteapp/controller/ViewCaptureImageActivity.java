@@ -48,33 +48,43 @@ public class ViewCaptureImageActivity extends AppCompatActivity {
 
     private static final String TAG = "ViewCaptureImage"; // Tag for logging
 
-    private ShapeableImageView imgReview;
-    private MaterialButton btnSave;
-    private FirebaseStorage storage;
-    private FirebaseAuth mAuth;
-    private FirebaseUser user;
-    private FirebaseFirestore db;
-    private TextInputLayout imageName;
-    private NoteAppProgressDialog progressDialog;
+    private ShapeableImageView imgReview; // Review image
+    private MaterialButton btnSave; // Button save
+    private FirebaseStorage storage; // Firebase storage
+    private FirebaseAuth mAuth; // Firebase auth
+    private FirebaseUser user; // Firebase user
+    private FirebaseFirestore db; // Firestore
+    private TextInputLayout imageName; // Image name
+    private NoteAppProgressDialog progressDialog; // Progress dialog
 
+    // Image path
     String path = "";
 
+    /**
+     * Handle on Activity create to show capture image
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_capture_image);
 
+        // Get database, auth, current user instance
         db = FirebaseFirestore.getInstance();
         mAuth = FirebaseAuth.getInstance();
         user = mAuth.getCurrentUser();
-
         storage = FirebaseStorage.getInstance();
+
+        // Get view component
         imgReview = (ShapeableImageView) findViewById(R.id.imgReview);
         btnSave = (MaterialButton) findViewById(R.id.btnSaveImage);
         imageName = findViewById(R.id.textInputImageName);
         path = getIntent().getExtras().getString("path");
+
+        // Get file from path
         File image = new File(path);
 
+        // if image exists get angle from image's exif
         if (image.exists()) {
             int angle = 0;
             try {
@@ -97,16 +107,23 @@ public class ViewCaptureImageActivity extends AppCompatActivity {
                 e.printStackTrace();
             }
 
+            // Show image to Review image
             Bitmap bitmap = BitmapFactory.decodeFile(image.getAbsolutePath());
             imgReview.setImageBitmap(RotateBitmap(bitmap, angle));
 
+            // Handle button save to save picture to database and storage
             btnSave.setOnClickListener(new View.OnClickListener() {
                 @Override public void onClick(View v) {
+                    // Get image name
                     String name = imageName.getEditText().getText().toString();
+
+                    // Check if name is empty
                     if(TextUtils.isEmpty(name)){
+                        // Set error to edit text
                         imageName.setErrorEnabled(true);
                         imageName.setError("Please enter Image Name!");
                     }else {
+                        // save image to storage
                         progressDialog = new NoteAppProgressDialog(ViewCaptureImageActivity.this);
                         progressDialog.setUpDialog("Just a moment...",
                                 "Please wait while we saving your note.");
@@ -118,6 +135,12 @@ public class ViewCaptureImageActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Rotate bitmap base on angle
+     * @param source
+     * @param angle
+     * @return rotated bitmap
+     */
     public static Bitmap RotateBitmap(Bitmap source, float angle) {
         Matrix matrix = new Matrix();
         matrix.postRotate(angle);
@@ -125,9 +148,18 @@ public class ViewCaptureImageActivity extends AppCompatActivity {
                 .createBitmap(source, 0, 0, source.getWidth(), source.getHeight(), matrix, true);
     }
 
+    /**
+     * Save Image to storage
+     * @param uri
+     * @param imageName
+     */
     public void saveImageToStorage(Uri uri, String imageName){
+
+        // Get storage reference
         StorageReference storageRef = storage.getReference();
+        // set image reference
         StorageReference imageReference = storageRef.child(user.getUid()+"/images/"+ uri.getLastPathSegment());
+        // Create upload Task
         UploadTask uploadTask = imageReference.putFile(uri);
 
         // Register observers to listen for when the download is done or if it fails
@@ -139,6 +171,7 @@ public class ViewCaptureImageActivity extends AppCompatActivity {
         }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                // Get user document from database
                 DocumentReference userInfoDoc = db.collection("users").document(user.getUid());
 
                 userInfoDoc.get().addOnCompleteListener(
@@ -147,10 +180,12 @@ public class ViewCaptureImageActivity extends AppCompatActivity {
                                     @NonNull @NotNull Task<DocumentSnapshot> task) {
                                 if(task.isSuccessful()) {
                                     DocumentSnapshot document = task.getResult();
+                                    // if document exist
                                     if(document.exists()){
                                         Notebook defaultNotebook = new Notebook();
                                         defaultNotebook.setTitle(Constants.FIRST_NOTEBOOK_NAME);
 
+                                        // Add new note to collection
                                         DocumentReference userDefNotebookDoc = userInfoDoc.collection("notebooks")
                                                 .document(user.getUid());
                                             Note imageNote = new Note();
@@ -160,6 +195,10 @@ public class ViewCaptureImageActivity extends AppCompatActivity {
                                             CollectionReference userDefNoteCollection = userDefNotebookDoc.collection("notes");
                                             userDefNoteCollection.add(imageNote).addOnSuccessListener(
                                                     new OnSuccessListener<DocumentReference>() {
+                                                        /**
+                                                         * Add success then go to main activity
+                                                         * @param documentReference
+                                                         */
                                                         @Override public void onSuccess(
                                                                 DocumentReference documentReference) {
                                                             Toast.makeText(ViewCaptureImageActivity.this, "Add Note Successful!!", Toast.LENGTH_SHORT).show();
@@ -167,13 +206,18 @@ public class ViewCaptureImageActivity extends AppCompatActivity {
                                                         }
                                                     }).addOnFailureListener(
                                                     new OnFailureListener() {
+                                                        /**
+                                                         * On failure display a error dialog
+                                                         * @param e
+                                                         */
                                                         @Override public void onFailure(
                                                                 @NonNull @NotNull Exception e) {
+                                                            progressDialog.dismiss();
                                                             Log.e("ViewCaptureImage", "Error adding new note", e);
 
                                                             NoteAppDialog dialog = new NoteAppDialog(ViewCaptureImageActivity.this);
                                                             dialog.setupOKDialog("Add Failed",
-                                                                    "An error occurred during your account setup. Please try register again!");
+                                                                    "An error occurred when add new note. Please try register again!");
                                                             dialog.create().show();
                                                         }
                                                     });
@@ -188,6 +232,9 @@ public class ViewCaptureImageActivity extends AppCompatActivity {
 
     }
 
+    /**
+     * To main activity
+     */
     private void toMainActivity() {
         progressDialog.dismiss();
         Intent intent = new Intent(ViewCaptureImageActivity.this, MainActivity.class);

@@ -57,23 +57,27 @@ import com.group6.noteapp.view.NoteAppProgressDialog;
 import org.jetbrains.annotations.NotNull;
 
 public class LoginFragment extends Fragment {
-    private static final int RC_SIGN_IN = 696969;
+    private static final int RC_SIGN_IN = 696969; // google sign in number
     private static final String TAG = "LoginFragment"; // Tag for logging
 
-    private MaterialButton btnLogin;
-    private TextInputLayout inputLogEmail;
-    private TextInputLayout inputLogPassword;
-    private FirebaseAuth firebaseAuth;
-    private LoginButton loginButton;
-    private CallbackManager callbackManager;
-    private NoteAppProgressDialog progressDialog;
-    private GoogleSignInClient mGoogleSignInClient;
-    private FirebaseFirestore db;
+    private MaterialButton btnLogin; // login button
+    private TextInputLayout inputLogEmail; // inputted email
+    private TextInputLayout inputLogPassword; // inputted password
+    private FirebaseAuth firebaseAuth; // Firebase auth
+    private LoginButton loginButton; // Login button
+    private CallbackManager callbackManager; // Facebook Callback manager
+    private NoteAppProgressDialog progressDialog; // Progress dialog
+    private GoogleSignInClient mGoogleSignInClient; // Google sign in client
+    private FirebaseFirestore db; // Firestore database
 
     public LoginFragment() {
         // Required empty public constructor
     }
 
+    /**
+     * Initialize database and login instance
+     * @param savedInstanceState
+     */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -85,18 +89,27 @@ public class LoginFragment extends Fragment {
                         .requestEmail()
                         .build();
 
+        // Get google sign in client
         mGoogleSignInClient = GoogleSignIn.getClient(getActivity(), gso);
+        // get firestore instance
         db = FirebaseFirestore.getInstance();
+        // get firebase auth instance
         firebaseAuth = FirebaseAuth.getInstance();
     }
 
+    /**
+     * Initialize login function
+     * @param inflater
+     * @param container
+     * @param savedInstanceState
+     * @return
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View inflatedView = inflater.inflate(R.layout.fragment_login, container, false);
 
-        // Get firestore instance
 
         // Get register button
         MaterialButton btnRegister = inflatedView.findViewById(R.id.btnNoAccount);
@@ -119,15 +132,18 @@ public class LoginFragment extends Fragment {
             }
         });
 
+        // Get and set login Facebook button
         MaterialButton btnLoginFacebook = inflatedView.findViewById(R.id.btnLoginFacebook);
         btnLoginFacebook.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                // show progress dialog
                 progressDialog = new NoteAppProgressDialog(getActivity());
                 progressDialog.setUpDialog("Just a moment...",
                         "Please wait while we connect you to Note App.");
                 progressDialog.show();
 
+                // button facebook login perform click
                 loginButton.performClick();
             }
         });
@@ -141,6 +157,7 @@ public class LoginFragment extends Fragment {
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                // Check login credentials
                 checkCredentials();
             }
         });
@@ -154,22 +171,36 @@ public class LoginFragment extends Fragment {
 
         // Callback registration
         loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
+            /**
+             * on facebook login success
+             * @param loginResult
+             */
             @Override
             public void onSuccess(LoginResult loginResult) {
 //                Toast.makeText(LoginFragment.this,"login successful!", Toast.LENGTH_LONG).show();
 
+                // Handle facebook access token
                 handleFacebookAccessToken(loginResult.getAccessToken());
             }
 
+            /**
+             * on facebook login cancel
+             */
             @Override
             public void onCancel() {
-                Toast.makeText(getActivity(), "Cancel !", Toast.LENGTH_LONG).show();
+                // Toast login cancel
+                Toast.makeText(getActivity(), "Login cancel !", Toast.LENGTH_LONG).show();
                 progressDialog.dismiss();
             }
 
+            /**
+             * On facebook login error
+             * @param exception
+             */
             @Override
             public void onError(FacebookException exception) {
-                Toast.makeText(getActivity(), "Error" + exception.getMessage(), Toast.LENGTH_LONG)
+                // Toast login error details
+                Toast.makeText(getActivity(), "Login Error: " + exception.getMessage(), Toast.LENGTH_LONG)
                         .show();
                 progressDialog.dismiss();
             }
@@ -181,9 +212,12 @@ public class LoginFragment extends Fragment {
         // Button listeners
         MaterialButton btnGoogleLogin = inflatedView.findViewById(R.id.btnLoginGoogle);
         btnGoogleLogin.setOnClickListener(new View.OnClickListener() {
+            /**
+             * sign In google
+             * @param v
+             */
             @Override
             public void onClick(View v) {
-
                 progressDialog = new NoteAppProgressDialog(getActivity());
                 progressDialog.setUpDialog("Just a moment...",
                         "Please wait while we connect you to Note App.");
@@ -197,6 +231,9 @@ public class LoginFragment extends Fragment {
         return inflatedView;
     }
 
+    /**
+     * Check user login credentials
+     */
     private void checkCredentials() {
         String logEmail = inputLogEmail.getEditText().getText().toString();
         String logPassword = inputLogPassword.getEditText().getText().toString();
@@ -234,7 +271,13 @@ public class LoginFragment extends Fragment {
         }
     }
 
+    /**
+     * Login to firebase with email and password
+     * @param email user email
+     * @param password user password
+     */
     public void loginWithEmailAndPassword(String email, String password) {
+        // Firebase sign in with email and password
         firebaseAuth.signInWithEmailAndPassword(email, password)
                 .addOnSuccessListener(new OnSuccessListener<AuthResult>() {
                     @Override
@@ -299,11 +342,19 @@ public class LoginFragment extends Fragment {
     }
     // [END on_start_check_user]
 
+    /**
+     * handle activity result for login facebook and google
+     * @param requestCode
+     * @param resultCode
+     * @param data
+     */
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        // Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
+        // if request code is RC_SIGN_IN
+        // handle login with google
+        // else handle login with facebook
         if (requestCode == RC_SIGN_IN) {
             Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
             try {
@@ -321,17 +372,32 @@ public class LoginFragment extends Fragment {
         }
     }
 
+    /**
+     * To Main activity
+     */
     private void goToMainActivity() {
         Intent intent = new Intent(getActivity(), MainActivity.class);
         intent.setFlags(intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
     }
 
+    /**
+     * Handle Facebook access token
+     * @param token facebook access token
+     */
     private void handleFacebookAccessToken(AccessToken token) {
 
+        // Get auth credential from facebook auth provider
         AuthCredential credential = FacebookAuthProvider.getCredential(token.getToken());
+
+        // sign in to firebase with credential
         firebaseAuth.signInWithCredential(credential)
                 .addOnCompleteListener(getActivity(), new OnCompleteListener<AuthResult>() {
+
+                    /**
+                     * Handle login complete check user exist in database
+                     * @param task
+                     */
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
@@ -340,8 +406,8 @@ public class LoginFragment extends Fragment {
 
                             String Uid = user.getUid();
 
+                            // Check user exist in database
                             DocumentReference userInfoDoc = db.collection("users").document(Uid);
-
                             userInfoDoc.get().addOnCompleteListener(
                                     new OnCompleteListener<DocumentSnapshot>() {
                                         @Override
@@ -349,6 +415,8 @@ public class LoginFragment extends Fragment {
                                                 @NonNull @NotNull Task<DocumentSnapshot> task) {
                                             if (task.isSuccessful()) {
                                                 DocumentSnapshot document = task.getResult();
+                                                // If user exist then go to main
+                                                // else create new user info
                                                 if (document.exists()) {
                                                     progressDialog.dismiss();
                                                     goToMainActivity();
@@ -371,10 +439,22 @@ public class LoginFragment extends Fragment {
                 });
     }
 
+    /**
+     * Handle firebase login with google
+     * @param idToken
+     */
     private void firebaseAuthWithGoogle(String idToken) {
+
+        // Get credential from google auth provider
         AuthCredential credential = GoogleAuthProvider.getCredential(idToken, null);
+
+        // Sign in with credential
         firebaseAuth.signInWithCredential(credential)
                 .addOnCompleteListener(getActivity(), new OnCompleteListener<AuthResult>() {
+                    /**
+                     * Handle login complete check user exist in database
+                     * @param task
+                     */
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
@@ -384,8 +464,8 @@ public class LoginFragment extends Fragment {
 
                             String Uid = user.getUid();
 
+                            // Check user exist in database
                             DocumentReference userInfoDoc = db.collection("users").document(Uid);
-
                             userInfoDoc.get().addOnCompleteListener(
                                     new OnCompleteListener<DocumentSnapshot>() {
                                         @Override
@@ -393,6 +473,8 @@ public class LoginFragment extends Fragment {
                                                 @NonNull @NotNull Task<DocumentSnapshot> task) {
                                             if (task.isSuccessful()) {
                                                 DocumentSnapshot document = task.getResult();
+                                                // If user exist then go to main
+                                                // else create new user info
                                                 if (document.exists()) {
                                                     progressDialog.dismiss();
                                                     goToMainActivity();
@@ -423,17 +505,26 @@ public class LoginFragment extends Fragment {
         startActivityForResult(signInIntent, RC_SIGN_IN);
     }
 
-
+    /**
+     * Add default notebook for user
+     * @param userInfoDoc   user document
+     * @param firebaseUser  Firebase user
+     */
     private void addDefaultNotebook(DocumentReference userInfoDoc, FirebaseUser firebaseUser) {
+        // Create new notebook and set title
         Notebook defaultNotebook = new Notebook();
         defaultNotebook.setTitle(Constants.FIRST_NOTEBOOK_NAME);
 
+        // Get User default notebook document
         DocumentReference userDefNotebookDoc = userInfoDoc.collection("notebooks").document(firebaseUser.getUid());
 
+        // Add default notebook
         userDefNotebookDoc.set(defaultNotebook)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    // If add default notebook successful
                     @Override
                     public void onSuccess(Void unused) {
+                        // Add welcome note
                         addWelcomeNote(userDefNotebookDoc, firebaseUser);
                     }
                 })
@@ -444,6 +535,8 @@ public class LoginFragment extends Fragment {
 
                         Log.e(Constants.REGISTER_ERROR, "Error adding default notebook", e);
 
+
+                        // Show dialog with error info
                         NoteAppDialog dialog = new NoteAppDialog(getActivity());
                         dialog.setupOKDialog("Registration Failed",
                                 "An error occurred during your account setup. Please try register again!");
@@ -452,6 +545,11 @@ public class LoginFragment extends Fragment {
                 });
     }
 
+    /**
+     * Add welcome note for user
+     * @param userDefNotebookDoc    user default notebook document
+     * @param firebaseUser          Firebase user
+     */
     private void addWelcomeNote(DocumentReference userDefNotebookDoc, FirebaseUser firebaseUser) {
         Note welcomeNote = new Note();
         welcomeNote.setTitle(Constants.WELCOME_NOTE_TITLE);
@@ -492,6 +590,11 @@ public class LoginFragment extends Fragment {
         userNoteCollection.add(welcomeNote3);
     }
 
+    /**
+     * Set up new user info
+     * @param firebaseUser
+     * @param userInfoDoc
+     */
     private void setUpUserInfo(FirebaseUser firebaseUser, DocumentReference userInfoDoc) {
         FirebaseStorage storage = FirebaseStorage.getInstance();
         StorageReference storageRef = storage.getReference();

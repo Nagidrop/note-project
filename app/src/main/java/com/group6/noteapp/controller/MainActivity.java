@@ -12,6 +12,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.Html;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -40,6 +41,7 @@ import com.group6.noteapp.R;
 import com.group6.noteapp.view.NoteAppDialog;
 
 import org.jetbrains.annotations.NotNull;
+import org.w3c.dom.Text;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -121,8 +123,15 @@ public class MainActivity extends AppCompatActivity {
                         Log.e("error", e.getMessage());
                     }
                 });
+
         txtNavFullName.setText(Html.fromHtml(getString(R.string.header_title, firebaseUser.getDisplayName())));
-        txtNavEmail.setText(getString(R.string.header_text, firebaseUser.getEmail()));
+
+        if(TextUtils.isEmpty(firebaseUser.getEmail())){
+            txtNavEmail.setText(getString(R.string.header_text, ""));
+        } else{
+            txtNavEmail.setText(getString(R.string.header_text, firebaseUser.getEmail()));
+        }
+
 
         // Set navigation icon click event to show navigation drawer
         topAppBar.setNavigationOnClickListener(new View.OnClickListener() {
