@@ -23,10 +23,12 @@ import com.group6.noteapp.view.NoteAppProgressDialog;
 
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * Forgot password input email fragment
+ */
 public class ForgotPasswordFragment01 extends Fragment {
 
-    NoteAppProgressDialog progressDialog;
-
+    NoteAppProgressDialog progressDialog;   // Note App progress dialog
 
     public ForgotPasswordFragment01() {
         // Required empty public constructor
@@ -35,18 +37,22 @@ public class ForgotPasswordFragment01 extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
         View inflatedView = inflater.inflate(R.layout.fragment_forgot_password01, container, false);
-        //get text Input text layout
-        MaterialButton btnSubmit = inflatedView.findViewById(R.id.btnForgotSubmit);
 
+        /* Get Button and set On Click Listener */
+        MaterialButton btnSubmit = inflatedView.findViewById(R.id.btnForgotSubmit);
         btnSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                /* Get TextInputLayout */
                 TextInputLayout inputResetPassEmail = inflatedView.findViewById(R.id.textInputForgotEmail);
                 String resetPassEmail = inputResetPassEmail.getEditText().getText().toString();
 
+                // Clear input errors before validation
                 clearInputErrors(inputResetPassEmail);
 
+                /* Validate input fields and set errors according to validation results */
                 boolean isInputValid = true;
                 int emailValidateResult = ValidationUtils.validateEmail(resetPassEmail);
 
@@ -58,15 +64,20 @@ public class ForgotPasswordFragment01 extends Fragment {
                     inputResetPassEmail.setError("Please use a valid email. (Ex: abc@g.cn)");
                 }
 
+
+                // If all input fields are valid
                 if (isInputValid){
+                    // Show progress dialog
                     progressDialog = new NoteAppProgressDialog(getActivity());
                     progressDialog.setUpDialog("Just a moment...",
                             "Please wait while we attempt to send you an email with instructions.");
                     progressDialog.show();
 
+                    // Clear input errors (before navigating)
                     clearInputErrors(inputResetPassEmail);
 
-                    sendEmailResetPassword(resetPassEmail);
+                    // Send email with reset password instructions
+                    sendResetPasswordEmail(resetPassEmail);
                 }
             }
         });
@@ -75,20 +86,32 @@ public class ForgotPasswordFragment01 extends Fragment {
         return inflatedView;
     }
 
-    private void sendEmailResetPassword(String emailAddress) {
+    /**
+     * Send email with reset password instructions
+     * @param emailAddress user's email address
+     */
+    private void sendResetPasswordEmail(String emailAddress) {
+        /* Firebase instance */
         FirebaseAuth auth = FirebaseAuth.getInstance();
 
+        // Send password reset email
         auth.sendPasswordResetEmail(emailAddress)
+                // If send email successful
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void unused) {
                         progressDialog.dismiss();
+
+                        // Add email to bundle
                         Bundle bundle = new Bundle();
                         bundle.putString("email", emailAddress);
+
+                        // Navigate to Send Email successful page
                         NavHostFragment.findNavController(ForgotPasswordFragment01.this)
                                 .navigate(R.id.action_forgotPasswordFragment01_to_forgotPasswordFragment02, bundle);
                     }
                 })
+                // If send email failed
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull @NotNull Exception e) {
@@ -96,6 +119,7 @@ public class ForgotPasswordFragment01 extends Fragment {
 
                         progressDialog.dismiss();
 
+                        // Show dialog dependent on error
                         NoteAppDialog dialog = new NoteAppDialog(getActivity());
 
                         switch (((FirebaseAuthException) e).getErrorCode()){
@@ -117,7 +141,12 @@ public class ForgotPasswordFragment01 extends Fragment {
                 });
     }
 
+    /**
+     * Clear input fields' errors
+     * @param inputResetPassEmail   input reset password email
+     */
     private void clearInputErrors(TextInputLayout inputResetPassEmail){
+        /* Set errors to disabled and then enable them again for quick clears */
         inputResetPassEmail.setErrorEnabled(false);
 
         inputResetPassEmail.setErrorEnabled(true);
