@@ -38,8 +38,6 @@ p
 @app/src/main/java/com/group6/noteapp/view/AudioListFragment.java,3\c\3c5159f40f651745321337afb9053f28a15e3317
 t
 Dapp/src/main/java/com/group6/noteapp/view/NoteAppProgressDialog.java,b\5\b5e5c1ef06604b1a88bf259fa4b15b7831bb8d0d
-w
-Gapp/src/main/java/com/group6/noteapp/controller/RegisterFragment01.java,c\a\ca32a263d95c8fd47bf5413e5c179cba70832311
 @
 app/build.gradle,f\4\f4a01d6a4fcb971362ec00a83903fd3902f52164
 l

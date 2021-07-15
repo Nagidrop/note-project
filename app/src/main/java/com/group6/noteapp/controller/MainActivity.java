@@ -12,6 +12,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.Html;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -40,6 +41,7 @@ import com.group6.noteapp.R;
 import com.group6.noteapp.view.NoteAppDialog;
 
 import org.jetbrains.annotations.NotNull;
+import org.w3c.dom.Text;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -53,15 +55,15 @@ public class MainActivity extends AppCompatActivity {
 
     private BroadcastReceiver MyReceiver = null;
 
-    private MenuItem previousItem;
-    private Animation rotateClose;
-    private Animation rotateOpen;
-    private Animation fromBottom;
-    private Animation toBottom;
-    private FloatingActionButton fabMenu;
-    private FloatingActionButton fabNote;
-    private FloatingActionButton fabRecord;
-    private FloatingActionButton fabCapture;
+    private MenuItem previousItem; // Menu previous clicked itemm
+    private Animation rotateClose; //Rotate close animation
+    private Animation rotateOpen; // Rotate open animation
+    private Animation fromBottom; // From bottom animation
+    private Animation toBottom; // To bottom animation
+    private FloatingActionButton fabMenu; // Fab menu button
+    private FloatingActionButton fabNote; // Fab note button
+    private FloatingActionButton fabRecord; // Fab record button
+    private FloatingActionButton fabCapture; // Fab capture button
     private boolean clicked; // fabMenu clicked state
 
 
@@ -94,6 +96,10 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        // close fab menu
+        clicked = true;
+        fabMenuOnClick();
+
         // -----------------------------
         // Navigation drawer
         //------------------------------
@@ -121,8 +127,15 @@ public class MainActivity extends AppCompatActivity {
                         Log.e("error", e.getMessage());
                     }
                 });
+
         txtNavFullName.setText(Html.fromHtml(getString(R.string.header_title, firebaseUser.getDisplayName())));
-        txtNavEmail.setText(getString(R.string.header_text, firebaseUser.getEmail()));
+
+        if(TextUtils.isEmpty(firebaseUser.getEmail())){
+            txtNavEmail.setText(getString(R.string.header_text, ""));
+        } else{
+            txtNavEmail.setText(getString(R.string.header_text, firebaseUser.getEmail()));
+        }
+
 
         // Set navigation icon click event to show navigation drawer
         topAppBar.setNavigationOnClickListener(new View.OnClickListener() {

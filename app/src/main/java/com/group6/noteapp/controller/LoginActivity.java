@@ -15,6 +15,10 @@ import com.group6.noteapp.R;
 
 public class LoginActivity extends AppCompatActivity {
 
+    /**
+     * Check if current user exist
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

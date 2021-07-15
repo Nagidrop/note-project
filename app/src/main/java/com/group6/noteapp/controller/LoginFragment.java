@@ -64,25 +64,27 @@ public class LoginFragment extends Fragment {
     private static final String TAG = "LoginFragment";  // Tag for logging
 
     /* Text Input Layouts and Button */
-    private TextInputLayout inputLogEmail;
-    private TextInputLayout inputLogPassword;
+    private MaterialButton btnLogin;                    // Email and password login button
+    private TextInputLayout inputLogEmail;              // inputted email
+    private TextInputLayout inputLogPassword;           // inputted password
     private LoginButton loginButton;                    // login button for Facebook sign in
 
     /* Firebase instances */
-    private FirebaseAuth firebaseAuth;
-    private FirebaseFirestore db;
+    private FirebaseAuth firebaseAuth;                  // Firebase auth
+    private FirebaseFirestore db;                       // Firestore database
 
     private CallbackManager callbackManager;            // Callback Manager for Login Button
     private NoteAppProgressDialog progressDialog;       // Note App progress dialog
     private GoogleSignInClient mGoogleSignInClient;     // Signed In Google Client Obj
 
-    /**
-     * Constructor
-     */
     public LoginFragment() {
         // Required empty public constructor
     }
 
+    /**
+     * Initialize database and login instance
+     * @param savedInstanceState
+     */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -94,13 +96,22 @@ public class LoginFragment extends Fragment {
                         .requestEmail()
                         .build();
 
+        // Get google sign in client
         mGoogleSignInClient = GoogleSignIn.getClient(getActivity(), gso);
 
         /* Get Firebase instances */
         db = FirebaseFirestore.getInstance();
+        // get firebase auth instance
         firebaseAuth = FirebaseAuth.getInstance();
     }
 
+    /**
+     * Initialize login function
+     * @param inflater
+     * @param container
+     * @param savedInstanceState
+     * @return
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -109,10 +120,10 @@ public class LoginFragment extends Fragment {
 
         /* Get Register Button and set On Click Listener */
         MaterialButton btnRegister = inflatedView.findViewById(R.id.btnNoAccount);
+        // Set navigate to register button
         btnRegister.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Navigate to Register Fragment
                 NavHostFragment.findNavController(LoginFragment.this)
                         .navigate(R.id.action_loginFragment_to_registerFragment01);
             }
@@ -144,19 +155,21 @@ public class LoginFragment extends Fragment {
             }
         });
 
-        /* Get TextInputLayout Views */
+        //get TextInputlayout
         inputLogEmail = inflatedView.findViewById(R.id.txtInputLoginEmail);
         inputLogPassword = inflatedView.findViewById(R.id.txtInputLoginPassword);
 
         //Get login button
-        MaterialButton btnLogin = inflatedView.findViewById(R.id.btnLogin);
+        btnLogin = inflatedView.findViewById(R.id.btnLogin);
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                // Check login credentials
                 checkCredentials();
             }
         });
 
+//        progressDialog = new ProgressDialog(getActivity());
         callbackManager = CallbackManager.Factory.create();
 
         loginButton = (LoginButton) inflatedView.findViewById(R.id.login_button);
@@ -165,20 +178,34 @@ public class LoginFragment extends Fragment {
 
         // Callback registration
         loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
+            /**
+             * on facebook login success
+             * @param loginResult
+             */
             @Override
             public void onSuccess(LoginResult loginResult) {
+                // Handle facebook access token
                 handleFacebookAccessToken(loginResult.getAccessToken());
             }
 
+            /**
+             * on facebook login cancel
+             */
             @Override
             public void onCancel() {
-                Toast.makeText(getActivity(), "Cancel !", Toast.LENGTH_LONG).show();
+                // Toast login cancel
+                Toast.makeText(getActivity(), "Login cancel !", Toast.LENGTH_LONG).show();
                 progressDialog.dismiss();
             }
 
+            /**
+             * On facebook login error
+             * @param exception
+             */
             @Override
             public void onError(FacebookException exception) {
-                Toast.makeText(getActivity(), "Error" + exception.getMessage(), Toast.LENGTH_LONG)
+                // Toast login error details
+                Toast.makeText(getActivity(), "Login Error: " + exception.getMessage(), Toast.LENGTH_LONG)
                         .show();
                 progressDialog.dismiss();
             }
@@ -253,12 +280,12 @@ public class LoginFragment extends Fragment {
     }
 
     /**
-     * Login using email and password
-     * @param email     user's email
-     * @param password  user's password
+     * Login to firebase with email and password
+     * @param email user email
+     * @param password user password
      */
     public void loginWithEmailAndPassword(String email, String password) {
-        // Log the user in
+        // Firebase sign in with email and password
         firebaseAuth.signInWithEmailAndPassword(email, password)
                 // If login successful
                 .addOnSuccessListener(new OnSuccessListener<AuthResult>() {
@@ -328,11 +355,19 @@ public class LoginFragment extends Fragment {
     }
     // [END on_start_check_user]
 
+    /**
+     * handle activity result for login facebook and google
+     * @param requestCode
+     * @param resultCode
+     * @param data
+     */
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        // Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
+        // if request code is RC_SIGN_IN
+        // handle login with google
+        // else handle login with facebook
         if (requestCode == RC_SIGN_IN) {
             Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
             try {
@@ -351,7 +386,7 @@ public class LoginFragment extends Fragment {
     }
 
     /**
-     * Go to main screen (activity)
+     * To Main activity
      */
     private void goToMainActivity() {
         Intent intent = new Intent(getActivity(), MainActivity.class);
@@ -360,21 +395,32 @@ public class LoginFragment extends Fragment {
     }
 
     /**
-     * Login using Facebook token
-     * @param token user's access token
+     * Handle Facebook access token
+     * @param token facebook access token
      */
     private void handleFacebookAccessToken(AccessToken token) {
-        /* Get Facebook credentials and sign in using the credentials */
+
+        // Get auth credential from facebook auth provider
         AuthCredential credential = FacebookAuthProvider.getCredential(token.getToken());
+
+        // sign in to firebase with credential
         firebaseAuth.signInWithCredential(credential)
                 .addOnCompleteListener(getActivity(), new OnCompleteListener<AuthResult>() {
+
+                    /**
+                     * Handle login complete check user exist in database
+                     * @param task
+                     */
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with the signed-in user's information
-                            DocumentReference userInfoDoc = db.collection("users")
-                                    .document(firebaseAuth.getCurrentUser().getUid());
+                            FirebaseUser user = firebaseAuth.getCurrentUser();
 
+                            String Uid = user.getUid();
+
+                            // Check user exist in database
+                            DocumentReference userInfoDoc = db.collection("users").document(Uid);
                             userInfoDoc.get().addOnCompleteListener(
                                     new OnCompleteListener<DocumentSnapshot>() {
                                         @Override
@@ -382,6 +428,8 @@ public class LoginFragment extends Fragment {
                                                 @NonNull @NotNull Task<DocumentSnapshot> task) {
                                             if (task.isSuccessful()) {
                                                 DocumentSnapshot document = task.getResult();
+                                                // If user exist then go to main
+                                                // else create new user info
                                                 if (document.exists()) {
                                                     progressDialog.dismiss();
                                                     goToMainActivity();
@@ -404,10 +452,22 @@ public class LoginFragment extends Fragment {
                 });
     }
 
+    /**
+     * Handle firebase login with google
+     * @param idToken
+     */
     private void firebaseAuthWithGoogle(String idToken) {
+
+        // Get credential from google auth provider
         AuthCredential credential = GoogleAuthProvider.getCredential(idToken, null);
+
+        // Sign in with credential
         firebaseAuth.signInWithCredential(credential)
                 .addOnCompleteListener(getActivity(), new OnCompleteListener<AuthResult>() {
+                    /**
+                     * Handle login complete check user exist in database
+                     * @param task
+                     */
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
@@ -417,6 +477,7 @@ public class LoginFragment extends Fragment {
 
                             String Uid = user.getUid();
 
+                            // Check user exist in database
                             DocumentReference userInfoDoc = db.collection("users").document(Uid);
 
                             userInfoDoc.get().addOnCompleteListener(
@@ -426,6 +487,8 @@ public class LoginFragment extends Fragment {
                                                 @NonNull @NotNull Task<DocumentSnapshot> task) {
                                             if (task.isSuccessful()) {
                                                 DocumentSnapshot document = task.getResult();
+                                                // If user exist then go to main
+                                                // else create new user info
                                                 if (document.exists()) {
                                                     progressDialog.dismiss();
                                                     goToMainActivity();
@@ -456,18 +519,27 @@ public class LoginFragment extends Fragment {
         startActivityForResult(signInIntent, RC_SIGN_IN);
     }
 
-
+    /**
+     * Add default notebook for user
+     * @param userInfoDoc   user document
+     * @param firebaseUser  Firebase user
+     */
     private void addDefaultNotebook(DocumentReference userInfoDoc, FirebaseUser firebaseUser) {
+        // Create new notebook and set title
         Notebook defaultNotebook = new Notebook();
         defaultNotebook.setTitle(Constants.FIRST_NOTEBOOK_NAME);
 
+        // Get User default notebook document
         DocumentReference userDefNotebookDoc = userInfoDoc.collection("notebooks").document(firebaseUser.getUid());
 
+        // Add default notebook
         userDefNotebookDoc.set(defaultNotebook)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    // If add default notebook successful
                     @Override
                     public void onSuccess(Void unused) {
-                        addWelcomeNote(userDefNotebookDoc);
+                        // Add welcome note
+                        addWelcomeNote(userDefNotebookDoc, firebaseUser);
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
@@ -477,6 +549,8 @@ public class LoginFragment extends Fragment {
 
                         Log.e(Constants.REGISTER_ERROR, "Error adding default notebook", e);
 
+
+                        // Show dialog with error info
                         NoteAppDialog dialog = new NoteAppDialog(getActivity());
                         dialog.setupOKDialog("Registration Failed",
                                 "An error occurred during your account setup. Please try register again!");
@@ -485,26 +559,33 @@ public class LoginFragment extends Fragment {
                 });
     }
 
-    private void addWelcomeNote(DocumentReference userDefNotebookDoc) {
+    /**
+     * Add welcome note for user
+     * @param userDefNotebookDoc    user default notebook document
+     * @param firebaseUser          Firebase user
+     */
+    private void addWelcomeNote(DocumentReference userDefNotebookDoc, FirebaseUser firebaseUser) {
+        /* Create new notes and set title and content */
         Note welcomeNote = new Note();
         welcomeNote.setTitle(Constants.WELCOME_NOTE_TITLE);
         welcomeNote.setContent(Constants.WELCOME_NOTE_CONTENT);
 
         Note welcomeNote2 = new Note();
-        welcomeNote2.setTitle("Test note - delete at release");
-        welcomeNote2.setContent(
-                "I don't know what you did, Fry, but once again, you screwed up! Now all the planets are gonna start cracking wise about our mamas. When will that be? Uh, is the puppy mechanical in any way? She also liked to shut up!\n" +
-                        "\n" +
-                        "Who am I making this out to? Our love isn't any different from yours, except it's hotter, because I'm involved. Okay, it's 500 dollars, you have no choice of carrier, the battery can't hold the charge and the reception isn't very…");
+        welcomeNote2.setTitle("Test note");
+        welcomeNote2.setContent("I don't know what you did, Fry, but once again, you screwed up! Now all the planets are gonna start cracking wise about our mamas. When will that be? Uh, is the puppy mechanical in any way? She also liked to shut up!\n" +
+                "\n" +
+                "Who am I making this out to? Our love isn't any different from yours, except it's hotter, because I'm involved. Okay, it's 500 dollars, you have no choice of carrier, the battery can't hold the charge and the reception isn't very…");
 
         Note welcomeNote3 = new Note();
-        welcomeNote3.setTitle(
-                "Test note but intentionally exceeds longer than two lines title - delete at release");
-        welcomeNote3.setContent(
-                "When I was first asked to make a film about my nephew, Hubert Farnsworth, I thought \"Why should I?\" Then later, Leela made the film. But if I did make it, you can bet there would have been more topless women on motorcycles. Roll film! You are the last hope of the universe.");
+        welcomeNote3.setTitle("Another test note but is intentionally set to exceed two lines title to simulate long title notes");
+        welcomeNote3.setContent("When I was first asked to make a film about my nephew, Hubert Farnsworth, I thought \"Why should I?\" Then later, Leela made the film. But if I did make it, you can bet there would have been more topless women on motorcycles. Roll film! You are the last hope of the universe.");
 
+        // User Note Collection
         CollectionReference userNoteCollection = userDefNotebookDoc.collection("notes");
+
+        // Add Welcome Note
         userNoteCollection.add(welcomeNote)
+                // If add welcome note successful
                 .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                     @Override
                     public void onSuccess(DocumentReference documentReference) {
@@ -525,19 +606,29 @@ public class LoginFragment extends Fragment {
         userNoteCollection.add(welcomeNote3);
     }
 
+    /**
+     * Set up new user info
+     * @param firebaseUser
+     * @param userInfoDoc
+     */
     private void setUpUserInfo(FirebaseUser firebaseUser, DocumentReference userInfoDoc) {
+        /* Get storage and storage reference */
         FirebaseStorage storage = FirebaseStorage.getInstance();
         StorageReference storageRef = storage.getReference();
 
+        // Profile picture URI points to project's drawable profile image
         Uri profilePic = Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE
                 + "://" + getResources().getResourcePackageName(R.drawable.img_profile_pic)
                 + '/' + getResources().getResourceTypeName(R.drawable.img_profile_pic)
                 + '/' + getResources().getResourceEntryName(R.drawable.img_profile_pic));
 
+        // Profile picture storage reference
         final StorageReference profilePictureRef =
                 storageRef.child(firebaseUser.getUid() +  "/images/" + "profilePicture.png");
 
+        // Upload profile picture
         profilePictureRef.putFile(profilePic)
+                // If upload successful
                 .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                     @Override
                     public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
