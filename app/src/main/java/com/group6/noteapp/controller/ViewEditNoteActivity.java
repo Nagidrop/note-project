@@ -11,6 +11,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.PopupMenu;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -124,7 +125,43 @@ public class ViewEditNoteActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.nav_menu:
+                // Creating the instance of PopupMenu
+                PopupMenu popup = new PopupMenu(ViewEditNoteActivity.this, findViewById(R.id.nav_menu));
 
+                // Inflating the Popup using xml file
+                popup.getMenuInflater()
+                        .inflate(R.menu.note_popup_menu, popup.getMenu());
+
+                // Registering popup with OnMenuItemClickListener
+                popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    public boolean onMenuItemClick(MenuItem item) {
+                        NoteAppDialog dialog = new NoteAppDialog(ViewEditNoteActivity.this);
+                        dialog.setupConfirmationDialog("Delete Confirmation",
+                                "Do you want to delete this note?");
+                        dialog.setPositiveButton("Yes",
+                                new DialogInterface.OnClickListener() {
+                                    /**
+                                     * Log the current user out
+                                     * @param dialog
+                                     * @param which
+                                     */
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        NoteAppProgressDialog progressDialog = new NoteAppProgressDialog(ViewEditNoteActivity.this);
+                                        progressDialog.setUpDialog("Just a moment...",
+                                                "Please wait while we deleting your note.");
+                                        progressDialog.show();
+
+                                        deleteNote(progressDialog, note);
+                                    }
+                                });
+                        dialog.create().show();
+
+                        return true;
+                    }
+                });
+
+                popup.show(); //showing popup menu
                 break;
         }
         return super.onOptionsItemSelected(item);
@@ -266,6 +303,37 @@ public class ViewEditNoteActivity extends AppCompatActivity {
                         }
                     });
         }
+    }
+
+    private void deleteNote(NoteAppProgressDialog progressDialog, Note note){
+        FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        db.collection("users").document(firebaseUser.getUid())
+                .collection("notebooks").document(note.getNotebook().getId())
+                .collection("notes").document(note.getId())
+                .delete()
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d("delete note", "onSuccess: Removed list item");
+                        progressDialog.dismiss();
+
+                        Toast.makeText(ViewEditNoteActivity.this, "Delete note success", Toast.LENGTH_SHORT);
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.d("delete note", "onFailure: " + e.getLocalizedMessage());
+
+                        // Show dialog to notify user
+                        NoteAppDialog dialog = new NoteAppDialog(ViewEditNoteActivity.this);
+                        dialog.setupOKDialog("Delete Failed",
+                                "Something went wrong while we delete your note. Please try again!");
+                        dialog.create().show();
+                    }
+                });
     }
 
     @Override

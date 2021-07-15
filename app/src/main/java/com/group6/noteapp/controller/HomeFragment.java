@@ -1,6 +1,5 @@
 package com.group6.noteapp.controller;
 
-import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.util.Log;
@@ -193,6 +192,5 @@ public class HomeFragment extends Fragment {
                         Log.d(TAG, "onFailure: " + e.getLocalizedMessage());
                     }
                 });
-        adapter.notifyDataSetChanged();
     }
 }
