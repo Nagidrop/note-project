@@ -52,25 +52,27 @@ import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
 public class RecordActivity extends AppCompatActivity implements View.OnClickListener {
-    private String fileName = null;
 
+    /* Text Input Layouts and Button */
+    private String fileName = null;                  //File name path
     private final String LOG_TAG = "Record_log";
-    private MediaRecorder recorder ;
-    private MediaPlayer player = null;
-    private TextView textTimeRecord;
-    private Button btnRecording, btnPlaying,btnSaveRecord, btnStop,btnReset;
-    private StorageReference storageReference;
-    private ProgressDialog progressDialog, progressDialog2;
-    private TextInputLayout recordName;
-    private FirebaseAuth firebaseAuth;
-    private SeekBar seekBar;
-    private Handler threadHandler = new Handler();
+    private MediaRecorder recorder ;                 //Media Recorder
+    private MediaPlayer player = null;               //Media player
+    private TextView textTimeRecord;                 //Textview Time
+    private Button btnRecording, btnPlaying,btnSaveRecord, btnStop,btnReset; //Button Record, Play , Save, Reset
+    private StorageReference storageReference;       //Storage Reference
+    private ProgressDialog progressDialog, progressDialog2; //Progress Dialog
+    private TextInputLayout recordName;              //Text input record name
+    private SeekBar seekBar;                         //Seekbar
+    private Handler threadHandler = new Handler();   //Handler
 
-    private FirebaseStorage storage;
-    private FirebaseUser user;
-    private FirebaseFirestore db;
+    /* Firebase instances */
+    private FirebaseAuth firebaseAuth;  //Firebase Auth
+    private FirebaseStorage storage;    //Firebase Storage
+    private FirebaseUser user;          //Firebase User
+    private FirebaseFirestore db;       //Firebase FireStore
 
-    private Chronometer timer;
+    private Chronometer timer;          //Chronometer
 
     //Get current date and time
     SimpleDateFormat formatter = new SimpleDateFormat("yyyy_MM_dd_hh_mm_ss", Locale.getDefault());
@@ -80,29 +82,29 @@ public class RecordActivity extends AppCompatActivity implements View.OnClickLis
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_record);
-
+        // Get view component
         timer = findViewById(R.id.record_timer);
-
         recordName=findViewById(R.id.textInputRecordName);
         textTimeRecord=findViewById(R.id.textTimeRecord);
         progressDialog = new ProgressDialog(this);
         progressDialog2 = new ProgressDialog(this);
         seekBar=findViewById(R.id.seekBar);
 
+        // Get database, auth, current user instance
         storageReference= FirebaseStorage.getInstance().getReference();
         db = FirebaseFirestore.getInstance();
         firebaseAuth=FirebaseAuth.getInstance();
         user = firebaseAuth.getCurrentUser();
-        //get file path
+        //Get file path
         fileName = getExternalCacheDir().getAbsolutePath();
-
+        // Get view component
         btnPlaying=(Button)findViewById(R.id.btnPlay);
         btnSaveRecord=(Button)findViewById(R.id.btnSaveRecord);
         btnRecording=(Button)findViewById(R.id.btnRecording);
         btnReset=(Button)findViewById(R.id.btnReset);
         btnStop=(Button)findViewById(R.id.btnStop);
 
-        //get action click button
+        //Get action click button
         btnPlaying.setOnClickListener(this);
         btnSaveRecord.setOnClickListener(this);
         btnStop.setOnClickListener(this);
@@ -110,7 +112,6 @@ public class RecordActivity extends AppCompatActivity implements View.OnClickLis
         btnRecording.setOnClickListener(this);
 
         statusButtonDefault();
-
 
     }
     //set status button default
@@ -125,11 +126,13 @@ public class RecordActivity extends AppCompatActivity implements View.OnClickLis
         btnPlaying.setText("Play");
     return false;
     }
+    //Action click button
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     public void onClick(View v) {
         switch (v.getId()){
-            case R.id.btnPlay:
+            case R.id.btnPlay://Button Play
+
                 if(btnPlaying.getText().equals("Play")){
                     btnPlaying.setText("Replay");
                     startPlaying();
@@ -139,10 +142,10 @@ public class RecordActivity extends AppCompatActivity implements View.OnClickLis
                     startPlaying();
                 }
                 break;
-            case R.id.btnSaveRecord:
+            case R.id.btnSaveRecord://Button save
                     uploadAudio(Uri.fromFile(new File(fileName)));
                 break;
-            case R.id.btnStop:
+            case R.id.btnStop:  //Button Stop
                     stopRecording();
                     btnReset.setEnabled(true);
                     recordName.setEnabled(true);
@@ -151,13 +154,14 @@ public class RecordActivity extends AppCompatActivity implements View.OnClickLis
                     btnRecording.setEnabled(false);
                     btnStop.setEnabled(false);
                 break;
-            case R.id.btnReset:
+            case R.id.btnReset: //Button reset
                 statusButtonDefault();
                 resetAll();
                 break;
-            case R.id.btnRecording:
+            case R.id.btnRecording: //Button Record
                 progressDialog2.setMessage("Record start ...");
                 progressDialog2.show();
+                //Set time dialog close
                 new Thread(new Runnable() {
                     public void run() {
                         try {
@@ -176,8 +180,8 @@ public class RecordActivity extends AppCompatActivity implements View.OnClickLis
 
         }
     }
+    //Start record
     private void startRecording() {
-
         //Start timer from 0
         timer.setBase(SystemClock.elapsedRealtime());
         timer.start();
@@ -201,6 +205,7 @@ public class RecordActivity extends AppCompatActivity implements View.OnClickLis
         recorder.start();
     }
 
+    //Stop record
     private void stopRecording() {
         //Stop Timer, very obvious
         timer.stop();
@@ -213,12 +218,16 @@ public class RecordActivity extends AppCompatActivity implements View.OnClickLis
     }
     //Update record to storage
     private void uploadAudio(Uri uri) {
+        //Show dialog uploading record
         progressDialog.setMessage("Uploading Record ...");
         progressDialog.show();
-
+        //Get ID user
         String userID=firebaseAuth.getUid();
+        //Get Storage Reference
         StorageReference filepath = storageReference.child(userID).child("Record").child("recording_" + formatter.format(now) + ".3gp");
+        // Create upload Task
         UploadTask uploadTask =filepath.putFile(uri);
+        // Register observers to listen for when the download is done or if it fails
         uploadTask.addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull @NotNull Exception e) {
@@ -228,18 +237,21 @@ public class RecordActivity extends AppCompatActivity implements View.OnClickLis
         }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                // Get user document from database
                 DocumentReference userInfoDoc = db.collection("users").document(user.getUid());
                 userInfoDoc.get().addOnCompleteListener(
                         new OnCompleteListener<DocumentSnapshot>() {
                             @Override public void onComplete(
                                     @NonNull @NotNull Task<DocumentSnapshot> task) {
                                 if(task.isSuccessful()) {
-                                    progressDialog.dismiss();
+
                                     DocumentSnapshot document = task.getResult();
                                     Log.e(LOG_TAG, "get failed with ", task.getException());
+                                    // if document exist
                                     if(document.exists()){
                                         Notebook defaultNotebook = new Notebook();
                                         defaultNotebook.setTitle(Constants.FIRST_NOTEBOOK_NAME);
+                                        // Add new note to collection
                                         DocumentReference userDefNotebookDoc = userInfoDoc.collection("notebooks")
                                                 .document(user.getUid());
                                         String name = recordName.getEditText().getText().toString();
@@ -253,14 +265,20 @@ public class RecordActivity extends AppCompatActivity implements View.OnClickLis
                                             recordNote.setUpdatedDate(Timestamp.now());
                                             CollectionReference userDefNoteCollection = userDefNotebookDoc.collection("notes");
                                             userDefNoteCollection.add(recordNote).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                                                /**
+                                                 * Add success then go to main activity
+                                                 * @param documentReference
+                                                 */
                                                 @Override
                                                 public void onSuccess(DocumentReference documentReference) {
                                                     Toast.makeText(RecordActivity.this, "Record Upload Successful!!", Toast.LENGTH_SHORT).show();
-                                                    Intent intent = new Intent(RecordActivity.this, LoginActivity.class);
-                                                    intent.setFlags(intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-                                                    startActivity(intent);
+                                                    toMainActivity();
                                                 }
                                             }).addOnFailureListener(new OnFailureListener() {
+                                                /**
+                                                 * On failure display a error dialog
+                                                 * @param e
+                                                 */
                                                 @Override
                                                 public void onFailure(@NonNull @NotNull Exception e) {
                                                     progressDialog.dismiss();
@@ -281,7 +299,7 @@ public class RecordActivity extends AppCompatActivity implements View.OnClickLis
         });
     }
 
-    //play record
+    //Play record
     @RequiresApi(api = Build.VERSION_CODES.N)
     private void startPlaying() {
         textTimeRecord.setEnabled(true);
@@ -309,7 +327,7 @@ public class RecordActivity extends AppCompatActivity implements View.OnClickLis
             Log.e(LOG_TAG, "prepare() failed");
         }
     }
-
+    //Milliseconds To String
     private String millisecondsToString(int milliseconds)  {
         long minutes = TimeUnit.MILLISECONDS.toMinutes((long) milliseconds);
         long seconds =  TimeUnit.MILLISECONDS.toSeconds((long) milliseconds) ;
@@ -335,12 +353,21 @@ public class RecordActivity extends AppCompatActivity implements View.OnClickLis
             threadHandler.postDelayed(this, 50);
         }
     }
-
+    //Reset button
     private void resetAll(){
         timer.setText("00:00");
         textTimeRecord.setEnabled(false);
         textTimeRecord.setText("Time");
     }
 
-
+    /**
+     * To main activity
+     */
+    private void toMainActivity() {
+        progressDialog.dismiss();
+        Intent intent = new Intent(RecordActivity.this, MainActivity.class);
+        intent.setFlags(intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+        finish();
+        startActivity(intent);
+    }
 }
