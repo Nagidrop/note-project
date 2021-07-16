@@ -8,7 +8,7 @@
     <string name="email">Email</string>
     <string name="email_sent_forgot_pass">Please check your inbox at &lt;br/&gt;&lt;b&gt;%1$s&lt;/b&gt; and follow instructions to reset password.</string>
     <string name="email_sent_reg">Almost done. &lt;br/&gt;Please check your inbox at &lt;b&gt;%1$s&lt;/b&gt; to confirm registration. </string>
-    <string name="empty_string"/>
+    <string name="empty_string" />
     <string name="enter_email">Please enter your email address.</string>
     <string name="fab_content_desc">fab button</string>
     <string name="facebook_app_id">506452847140505</string>
