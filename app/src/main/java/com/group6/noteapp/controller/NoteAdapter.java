@@ -64,19 +64,7 @@ public class NoteAdapter extends FirestoreRecyclerAdapter<Note, NoteViewHolder> 
     public int getItemViewType(int position) {
         Note note = getItem(position);
 
-        switch (note.getType()) {
-            case 1:
-                return 1;
-
-            case 2:
-                return 2;
-
-            case 3:
-                return 3;
-
-            default:
-                return 0;
-        }
+        return note.getType();
     }
 
     /**
