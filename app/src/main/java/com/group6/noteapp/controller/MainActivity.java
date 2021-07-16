@@ -169,8 +169,10 @@ public class MainActivity extends AppCompatActivity {
 
                         Fragment fragment;
                         FragmentManager fragmentManager = getSupportFragmentManager();
-                        Log.d("Nav", String.valueOf(item.getItemId()));
 
+                        /*
+                           Navigate fragment base on menu item
+                         */
                         switch (item.getItemId()) {
                             case R.id.menu_all_notes:
                                 fragment = new HomeFragment();
@@ -189,6 +191,10 @@ public class MainActivity extends AppCompatActivity {
                                 .replace(R.id.fragmentContainerView, fragment)
                                 .commit();
 
+                        // close fab menu
+                        if(clicked) {
+                            fabMenuOnClick();
+                        }
                         return true;
                     }
                 });
