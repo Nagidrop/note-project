@@ -53,6 +53,7 @@ public class ViewEditNoteActivity extends AppCompatActivity {
         // If user add new note
         if (getIntent().getParcelableExtra("note") == null) {
             note = new Note();
+            note.setType(1);
         } else {
             // If user update existing note
             note = getIntent().getParcelableExtra("note");
@@ -119,6 +120,7 @@ public class ViewEditNoteActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_view_note, menu);
+
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -148,6 +150,7 @@ public class ViewEditNoteActivity extends AppCompatActivity {
                                      */
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
+                                        // Show progress dialog
                                         NoteAppProgressDialog progressDialog = new NoteAppProgressDialog(ViewEditNoteActivity.this);
                                         progressDialog.setUpDialog("Just a moment...",
                                                 "Please wait while we deleting your note.");
@@ -163,7 +166,8 @@ public class ViewEditNoteActivity extends AppCompatActivity {
                     }
                 });
 
-                popup.show(); //showing popup menu
+                // Show popup menu
+                popup.show();
                 break;
         }
         return super.onOptionsItemSelected(item);
@@ -174,11 +178,11 @@ public class ViewEditNoteActivity extends AppCompatActivity {
      *
      * @param noteTitle   note title
      * @param noteContent note content
-     * @return true if note is unsaved
-     * false if note is already saved
+     * @return  true if note is unsaved
+     *          false if note is already saved
      */
     private boolean isUnsaved(String noteTitle, String noteContent) {
-        // if note title or content differs from saved note
+        // If note title or content differs from saved note
         if (!noteTitle.equals(savedNoteTitle) || !noteContent.equals(savedNoteContent)) {
             return true;
         }
@@ -199,7 +203,7 @@ public class ViewEditNoteActivity extends AppCompatActivity {
 
         NoteAppProgressDialog progressDialog = new NoteAppProgressDialog(ViewEditNoteActivity.this);
 
-        // If Note already exists, proceed to update existing note
+        // If note already exists, proceed to update existing note
         if (note.getId() != null) {
             // Show progress dialog
             progressDialog.setUpDialog("Just a moment...",
@@ -269,6 +273,9 @@ public class ViewEditNoteActivity extends AppCompatActivity {
                         }
                     });
         } else {
+            // If note doesn't exist, proceed to create new note
+
+            // Show progress dialog
             progressDialog.setUpDialog("Just a moment...",
                     "Please wait while we add your note.");
             progressDialog.show();
