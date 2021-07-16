@@ -132,7 +132,7 @@ public class CameraActivity extends AppCompatActivity {
     private void captureImage() {
         // Create file on local
         File file = new File(
-                getBatchDirectoryName() + "/" + user.getUid() +
+                getBatchDirectoryName() + user.getUid() +
                         System.currentTimeMillis() + ".jpg");
 
         // Build output file option
@@ -162,6 +162,7 @@ public class CameraActivity extends AppCompatActivity {
 
                     @Override
                     public void onError(@NonNull @NotNull ImageCaptureException exception) {
+                        Toast.makeText(CameraActivity.this, "Some error occurred!!", Toast.LENGTH_SHORT).show();
                         exception.printStackTrace();
                     }
                 });
@@ -174,7 +175,7 @@ public class CameraActivity extends AppCompatActivity {
      */
     public String getBatchDirectoryName() {
         String imagePath = "";
-        imagePath = Environment.getExternalStorageDirectory().toString() + "/";
+        imagePath = Environment.getExternalStorageDirectory().toString() + "/images/";
         File dir = new File(imagePath);
         if (!dir.exists() && !dir.mkdirs()) {
 

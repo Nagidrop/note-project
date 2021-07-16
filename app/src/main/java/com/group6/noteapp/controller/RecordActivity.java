@@ -260,6 +260,7 @@ public class RecordActivity extends AppCompatActivity implements View.OnClickLis
                                             recordName.setError("Please enter Record Name!");
                                         }else{
                                             Note recordNote = new Note();
+                                            recordNote.setType(3);
                                             recordNote.setTitle(name);
                                             recordNote.setContent(uri.getLastPathSegment());
                                             recordNote.setUpdatedDate(Timestamp.now());

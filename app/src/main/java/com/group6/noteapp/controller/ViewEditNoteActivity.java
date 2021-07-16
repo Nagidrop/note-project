@@ -38,6 +38,7 @@ import org.jetbrains.annotations.NotNull;
  * Activity for viewing and editing note
  */
 public class ViewEditNoteActivity extends AppCompatActivity {
+
     private String savedNoteTitle;                  // Saved note title (to check if note title not saved)
     private String savedNoteContent;                // Saved note title (to check if note content not saved)
     private TextInputLayout txtInputNoteTitle;      // Note Title Text Input Layout

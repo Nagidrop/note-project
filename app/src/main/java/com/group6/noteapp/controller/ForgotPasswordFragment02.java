@@ -17,6 +17,7 @@ import com.group6.noteapp.R;
  * Forgot password send email successful screen
  */
 public class ForgotPasswordFragment02 extends Fragment {
+
     private String email;       // user's email
 
     /**
@@ -49,7 +50,8 @@ public class ForgotPasswordFragment02 extends Fragment {
         /* Get Button and set On Click Listener */
         MaterialButton btnForgotLogin = inflatedView.findViewById(R.id.btnForgotLogin);
         btnForgotLogin.setOnClickListener(new View.OnClickListener() {
-            @Override public void onClick(View v) {
+            @Override
+            public void onClick(View v) {
                 NavHostFragment.findNavController(ForgotPasswordFragment02.this)
                         .navigate(R.id.action_forgotPasswordFragment02_to_loginFragment);
             }

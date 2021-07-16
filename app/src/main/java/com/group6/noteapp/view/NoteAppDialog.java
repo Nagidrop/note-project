@@ -42,8 +42,8 @@ public class NoteAppDialog extends MaterialAlertDialogBuilder {
                 new DialogInterface.OnClickListener() {
                     /**
                      * Dismiss the dialog
-                     * @param dialog dialog
-                     * @param which
+                     * @param dialog    dialog
+                     * @param which     the button that was clicked
                      */
                     @Override
                     public void onClick(DialogInterface dialog,
@@ -68,8 +68,8 @@ public class NoteAppDialog extends MaterialAlertDialogBuilder {
                 new DialogInterface.OnClickListener() {
                     /**
                      * Dismiss the dialog
-                     * @param dialog
-                     * @param which
+                     * @param dialog    dialog
+                     * @param which     the button that was clicked
                      */
                     @Override
                     public void onClick(DialogInterface dialog,
@@ -94,8 +94,8 @@ public class NoteAppDialog extends MaterialAlertDialogBuilder {
                 new DialogInterface.OnClickListener() {
                     /**
                      * Dismiss the dialog
-                     * @param dialog
-                     * @param which
+                     * @param dialog    dialog
+                     * @param which     the button that was clicked
                      */
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -119,8 +119,8 @@ public class NoteAppDialog extends MaterialAlertDialogBuilder {
                 new DialogInterface.OnClickListener() {
                     /**
                      * Dismiss the dialog
-                     * @param dialog
-                     * @param which
+                     * @param dialog    dialog
+                     * @param which     the button that was clicked
                      */
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -145,7 +145,7 @@ public class NoteAppDialog extends MaterialAlertDialogBuilder {
             alertDialog.setOnShowListener(new DialogInterface.OnShowListener() {
                 /**
                  * Highlight the negative button by default
-                 * @param dialogInterface
+                 * @param dialogInterface   dialog interface
                  */
                 @Override
                 public void onShow(DialogInterface dialogInterface) {

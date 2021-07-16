@@ -36,8 +36,10 @@ import org.jetbrains.annotations.NotNull;
  * Home Fragment (Main Activity)
  */
 public class HomeFragment extends Fragment {
+
     private static final String TAG = "HomeFragment";   // Log tag
     private NoteAdapter adapter;                        // Firestore adapter
+
     /**
      * Constructor
      */

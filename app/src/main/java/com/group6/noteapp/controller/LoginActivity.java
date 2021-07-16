@@ -17,7 +17,7 @@ public class LoginActivity extends AppCompatActivity {
 
     /**
      * Check if current user exist
-     * @param savedInstanceState
+     * @param savedInstanceState saved instance state
      */
     @Override
     protected void onCreate(Bundle savedInstanceState) {

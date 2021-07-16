@@ -9,6 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.card.MaterialCardView;
+import com.google.android.material.imageview.ShapeableImageView;
 import com.google.android.material.textview.MaterialTextView;
 import com.group6.noteapp.R;
 
@@ -20,6 +21,7 @@ public class NoteViewHolder extends RecyclerView.ViewHolder {
     private final MaterialTextView noteContent;         // note content
     private final MaterialTextView noteUpdatedDate;     // note updated date
     private final MaterialCardView noteCardView;        // note card view
+    private final ShapeableImageView noteImage;         // note image view
 
     /**
      * Constructor
@@ -33,6 +35,7 @@ public class NoteViewHolder extends RecyclerView.ViewHolder {
         noteContent = noteView.findViewById(R.id.txtNoteContent);
         noteUpdatedDate = noteView.findViewById(R.id.txtNoteUpdatedDate);
         noteCardView = noteView.findViewById(R.id.cardView);
+        noteImage = noteView.findViewById(R.id.imgNote);
     }
 
     /* Getters */
@@ -48,5 +51,11 @@ public class NoteViewHolder extends RecyclerView.ViewHolder {
         return noteUpdatedDate;
     }
 
-    public MaterialCardView getNoteCardView() {return noteCardView;}
+    public MaterialCardView getNoteCardView() {
+        return noteCardView;
+    }
+
+    public ShapeableImageView getNoteImage() {
+        return noteImage;
+    }
 }
