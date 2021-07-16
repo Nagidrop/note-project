@@ -23,6 +23,8 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 
 import com.bumptech.glide.Glide;
 import com.facebook.login.LoginManager;
@@ -41,7 +43,6 @@ import com.group6.noteapp.R;
 import com.group6.noteapp.view.NoteAppDialog;
 
 import org.jetbrains.annotations.NotNull;
-import org.w3c.dom.Text;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -128,11 +129,12 @@ public class MainActivity extends AppCompatActivity {
                     }
                 });
 
-        txtNavFullName.setText(Html.fromHtml(getString(R.string.header_title, firebaseUser.getDisplayName())));
+        txtNavFullName.setText(
+                Html.fromHtml(getString(R.string.header_title, firebaseUser.getDisplayName())));
 
-        if(TextUtils.isEmpty(firebaseUser.getEmail())){
+        if (TextUtils.isEmpty(firebaseUser.getEmail())) {
             txtNavEmail.setText(getString(R.string.header_text, ""));
-        } else{
+        } else {
             txtNavEmail.setText(getString(R.string.header_text, firebaseUser.getEmail()));
         }
 
@@ -164,6 +166,29 @@ public class MainActivity extends AppCompatActivity {
                         item.setChecked(true);
                         previousItem = item;
                         topAppBar.setTitle(item.getTitle());
+
+                        Fragment fragment;
+                        FragmentManager fragmentManager = getSupportFragmentManager();
+                        Log.d("Nav", String.valueOf(item.getItemId()));
+
+                        switch (item.getItemId()) {
+                            case R.id.menu_all_notes:
+                                fragment = new HomeFragment();
+                                break;
+                            case R.id.menu_notebooks:
+                                fragment = new HomeFragment();
+                                break;
+                            case R.id.menu_trash:
+                                fragment = new TrashFragment();
+                                break;
+                            default:
+                                fragment = new HomeFragment();
+                        }
+
+                        fragmentManager.beginTransaction()
+                                .replace(R.id.fragmentContainerView, fragment)
+                                .commit();
+
                         return true;
                     }
                 });
