@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
@@ -145,7 +146,7 @@ public class HomeFragment extends Fragment {
                                         // Set up delete confirmation dialog
                                         NoteAppDialog dialog = new NoteAppDialog(getActivity());
                                         dialog.setupConfirmationDialog("Delete Confirmation",
-                                                "Do you want to delete this note?");
+                                                "Do you want to move this note to trash?");
                                         dialog.setPositiveButton("Yes",
                                                 new DialogInterface.OnClickListener() {
                                                     /**
@@ -158,7 +159,7 @@ public class HomeFragment extends Fragment {
                                                         // Show progress dialog
                                                         NoteAppProgressDialog progressDialog = new NoteAppProgressDialog(getActivity());
                                                         progressDialog.setUpDialog("Just a moment...",
-                                                                "Please wait while we deleting your note.");
+                                                                "Please wait while we moving your note.");
                                                         progressDialog.show();
 
                                                         // Delete note
@@ -213,17 +214,19 @@ public class HomeFragment extends Fragment {
     private void deleteNote(FirebaseFirestore db, RecyclerView.ViewHolder viewHolder, FirebaseUser firebaseUser,NoteAppProgressDialog progressDialog) { ;
         // Get note from its position in Firestore adapter
         Note deleteNote = adapter.getItem(viewHolder.getAdapterPosition());
+        deleteNote.setDeleted(true);
 
         db.collection("users").document(firebaseUser.getUid())
                 .collection("notebooks").document(deleteNote.getNotebook().getId()).collection("notes")
                 .document(deleteNote.getId())
-                .delete()
+                .update("deleted", deleteNote.isDeleted(),
+                        "updatedDate", Timestamp.now())
                 // If delete note successful
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
                         // Show toast message to notify user
-                        Toast.makeText(getActivity(), "Delete note successful.", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(), "Move note to trash successful.", Toast.LENGTH_SHORT).show();
                         Log.d(TAG, "onSuccess: Removed list item");
                         progressDialog.dismiss();
                     }
@@ -236,8 +239,8 @@ public class HomeFragment extends Fragment {
 
                         // Show dialog to notify user of error
                         NoteAppDialog dialog = new NoteAppDialog(getActivity());
-                        dialog.setupOKDialog("Delete Note Failed",
-                                "Something went wrong while we delete your note. Please try again!");
+                        dialog.setupOKDialog("Move To Trash Failed",
+                                "Something went wrong while we move your note. Please try again!");
                         dialog.create().show();
 
                         Log.d(TAG, "onFailure: " + e.getLocalizedMessage());
