@@ -176,7 +176,7 @@ public class MainActivity extends AppCompatActivity {
                                 fragment = new HomeFragment();
                                 break;
                             case R.id.menu_notebooks:
-                                fragment = new NotebookFragment();
+                                fragment = new HomeFragment();
                                 break;
                             case R.id.menu_trash:
                                 fragment = new TrashFragment();

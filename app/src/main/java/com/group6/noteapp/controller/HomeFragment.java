@@ -102,7 +102,7 @@ public class HomeFragment extends Fragment {
                                 .collection("notes");   // "notebooks" collection reference
 
                         // Query for Firestore adapter to listen to
-                        Query query = noteColRef.orderBy("updatedDate", Query.Direction.DESCENDING);
+                        Query query = noteColRef.whereEqualTo("deleted", false).orderBy("updatedDate", Query.Direction.DESCENDING);
 
                         // Options to configure the FirestoreRecyclerAdapter
                         FirestoreRecyclerOptions<Note> options =
