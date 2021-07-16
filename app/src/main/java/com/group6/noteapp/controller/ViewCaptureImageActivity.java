@@ -189,6 +189,7 @@ public class ViewCaptureImageActivity extends AppCompatActivity {
                                         DocumentReference userDefNotebookDoc = userInfoDoc.collection("notebooks")
                                                 .document(user.getUid());
                                             Note imageNote = new Note();
+                                            imageNote.setType(2);
                                             imageNote.setTitle(imageName);
                                             imageNote.setContent(uri.getLastPathSegment());
                                             imageNote.setUpdatedDate(Timestamp.now());
