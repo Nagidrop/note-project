@@ -22,8 +22,8 @@
             android:id="@+id/imageNoteTextLayout"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:gravity="top|start"
             android:orientation="vertical"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/imgNote"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
@@ -32,7 +32,6 @@
                 android:id="@+id/txtNoteUpdatedDate"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="left"
                 android:maxLines="1"
                 android:textAppearance="@style/TextAppearance.MyTheme.Body3"
                 android:textColor="@color/black_65" />
@@ -41,7 +40,6 @@
                 android:id="@+id/txtNoteTitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="left"
                 android:layout_marginTop="10dp"
                 android:layout_marginBottom="6dp"
                 android:ellipsize="end"
