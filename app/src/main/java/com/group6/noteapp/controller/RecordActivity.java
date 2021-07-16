@@ -27,6 +27,7 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputLayout;
+import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
@@ -216,7 +217,7 @@ public class RecordActivity extends AppCompatActivity implements View.OnClickLis
         progressDialog.show();
 
         String userID=firebaseAuth.getUid();
-        StorageReference filepath = storageReference.child(userID).child("Record").child("recording_" + formatter.format(now)+ ".3gp");
+        StorageReference filepath = storageReference.child(userID).child("Record").child("recording_" + formatter.format(now) + ".3gp");
         UploadTask uploadTask =filepath.putFile(uri);
         uploadTask.addOnFailureListener(new OnFailureListener() {
             @Override
@@ -240,7 +241,7 @@ public class RecordActivity extends AppCompatActivity implements View.OnClickLis
                                         Notebook defaultNotebook = new Notebook();
                                         defaultNotebook.setTitle(Constants.FIRST_NOTEBOOK_NAME);
                                         DocumentReference userDefNotebookDoc = userInfoDoc.collection("notebooks")
-                                                .document(defaultNotebook.getTitle());
+                                                .document(user.getUid());
                                         String name = recordName.getEditText().getText().toString();
                                         if(TextUtils.isEmpty(name)){
                                             recordName.setErrorEnabled(true);
@@ -249,13 +250,26 @@ public class RecordActivity extends AppCompatActivity implements View.OnClickLis
                                             Note recordNote = new Note();
                                             recordNote.setTitle(name);
                                             recordNote.setContent(uri.getLastPathSegment());
+                                            recordNote.setUpdatedDate(Timestamp.now());
                                             CollectionReference userDefNoteCollection = userDefNotebookDoc.collection("notes");
-                                            userDefNoteCollection.add(recordNote);
+                                            userDefNoteCollection.add(recordNote).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                                                @Override
+                                                public void onSuccess(DocumentReference documentReference) {
+                                                    Toast.makeText(RecordActivity.this, "Record Upload Successful!!", Toast.LENGTH_SHORT).show();
+                                                    Intent intent = new Intent(RecordActivity.this, LoginActivity.class);
+                                                    intent.setFlags(intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                                                    startActivity(intent);
+                                                }
+                                            }).addOnFailureListener(new OnFailureListener() {
+                                                @Override
+                                                public void onFailure(@NonNull @NotNull Exception e) {
+                                                    progressDialog.dismiss();
+                                                    Log.e("ViewRecord", "Error adding new note", e);
 
-                                            Toast.makeText(RecordActivity.this, "Record Upload Successful!!", Toast.LENGTH_SHORT).show();
-                                            Intent intent = new Intent(RecordActivity.this, LoginActivity.class);
-                                            intent.setFlags(intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-                                            startActivity(intent);
+                                                }
+                                            });
+
+
                                         }
                                     }
                                 } else {
