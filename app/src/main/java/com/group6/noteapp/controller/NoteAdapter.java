@@ -53,6 +53,13 @@ public class NoteAdapter extends FirestoreRecyclerAdapter<Note, NoteViewHolder> 
         this.notebook = notebook;
     }
 
+    /**
+     * Get note item view type to display
+     * @param position  note position in adapter
+     * @return  1 if note is text note
+     *          2 if note is camera note
+     *          3 if note is audio note
+     */
     @Override
     public int getItemViewType(int position) {
         Note note = getItem(position);
@@ -117,7 +124,7 @@ public class NoteAdapter extends FirestoreRecyclerAdapter<Note, NoteViewHolder> 
                         .addOnSuccessListener(new OnSuccessListener<Uri>() {
                             @Override
                             public void onSuccess(Uri uri) {
-                                Glide.with(context).load(uri).into(holder.getNoteImageView());
+                                Glide.with(context).load(uri).into(holder.getNoteImage());
                             }
                         })
                         .addOnFailureListener(new OnFailureListener() {
@@ -137,11 +144,11 @@ public class NoteAdapter extends FirestoreRecyclerAdapter<Note, NoteViewHolder> 
                 holder.getNoteCardView().setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Intent viewEditNoteIntent = new Intent(context, ViewEditNoteActivity.class);
+                        Intent viewCaptureImageIntent = new Intent(context, ViewCaptureImageActivity.class);
 
-                        viewEditNoteIntent.putExtra("note", model);
+                        viewCaptureImageIntent.putExtra("note", model);
 
-                        context.startActivity(viewEditNoteIntent);
+                        context.startActivity(viewCaptureImageIntent);
                     }
                 });
 
@@ -174,7 +181,6 @@ public class NoteAdapter extends FirestoreRecyclerAdapter<Note, NoteViewHolder> 
 
                 break;
         }
-
 
         return new NoteViewHolder(noteView);
     }

@@ -21,7 +21,7 @@ public class NoteViewHolder extends RecyclerView.ViewHolder {
     private final MaterialTextView noteContent;         // note content
     private final MaterialTextView noteUpdatedDate;     // note updated date
     private final MaterialCardView noteCardView;        // note card view
-    private final ShapeableImageView noteImageView;       // note image view
+    private final ShapeableImageView noteImage;         // note image view
 
     /**
      * Constructor
@@ -35,7 +35,7 @@ public class NoteViewHolder extends RecyclerView.ViewHolder {
         noteContent = noteView.findViewById(R.id.txtNoteContent);
         noteUpdatedDate = noteView.findViewById(R.id.txtNoteUpdatedDate);
         noteCardView = noteView.findViewById(R.id.cardView);
-        noteImageView = noteView.findViewById(R.id.imgNote);
+        noteImage = noteView.findViewById(R.id.imgNote);
     }
 
     /* Getters */
@@ -55,7 +55,7 @@ public class NoteViewHolder extends RecyclerView.ViewHolder {
         return noteCardView;
     }
 
-    public ShapeableImageView getNoteImageView() {
-        return noteImageView;
+    public ShapeableImageView getNoteImage() {
+        return noteImage;
     }
 }
