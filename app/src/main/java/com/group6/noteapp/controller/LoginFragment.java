@@ -60,6 +60,7 @@ import org.jetbrains.annotations.NotNull;
  * Login Fragment
  */
 public class LoginFragment extends Fragment {
+
     private static final int RC_SIGN_IN = 696969;       // Request code for Google sign in
     private static final String TAG = "LoginFragment";  // Tag for logging
 

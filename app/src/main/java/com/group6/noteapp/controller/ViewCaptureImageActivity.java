@@ -48,21 +48,15 @@ public class ViewCaptureImageActivity extends AppCompatActivity {
 
     private static final String TAG = "ViewCaptureImage"; // Tag for logging
 
-    private ShapeableImageView imgReview; // Review image
-    private MaterialButton btnSave; // Button save
-    private FirebaseStorage storage; // Firebase storage
-    private FirebaseAuth mAuth; // Firebase auth
-    private FirebaseUser user; // Firebase user
-    private FirebaseFirestore db; // Firestore
-    private TextInputLayout imageName; // Image name
-    private NoteAppProgressDialog progressDialog; // Progress dialog
-
-    // Image path
-    String path = "";
+    private FirebaseStorage storage;                // Firebase storage
+    private FirebaseUser user;                      // Firebase user
+    private FirebaseFirestore db;                   // Firestore
+    private TextInputLayout imageName;              // Image name
+    private NoteAppProgressDialog progressDialog;   // Progress dialog
 
     /**
      * Handle on Activity create to show capture image
-     * @param savedInstanceState
+     * @param savedInstanceState saved instance state
      */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,17 +65,19 @@ public class ViewCaptureImageActivity extends AppCompatActivity {
 
         // Get database, auth, current user instance
         db = FirebaseFirestore.getInstance();
-        mAuth = FirebaseAuth.getInstance();
+        FirebaseAuth mAuth = FirebaseAuth.getInstance();
         user = mAuth.getCurrentUser();
         storage = FirebaseStorage.getInstance();
 
         // Get view component
-        imgReview = (ShapeableImageView) findViewById(R.id.imgReview);
-        btnSave = (MaterialButton) findViewById(R.id.btnSaveImage);
+        ShapeableImageView imgReview = findViewById(R.id.imgReview);
+        MaterialButton btnSave = findViewById(R.id.btnSaveImage);
         imageName = findViewById(R.id.textInputImageName);
-        path = getIntent().getExtras().getString("path");
 
-        // Get file from path
+        // Get image path
+        String path = getIntent().getExtras().getString("path");
+
+        // Get file from image path
         File image = new File(path);
 
         // if image exists get angle from image's exif
@@ -137,8 +133,8 @@ public class ViewCaptureImageActivity extends AppCompatActivity {
 
     /**
      * Rotate bitmap base on angle
-     * @param source
-     * @param angle
+     * @param source bitmap source
+     * @param angle  angle
      * @return rotated bitmap
      */
     public static Bitmap RotateBitmap(Bitmap source, float angle) {
@@ -150,8 +146,8 @@ public class ViewCaptureImageActivity extends AppCompatActivity {
 
     /**
      * Save Image to storage
-     * @param uri
-     * @param imageName
+     * @param uri       image URI
+     * @param imageName image name
      */
     public void saveImageToStorage(Uri uri, String imageName){
 
@@ -198,7 +194,7 @@ public class ViewCaptureImageActivity extends AppCompatActivity {
                                                     new OnSuccessListener<DocumentReference>() {
                                                         /**
                                                          * Add success then go to main activity
-                                                         * @param documentReference
+                                                         * @param documentReference document reference
                                                          */
                                                         @Override public void onSuccess(
                                                                 DocumentReference documentReference) {
@@ -209,7 +205,7 @@ public class ViewCaptureImageActivity extends AppCompatActivity {
                                                     new OnFailureListener() {
                                                         /**
                                                          * On failure display a error dialog
-                                                         * @param e
+                                                         * @param e exception
                                                          */
                                                         @Override public void onFailure(
                                                                 @NonNull @NotNull Exception e) {
@@ -238,6 +234,7 @@ public class ViewCaptureImageActivity extends AppCompatActivity {
      */
     private void toMainActivity() {
         progressDialog.dismiss();
+
         Intent intent = new Intent(ViewCaptureImageActivity.this, MainActivity.class);
         intent.setFlags(intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
         finish();

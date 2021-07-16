@@ -66,7 +66,7 @@ public class ForgotPasswordFragment01 extends Fragment {
 
 
                 // If all input fields are valid
-                if (isInputValid){
+                if (isInputValid) {
                     // Show progress dialog
                     progressDialog = new NoteAppProgressDialog(getActivity());
                     progressDialog.setUpDialog("Just a moment...",
@@ -88,6 +88,7 @@ public class ForgotPasswordFragment01 extends Fragment {
 
     /**
      * Send email with reset password instructions
+     *
      * @param emailAddress user's email address
      */
     private void sendResetPasswordEmail(String emailAddress) {
@@ -122,7 +123,7 @@ public class ForgotPasswordFragment01 extends Fragment {
                         // Show dialog dependent on error
                         NoteAppDialog dialog = new NoteAppDialog(getActivity());
 
-                        switch (((FirebaseAuthException) e).getErrorCode()){
+                        switch (((FirebaseAuthException) e).getErrorCode()) {
                             case "ERROR_USER_NOT_FOUND":
                                 dialog.setupOKDialog("Email Not Sent",
                                         "There is no account associated with this email address.");
@@ -143,9 +144,10 @@ public class ForgotPasswordFragment01 extends Fragment {
 
     /**
      * Clear input fields' errors
-     * @param inputResetPassEmail   input reset password email
+     *
+     * @param inputResetPassEmail input reset password email
      */
-    private void clearInputErrors(TextInputLayout inputResetPassEmail){
+    private void clearInputErrors(TextInputLayout inputResetPassEmail) {
         /* Set errors to disabled and then enable them again for quick clears */
         inputResetPassEmail.setErrorEnabled(false);
 

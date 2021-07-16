@@ -111,13 +111,15 @@ public final class ValidationUtils {
     }
 
     /**
-     * Validate if image name input is valid
-     * @param imageName image name string to validate
+     * Validate if file name input is valid
+     * @param fileName file name string to validate
      * @return  0 if valid
      *          1 if empty
      */
-    public static int validateImageName(String imageName){
-        if (imageName.isEmpty()){
+    public static int validateFileName(String fileName){
+        fileName = fileName.trim();
+
+        if (fileName.isEmpty()){
             return 1;
         }
 

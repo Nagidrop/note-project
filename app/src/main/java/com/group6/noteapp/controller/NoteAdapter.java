@@ -37,14 +37,15 @@ import java.text.SimpleDateFormat;
  * Note Adapter to store list of notes
  */
 public class NoteAdapter extends FirestoreRecyclerAdapter<Note, NoteViewHolder> {
-    private Context context;            // activity's context
-    private Notebook notebook;          // notebook in which the notes in adapter are in
+
+    private final Context context;            // activity's context
+    private final Notebook notebook;          // notebook in which the notes in adapter are in
 
     /**
      * Create a new RecyclerView adapter that listens to a Firestore Query.  See {@link
      * FirestoreRecyclerOptions} for configuration options.
      *
-     * @param options
+     * @param options Firestore Recycler Options
      */
     public NoteAdapter(@NonNull @NotNull FirestoreRecyclerOptions<Note> options, Context context,
                        Notebook notebook) {
@@ -78,7 +79,7 @@ public class NoteAdapter extends FirestoreRecyclerAdapter<Note, NoteViewHolder> 
     protected void onBindViewHolder(@NonNull @NotNull NoteViewHolder holder, int position,
                                     @NonNull @NotNull Note model) {
         SimpleDateFormat dateFormat = new SimpleDateFormat("E, dd MMM yyyy h:mm aa");
-        String updatedDate = "Unknown Date";
+        String updatedDate;
 
         switch (model.getType()) {
             case 1:
@@ -171,7 +172,7 @@ public class NoteAdapter extends FirestoreRecyclerAdapter<Note, NoteViewHolder> 
      * Create new view (invoked by the layout manager)
      * @param parent   parent of view layout
      * @param viewType type of view
-     * @return
+     * @return note view holder
      */
     public NoteViewHolder onCreateViewHolder(@NonNull @NotNull ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(context);
@@ -203,7 +204,7 @@ public class NoteAdapter extends FirestoreRecyclerAdapter<Note, NoteViewHolder> 
      * @param e Firebase Firestore Exception
      */
     @Override
-    public void onError(FirebaseFirestoreException e) {
+    public void onError(@NotNull FirebaseFirestoreException e) {
         Log.e("note adapter error", e.getMessage(), e);
 
         NoteAppDialog dialog = new NoteAppDialog(context);
