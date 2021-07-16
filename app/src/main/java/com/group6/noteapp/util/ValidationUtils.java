@@ -12,20 +12,20 @@ public final class ValidationUtils {
     private static final String passwordRegex = "^[A-Za-z\\d$&+,:;=?@#|'<>.^*()%!-]{8,}$";  // minimum 8 characters
     private static final String fullNameRegex = "^([a-zA-Zàáãạảăắằẳẵặâấầẩẫậèéẹẻẽêềếểễệđìíĩỉị" +
             "òóõọỏôốồổỗộơớờởỡợùúũụủưứừửữựỳỵỷỹýÀÁÃẠẢĂẮẰẲẴẶÂẤẦẨẪẬÈÉẸẺẼÊỀẾỂỄỆĐÌÍĨỈỊÒÓÕỌỎÔỐỒỔỖỘƠỚỜỞỠỢ" +
-            "ÙÚŨỤỦƯỨỪỬỮỰỲỴỶỸÝ]{1,})" +   // match a single Vietnamese word
+            "ÙÚŨỤỦƯỨỪỬỮỰỲỴỶỸÝ]+)" +   // match a single Vietnamese word
             "(\\s[a-zA-Zàáãạảăắằẳẵặâấầẩẫậèéẹẻẽêềếểễệđìíĩỉị" +
             "òóõọỏôốồổỗộơớờởỡợùúũụủưứừửữựỳỵỷỹýÀÁÃẠẢĂẮẰẲẴẶÂẤẦẨẪẬÈÉẸẺẼÊỀẾỂỄỆĐÌÍĨỈỊÒÓÕỌỎÔỐỒỔỖỘƠỚỜỞỠỢ" +
-            "ÙÚŨỤỦƯỨỪỬỮỰỲỴỶỸÝ]{1,})+$"   // follows by a single Vietnamese word or more
+            "ÙÚŨỤỦƯỨỪỬỮỰỲỴỶỸÝ]+)+$"   // follows by a single Vietnamese word or more
             ;
     private static final String emailRegex = "^(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*" +
             "|\"(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21\\x23-\\x5b\\x5d-\\x7f]|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])*\")" +
             "@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?" +
             "|\\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:" +
-            "(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21-\\x5a\\x53-\\x7f]|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])+)\\])$"
+            "(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21-\\x5a\\x53-\\x7f]|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])+)])$"
             ;                           // conform to RFC 5322
     private static final String addressRegex = "^[a-zA-Zàáãạảăắằẳẵặâấầẩẫậèéẹẻẽêềếểễệđìíĩỉịòóõọỏôốồổỗộơớờởỡợ" +
             "ùúũụủưứừửữựỳỵỷỹýÀÁÃẠẢĂẮẰẲẴẶÂẤẦẨẪẬÈÉẸẺẼÊỀẾỂỄỆĐÌÍĨỈỊÒÓÕỌỎÔỐỒỔỖỘƠỚỜỞỠỢÙÚŨỤỦƯỨỪỬỮỰỲỴỶỸÝ" +
-            "0-9\\.\\-\\s\\,\\/]*$";    // match a Vietnamese or foreign country's address
+            "0-9.\\-\\s,/]*$";    // match a Vietnamese or foreign country's address
 
     /**
      * Validate if email input is valid
