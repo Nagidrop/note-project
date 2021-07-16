@@ -214,7 +214,7 @@ public class ViewCaptureImageActivity extends AppCompatActivity {
 
                                                             NoteAppDialog dialog = new NoteAppDialog(ViewCaptureImageActivity.this);
                                                             dialog.setupOKDialog("Add Failed",
-                                                                    "An error occurred when add new note. Please try register again!");
+                                                                    "An error occurred when add new note. Please try again!");
                                                             dialog.create().show();
                                                         }
                                                     });

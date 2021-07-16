@@ -1,5 +1,6 @@
 package com.group6.noteapp.controller;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -31,6 +32,8 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.group6.noteapp.R;
 import com.group6.noteapp.model.Note;
+import com.group6.noteapp.view.NoteAppDialog;
+import com.group6.noteapp.view.NoteAppProgressDialog;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -47,6 +50,7 @@ public class ViewImageDetails extends AppCompatActivity {
     private MaterialButton btnChangeName;
     private ShapeableImageView viewImage;
     private TextInputLayout imageName;
+    private NoteAppProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,7 +76,14 @@ public class ViewImageDetails extends AppCompatActivity {
             }
         });
 
+        progressDialog = new NoteAppProgressDialog(ViewImageDetails.this);
+        progressDialog.setUpDialog("Just a moment...",
+                "Please wait while we loading your image.");
+        progressDialog.show();
+
         loadImage(note);
+
+        imageName.getEditText().setText(note.getTitle());
 
     }
 
@@ -151,11 +162,17 @@ public class ViewImageDetails extends AppCompatActivity {
                                                             tempImage.getAbsolutePath());
                                                     viewImage.setImageBitmap(
                                                             RotateBitmap(bitmap, angle));
+                                                    progressDialog.dismiss();
                                                 }
                                             }).addOnFailureListener(new OnFailureListener() {
                                         @Override
                                         public void onFailure(@NonNull Exception exception) {
                                             // Handle any errors
+                                            progressDialog.dismiss();
+                                            NoteAppDialog dialog = new NoteAppDialog(ViewImageDetails.this);
+                                            dialog.setupOKDialog("Load Failed",
+                                                    "An error occurred when loading your image. Please try again!");
+                                            dialog.create().show();
                                         }
                                     });
                                 } catch (IOException e) {
