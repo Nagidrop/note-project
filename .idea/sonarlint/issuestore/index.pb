@@ -42,3 +42,5 @@ Dapp/src/main/java/com/group6/noteapp/view/NoteAppProgressDialog.java,b\5\b5e5c
 app/build.gradle,f\4\f4a01d6a4fcb971362ec00a83903fd3902f52164
 l
 <app/src/main/java/com/group6/noteapp/view/NoteAppDialog.java,f\d\fda2d7d0e77fce8c97195593b379af84890807ff
+r
+Bapp/src/main/java/com/group6/noteapp/controller/LoginFragment.java,8\1\818049e6407837f50523a0e1696f33860302ee46
