@@ -119,7 +119,7 @@ public final class ValidationUtils {
     public static int validateFileName(String fileName){
         fileName = fileName.trim();
 
-        if (fileName.isEmpty()){
+        if (TextUtils.isEmpty(fileName)){
             return 1;
         }
 

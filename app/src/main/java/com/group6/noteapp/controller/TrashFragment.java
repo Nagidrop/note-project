@@ -18,6 +18,7 @@ import android.widget.Toast;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
@@ -75,8 +76,9 @@ public class TrashFragment extends Fragment {
 
     /**
      * Setup recycler view to display notes
-     * @param inflatedView      the inflated view
-     * @param progressDialog    Note App progress dialog
+     *
+     * @param inflatedView   the inflated view
+     * @param progressDialog Note App progress dialog
      */
     private void setupRecyclerView(View inflatedView, NoteAppProgressDialog progressDialog) {
         /* Firebase instances */
@@ -102,7 +104,8 @@ public class TrashFragment extends Fragment {
                                 .collection("notes");   // "notebooks" collection reference
 
                         // Query for Firestore adapter to listen to
-                        Query query = noteColRef.whereEqualTo("deleted", true).orderBy("updatedDate", Query.Direction.DESCENDING);
+                        Query query = noteColRef.whereEqualTo("deleted", true)
+                                .orderBy("updatedDate", Query.Direction.DESCENDING);
 
                         // Options to configure the FirestoreRecyclerAdapter
                         FirestoreRecyclerOptions<Note> options =
@@ -116,12 +119,15 @@ public class TrashFragment extends Fragment {
 
                         /* Set up Recycler View */
                         RecyclerView rvNote = inflatedView.findViewById(R.id.recyclerViewTrash);
-                        rvNote.setHasFixedSize(true);   // notify recycler view that all items have same size
+                        rvNote.setHasFixedSize(
+                                true);   // notify recycler view that all items have same size
                         rvNote.setAdapter(adapter);     // set adapter
-                        rvNote.setLayoutManager(new LinearLayoutManager(getActivity()));    // set layout
+                        rvNote.setLayoutManager(
+                                new LinearLayoutManager(getActivity()));    // set layout
 
                         new ItemTouchHelper(
-                                new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT) {
+                                new ItemTouchHelper.SimpleCallback(0,
+                                        ItemTouchHelper.RIGHT | ItemTouchHelper.LEFT) {
                                     @Override
                                     public boolean onMove(@NonNull RecyclerView recyclerView,
                                                           @NonNull
@@ -141,47 +147,100 @@ public class TrashFragment extends Fragment {
                                     public void onSwiped(
                                             @NonNull RecyclerView.ViewHolder viewHolder,
                                             int direction) {
-
                                         // Set up delete confirmation dialog
                                         NoteAppDialog dialog = new NoteAppDialog(getActivity());
-                                        dialog.setupConfirmationDialog("Delete Confirmation",
-                                                "Do you want to delete this note?");
-                                        dialog.setPositiveButton("Yes",
-                                                new DialogInterface.OnClickListener() {
-                                                    /**
-                                                     * Delete user note on confirmation
-                                                     * @param dialog
-                                                     * @param which
-                                                     */
-                                                    @Override
-                                                    public void onClick(DialogInterface dialog, int which) {
-                                                        // Show progress dialog
-                                                        NoteAppProgressDialog progressDialog = new NoteAppProgressDialog(getActivity());
-                                                        progressDialog.setUpDialog("Just a moment...",
-                                                                "Please wait while we deleting your note.");
-                                                        progressDialog.show();
+                                        if (direction == ItemTouchHelper.RIGHT) {
+                                            dialog.setupConfirmationDialog("Delete Confirmation",
+                                                    "Do you want to delete this note?");
+                                            dialog.setPositiveButton("Yes",
+                                                    new DialogInterface.OnClickListener() {
+                                                        /**
+                                                         * Delete user note on confirmation
+                                                         * @param dialog
+                                                         * @param which
+                                                         */
+                                                        @Override
+                                                        public void onClick(DialogInterface dialog,
+                                                                            int which) {
+                                                            // Show progress dialog
+                                                            NoteAppProgressDialog progressDialog =
+                                                                    new NoteAppProgressDialog(
+                                                                            getActivity());
+                                                            progressDialog
+                                                                    .setUpDialog("Just a moment...",
+                                                                            "Please wait while we deleting your note.");
+                                                            progressDialog.show();
 
-                                                        // Delete note
-                                                        deleteNote(db, viewHolder, firebaseUser, progressDialog);
-                                                    }
-                                                });
-                                        dialog.setNegativeButton("No",
-                                                new DialogInterface.OnClickListener() {
-                                                    /**
-                                                     * Refresh recycler view
-                                                     * @param dialog
-                                                     * @param which
-                                                     */
-                                                    @Override
-                                                    public void onClick(DialogInterface dialog,
-                                                                        int which) {
-                                                        adapter.notifyDataSetChanged();
-                                                    }
-                                                });
+                                                            // Delete note
+                                                            deleteNote(db, viewHolder, firebaseUser,
+                                                                    progressDialog);
+                                                        }
+                                                    });
+                                            dialog.setNegativeButton("No",
+                                                    new DialogInterface.OnClickListener() {
+                                                        /**
+                                                         * Refresh recycler view
+                                                         * @param dialog
+                                                         * @param which
+                                                         */
+                                                        @Override
+                                                        public void onClick(DialogInterface dialog,
+                                                                            int which) {
+                                                            adapter.notifyDataSetChanged();
+                                                        }
+                                                    });
+
+                                        } else if (direction == ItemTouchHelper.LEFT) {
+
+                                            dialog.setupConfirmationDialog("Restore Confirmation",
+                                                    "Do you want to restore this note?");
+                                            dialog.setPositiveButton("Yes",
+                                                    new DialogInterface.OnClickListener() {
+                                                        /**
+                                                         * Delete user note on confirmation
+                                                         *
+                                                         * @param dialog
+                                                         * @param which
+                                                         */
+                                                        @Override
+                                                        public void onClick(DialogInterface dialog,
+                                                                            int which) {
+                                                            // Show progress dialog
+                                                            NoteAppProgressDialog progressDialog =
+                                                                    new NoteAppProgressDialog(
+                                                                            getActivity());
+                                                            progressDialog
+                                                                    .setUpDialog("Just a moment...",
+                                                                            "Please wait while we restoring your note.");
+                                                            progressDialog.show();
+
+                                                            // Delete note
+                                                            restoreNote(db, viewHolder,
+                                                                    firebaseUser,
+                                                                    progressDialog);
+                                                        }
+                                                    });
+                                            dialog.setNegativeButton("No",
+                                                    new DialogInterface.OnClickListener() {
+                                                        /**
+                                                         * Refresh recycler view
+                                                         *
+                                                         * @param dialog
+                                                         * @param which
+                                                         */
+                                                        @Override
+                                                        public void onClick(DialogInterface dialog,
+                                                                            int which) {
+                                                            adapter.notifyDataSetChanged();
+                                                        }
+                                                    });
+                                        }
+
                                         dialog.create().show();
                                     }
 
-                                }).attachToRecyclerView(rvNote);    // attach item call back to recycler view
+                                }).attachToRecyclerView(
+                                rvNote);    // attach item call back to recycler view
 
                         progressDialog.dismiss();
                     }
@@ -202,20 +261,70 @@ public class TrashFragment extends Fragment {
                 });
     }
 
+    /**
+     * Restore note
+     *
+     * @param db             firestore database
+     * @param viewHolder     Recycler View view holder
+     * @param firebaseUser   Current firebase user
+     * @param progressDialog progress dialog
+     */
+    private void restoreNote(FirebaseFirestore db, RecyclerView.ViewHolder viewHolder,
+                             FirebaseUser firebaseUser, NoteAppProgressDialog progressDialog) {
+
+        // Get note from its position in Firestore adapter
+        Note restoreNote = adapter.getItem(viewHolder.getAdapterPosition());
+        restoreNote.setDeleted(false);
+
+        db.collection("users").document(firebaseUser.getUid())
+                .collection("notebooks").document(restoreNote.getNotebook().getId()).collection("notes")
+                .document(restoreNote.getId())
+                .update("deleted", restoreNote.isDeleted(),
+                        "updatedDate", Timestamp.now())
+                // If delete note successful
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        // Show toast message to notify user
+                        Toast.makeText(getActivity(), "Restore Note successful.", Toast.LENGTH_SHORT).show();
+                        Log.d(TAG, "onSuccess: Removed list item");
+                        progressDialog.dismiss();
+                    }
+                })
+                // If delete note failed
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        progressDialog.dismiss();
+
+                        // Show dialog to notify user of error
+                        NoteAppDialog dialog = new NoteAppDialog(getActivity());
+                        dialog.setupOKDialog("Restore Note Failed",
+                                "Something went wrong while we restoring your note. Please try again!");
+                        dialog.create().show();
+
+                        Log.d(TAG, "onFailure: " + e.getLocalizedMessage());
+                    }
+                });
+    }
+
 
     /**
      * Delete Note
-     * @param db firestore database
-     * @param viewHolder Recycler View view holder
-     * @param firebaseUser Current firebase user
+     *
+     * @param db             firestore database
+     * @param viewHolder     Recycler View view holder
+     * @param firebaseUser   Current firebase user
      * @param progressDialog progress dialog
      */
-    private void deleteNote(FirebaseFirestore db, RecyclerView.ViewHolder viewHolder, FirebaseUser firebaseUser, NoteAppProgressDialog progressDialog) { ;
+    private void deleteNote(FirebaseFirestore db, RecyclerView.ViewHolder viewHolder,
+                            FirebaseUser firebaseUser, NoteAppProgressDialog progressDialog) {
         // Get note from its position in Firestore adapter
         Note deleteNote = adapter.getItem(viewHolder.getAdapterPosition());
 
         db.collection("users").document(firebaseUser.getUid())
-                .collection("notebooks").document(deleteNote.getNotebook().getId()).collection("notes")
+                .collection("notebooks").document(deleteNote.getNotebook().getId())
+                .collection("notes")
                 .document(deleteNote.getId())
                 .delete()
                 // If delete note successful
@@ -223,7 +332,8 @@ public class TrashFragment extends Fragment {
                     @Override
                     public void onSuccess(Void aVoid) {
                         // Show toast message to notify user
-                        Toast.makeText(getActivity(), "Delete note successful.", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(), "Delete note successful.", Toast.LENGTH_SHORT)
+                                .show();
                         Log.d(TAG, "onSuccess: Removed list item");
                         progressDialog.dismiss();
                     }

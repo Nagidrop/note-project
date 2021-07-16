@@ -36,6 +36,7 @@ import com.group6.noteapp.R;
 import com.group6.noteapp.model.Note;
 import com.group6.noteapp.model.Notebook;
 import com.group6.noteapp.util.Constants;
+import com.group6.noteapp.util.ValidationUtils;
 import com.group6.noteapp.view.NoteAppDialog;
 import com.group6.noteapp.view.NoteAppProgressDialog;
 
@@ -114,7 +115,7 @@ public class ViewCaptureImageActivity extends AppCompatActivity {
                     String name = imageName.getEditText().getText().toString();
 
                     // Check if name is empty
-                    if(TextUtils.isEmpty(name)){
+                    if(ValidationUtils.validateFileName(name) == 1){
                         // Set error to edit text
                         imageName.setErrorEnabled(true);
                         imageName.setError("Please enter Image Name!");

@@ -31,6 +31,7 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.group6.noteapp.R;
 import com.group6.noteapp.model.Note;
+import com.group6.noteapp.util.ValidationUtils;
 import com.group6.noteapp.view.NoteAppDialog;
 import com.group6.noteapp.view.NoteAppProgressDialog;
 
@@ -92,7 +93,7 @@ public class ViewImageDetails extends AppCompatActivity {
     private void changeImageName(Note note) {
         String name = imageName.getEditText().getText().toString();
 
-        if(TextUtils.isEmpty(name)){
+        if(ValidationUtils.validateFileName(name) == 1){
             imageName.setErrorEnabled(true);
             imageName.setError("Please enter Image Name!");
         }else{

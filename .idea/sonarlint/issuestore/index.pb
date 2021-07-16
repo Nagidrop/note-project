@@ -30,8 +30,6 @@ P
  app/src/main/AndroidManifest.xml,8\c\8c55c3ccc257e5907959013f99656e4c8ec3903e
 <
 build.gradle,f\0\f07866736216be0ee2aba49e392191aeae700a35
-m
-=app/src/main/java/com/group6/noteapp/view/NoteViewHolder.java,1\a\1ac2a0a9bf62167955f63a98de227fd8b19de86f
 p
 @app/src/main/java/com/group6/noteapp/view/AudioListFragment.java,3\c\3c5159f40f651745321337afb9053f28a15e3317
 t

@@ -518,6 +518,7 @@ public class LoginFragment extends Fragment {
     private void signIn() {
         Intent signInIntent = mGoogleSignInClient.getSignInIntent();
         startActivityForResult(signInIntent, RC_SIGN_IN);
+        progressDialog.dismiss();
     }
 
     /**
