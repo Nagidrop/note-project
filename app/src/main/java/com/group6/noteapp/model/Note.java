@@ -19,6 +19,7 @@ public class Note implements Parcelable {
     @DocumentId
     private String id;              // Note Document ID
     private Notebook notebook;      // The notebook which the note is in
+    private int type;               // Note type
     private String title;           // Note's title
     private String content;         // Note's content
     private boolean isDeleted;      // Is the note in trash?
@@ -39,16 +40,18 @@ public class Note implements Parcelable {
      * All args constructor
      * @param id            Note Document ID
      * @param notebook      The notebook which the note is in
+     * @param type          Note type
      * @param title         Note's title
      * @param content       Note's content
      * @param isDeleted     Is the note in trash?
      * @param createdDate   Note's created date
      * @param updatedDate   Note's updated date
      */
-    public Note(String id, Notebook notebook, String title, String content,
+    public Note(String id, Notebook notebook, int type, String title, String content,
                 boolean isDeleted, Timestamp createdDate, Timestamp updatedDate) {
         this.id = id;
         this.notebook = notebook;
+        this.type = type;
         this.title = title;
         this.content = content;
         this.isDeleted = isDeleted;
@@ -73,6 +76,14 @@ public class Note implements Parcelable {
 
     public void setNotebook(Notebook notebook) {
         this.notebook = notebook;
+    }
+
+    public int getType() {
+        return type;
+    }
+
+    public void setType(int type) {
+        this.type = type;
     }
 
     public String getTitle() {
@@ -120,6 +131,7 @@ public class Note implements Parcelable {
     protected Note(Parcel in) {
         id = in.readString();
         notebook = in.readParcelable(Notebook.class.getClassLoader());
+        type = in.readInt();
         title = in.readString();
         content = in.readString();
         isDeleted = in.readByte() != 0;
@@ -165,6 +177,7 @@ public class Note implements Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(id);
         dest.writeParcelable(notebook, flags);
+        dest.writeInt(type);
         dest.writeString(title);
         dest.writeString(content);
         dest.writeByte((byte) (isDeleted ? 1 : 0));
