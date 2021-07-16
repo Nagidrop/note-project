@@ -30,10 +30,20 @@ public class ForgotPasswordFragment01 extends Fragment {
 
     NoteAppProgressDialog progressDialog;   // Note App progress dialog
 
+    /**
+     * Constructor
+     */
     public ForgotPasswordFragment01() {
         // Required empty public constructor
     }
 
+    /**
+     * Called to have the fragment instantiate its user interface view
+     * @param inflater              Layout Inflater
+     * @param container             ViewGroup container
+     * @param savedInstanceState    saved
+     * @return
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
