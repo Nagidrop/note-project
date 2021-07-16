@@ -57,7 +57,7 @@ public class NoteAdapter extends FirestoreRecyclerAdapter<Note, NoteViewHolder> 
      * Get note item view type to display
      * @param position  note position in adapter
      * @return  1 if note is text note
-     *          2 if note is camera note
+     *          2 if note is image note
      *          3 if note is audio note
      */
     @Override
@@ -140,6 +140,25 @@ public class NoteAdapter extends FirestoreRecyclerAdapter<Note, NoteViewHolder> 
                     }
                 });
 
+            case 3:
+                holder.getNoteTitle().setText(model.getTitle());             // set note title
+
+                updatedDate = dateFormat.format(model.getUpdatedDate().toDate());
+                holder.getNoteUpdatedDate().setText(updatedDate);           // set note updated date
+                model.setNotebook(notebook);
+
+                // card view onclick
+                holder.getNoteCardView().setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent viewCaptureImageIntent = new Intent(context, ViewCaptureImageActivity.class);
+
+                        viewCaptureImageIntent.putExtra("note", model);
+
+                        context.startActivity(viewCaptureImageIntent);
+                    }
+                });
+
                 break;
         }
 
@@ -165,6 +184,7 @@ public class NoteAdapter extends FirestoreRecyclerAdapter<Note, NoteViewHolder> 
                 break;
 
             case 2:
+            case 3:
                 noteView = inflater.inflate(R.layout.recycler_image_note_item, parent, false);
 
                 break;

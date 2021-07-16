@@ -53,11 +53,9 @@
         <com.google.android.material.imageview.ShapeableImageView
             android:id="@+id/imgNote"
             android:layout_width="240px"
-            android:layout_height="320px"
+            android:layout_height="240px"
             android:layout_toRightOf="@+id/imageNoteTextLayout"
-            android:src="@drawable/img_no_image"
-            app:strokeWidth="1dp"
-            app:strokeColor="@color/grey_disabled"
+            android:src="@drawable/img_audio"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
