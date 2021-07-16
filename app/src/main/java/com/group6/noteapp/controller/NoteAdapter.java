@@ -38,8 +38,10 @@ import java.text.SimpleDateFormat;
  */
 public class NoteAdapter extends FirestoreRecyclerAdapter<Note, NoteViewHolder> {
 
-    private final Context context;            // activity's context
-    private final Notebook notebook;          // notebook in which the notes in adapter are in
+    private final Context context;              // activity's context
+    private final Notebook notebook;            // notebook in which the notes in adapter are in
+    private FirebaseUser firebaseUser;          // Firebase user
+    private FirebaseStorage firebaseStorage;    // Firebase storage
 
     /**
      * Create a new RecyclerView adapter that listens to a Firestore Query.  See {@link
@@ -52,6 +54,8 @@ public class NoteAdapter extends FirestoreRecyclerAdapter<Note, NoteViewHolder> 
         super(options);
         this.context = context;
         this.notebook = notebook;
+        this.firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+        this.firebaseStorage = FirebaseStorage.getInstance();
     }
 
     /**
@@ -83,14 +87,18 @@ public class NoteAdapter extends FirestoreRecyclerAdapter<Note, NoteViewHolder> 
 
         switch (model.getType()) {
             case 1:
-                holder.getNoteTitle().setText(model.getTitle());             // set note title
-                holder.getNoteContent().setText(model.getContent());         // set note content
+                // Set note's title
+                holder.getNoteTitle().setText(model.getTitle());
 
+                // Set note's content
+                holder.getNoteContent().setText(model.getContent());
+
+                // Set note's updated date
                 updatedDate = dateFormat.format(model.getUpdatedDate().toDate());
                 holder.getNoteUpdatedDate().setText(updatedDate);           // set note updated date
                 model.setNotebook(notebook);
 
-                // card view onclick
+                // Card view's On Click Listener
                 holder.getNoteCardView().setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -105,9 +113,11 @@ public class NoteAdapter extends FirestoreRecyclerAdapter<Note, NoteViewHolder> 
                 break;
 
             case 2:
-                FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-                FirebaseStorage storage = FirebaseStorage.getInstance();
-                StorageReference profileRef = storage.getReference()
+                // Set note's title
+                holder.getNoteTitle().setText(model.getTitle());
+
+                // Set captured image in note
+                StorageReference profileRef = firebaseStorage.getReference()
                         .child(firebaseUser.getUid() + "/images/" + model.getContent());
                 profileRef.getDownloadUrl()
                         .addOnSuccessListener(new OnSuccessListener<Uri>() {
@@ -123,13 +133,12 @@ public class NoteAdapter extends FirestoreRecyclerAdapter<Note, NoteViewHolder> 
                             }
                         });
 
-                holder.getNoteTitle().setText(model.getTitle());             // set note title
-
+                // Set note's updated date
                 updatedDate = dateFormat.format(model.getUpdatedDate().toDate());
-                holder.getNoteUpdatedDate().setText(updatedDate);           // set note updated date
+                holder.getNoteUpdatedDate().setText(updatedDate);
                 model.setNotebook(notebook);
 
-                // card view onclick
+                // Card view's On Click Listener
                 holder.getNoteCardView().setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -142,13 +151,15 @@ public class NoteAdapter extends FirestoreRecyclerAdapter<Note, NoteViewHolder> 
                 });
 
             case 3:
+                // Set note's title
                 holder.getNoteTitle().setText(model.getTitle());             // set note title
 
+                // Set note's updated date
                 updatedDate = dateFormat.format(model.getUpdatedDate().toDate());
                 holder.getNoteUpdatedDate().setText(updatedDate);           // set note updated date
                 model.setNotebook(notebook);
 
-                // card view onclick
+                // Card view's On Click Listener
                 holder.getNoteCardView().setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
