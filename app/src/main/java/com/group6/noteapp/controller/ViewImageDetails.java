@@ -1,6 +1,5 @@
 package com.group6.noteapp.controller;
 
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
