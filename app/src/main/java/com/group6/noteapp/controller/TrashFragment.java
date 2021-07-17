@@ -1,3 +1,7 @@
+/*
+ * Group 06 SE1402
+ */
+
 package com.group6.noteapp.controller;
 
 import android.content.DialogInterface;
@@ -35,7 +39,9 @@ import com.group6.noteapp.view.NoteAppProgressDialog;
 
 import org.jetbrains.annotations.NotNull;
 
-
+/**
+ * Trash Fragment
+ */
 public class TrashFragment extends Fragment {
 
     private static final String TAG = "HomeFragment";   // Log tag

@@ -1,3 +1,7 @@
+/*
+ * Group 06 SE1402
+ */
+
 package com.group6.noteapp.controller;
 
 import android.os.Bundle;
@@ -14,7 +18,7 @@ import com.google.android.material.button.MaterialButton;
 import com.group6.noteapp.R;
 
 /**
- * Register Successful Fragment
+ * Register Successful Message Fragment
  */
 public class RegisterFragment03 extends Fragment {
     private String regEmail;        // User register email

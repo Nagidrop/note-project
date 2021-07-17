@@ -1,5 +1,5 @@
-/**
- * Quan Duc Loc CE140037 SE1402
+/*
+ * Group 06 SE1402
  */
 package com.group6.noteapp.controller;
 
@@ -27,17 +27,18 @@ public class DatePickerFragment extends DialogFragment
 
     /**
      * Constructor
+     *
      * @param inputRegBirthdateEditText the birthdate Input EditText
      */
-    public DatePickerFragment(TextInputEditText inputRegBirthdateEditText){
+    public DatePickerFragment(TextInputEditText inputRegBirthdateEditText) {
         this.inputRegBirthdateEditText = inputRegBirthdateEditText;
     }
 
-    @NotNull
-    @Override
     /**
      * Create Date Picker dialog
      */
+    @NotNull
+    @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         // Use the current date as the default date in the picker
         final Calendar c = Calendar.getInstance();
@@ -57,6 +58,7 @@ public class DatePickerFragment extends DialogFragment
 
     /**
      * When the date is set, the birthdate input is also set with dd/MM/yyyy format
+     *
      * @param view  DatePicker view
      * @param year  selected year
      * @param month selected month

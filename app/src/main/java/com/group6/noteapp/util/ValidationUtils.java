@@ -1,12 +1,13 @@
-/**
- * Quan Duc Loc CE140037 SE1402
+/*
+ * Group 06 SE1402
  */
+
 package com.group6.noteapp.util;
 
 import android.text.TextUtils;
 
 /**
- * Validate input fields
+ * Utils for validating input fields
  */
 public final class ValidationUtils {
     private static final String passwordRegex = "^[A-Za-z\\d$&+,:;=?@#|'<>.^*()%!-]{8,}$";  // minimum 8 characters

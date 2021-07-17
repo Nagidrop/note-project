@@ -1,6 +1,7 @@
-/**
- * Quan Duc Loc CE140037 SE1402
+/*
+ * Group 06 SE1402
  */
+
 package com.group6.noteapp.view;
 
 import android.view.View;
@@ -14,7 +15,7 @@ import com.google.android.material.textview.MaterialTextView;
 import com.group6.noteapp.R;
 
 /**
- * Class represents each Recycler View's item in note list
+ * Recycler View's item view holder
  */
 public class NoteViewHolder extends RecyclerView.ViewHolder {
     private final MaterialTextView noteTitle;           // note title

@@ -1,3 +1,7 @@
+/*
+ * Group 06 SE1402
+ */
+
 package com.group6.noteapp.controller;
 
 import android.content.DialogInterface;
@@ -36,7 +40,7 @@ import com.group6.noteapp.view.NoteAppProgressDialog;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * Home Fragment (Main Activity)
+ * Home Fragment (of Main Activity)
  */
 public class HomeFragment extends Fragment {
 
@@ -263,8 +267,8 @@ public class HomeFragment extends Fragment {
                                                 new DialogInterface.OnClickListener() {
                                                     /**
                                                      * Delete user note on confirmation
-                                                     * @param dialog
-                                                     * @param which
+                                                     * @param dialog    dialog
+                                                     * @param which     which button is clicked
                                                      */
                                                     @Override
                                                     public void onClick(DialogInterface dialog, int which) {
@@ -282,8 +286,8 @@ public class HomeFragment extends Fragment {
                                                 new DialogInterface.OnClickListener() {
                                                     /**
                                                      * Refresh recycler view
-                                                     * @param dialog
-                                                     * @param which
+                                                     * @param dialog    dialog
+                                                     * @param which     which button is clicked
                                                      */
                                                     @Override
                                                     public void onClick(DialogInterface dialog,

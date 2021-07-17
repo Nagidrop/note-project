@@ -1,6 +1,7 @@
-/**
- * Quan Duc Loc CE140037 SE1402
+/*
+ * Group 06 SE1402
  */
+
 package com.group6.noteapp.view;
 
 import android.app.ProgressDialog;

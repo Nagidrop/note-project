@@ -24,7 +24,7 @@
         <activity android:name=".controller.ViewCaptureImageActivity" />
         <activity
             android:name=".controller.ViewEditNoteActivity"
-            android:label=""></activity>
+            android:label="" />
         <activity android:name=".controller.CameraActivity" />
         <activity android:name=".controller.RecordActivity" />
         <activity android:name=".controller.MainActivity" />

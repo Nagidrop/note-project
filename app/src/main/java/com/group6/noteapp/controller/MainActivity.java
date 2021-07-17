@@ -1,3 +1,7 @@
+/*
+ * Group 06 SE1402
+ */
+
 package com.group6.noteapp.controller;
 
 import android.Manifest;
@@ -41,6 +45,9 @@ import com.group6.noteapp.view.NoteAppDialog;
 
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * Main Activity
+ */
 public class MainActivity extends AppCompatActivity {
 
     private static final int REQUEST_CODE = 696;
@@ -168,7 +175,7 @@ public class MainActivity extends AppCompatActivity {
                         FragmentManager fragmentManager = getSupportFragmentManager();
 
                         /*
-                           Navigate fragment base on menu item
+                         *  Navigate fragment base on menu item
                          */
                         switch (item.getItemId()) {
                             case R.id.menu_all_notes:

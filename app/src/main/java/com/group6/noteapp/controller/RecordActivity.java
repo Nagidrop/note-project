@@ -1,3 +1,7 @@
+/*
+ * Group 06 SE1402
+ */
+
 package com.group6.noteapp.controller;
 
 import android.app.ProgressDialog;
@@ -49,6 +53,9 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * Activity for recording audio
+ */
 public class RecordActivity extends AppCompatActivity implements View.OnClickListener {
 
     /* Text Input Layouts and Button */

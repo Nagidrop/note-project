@@ -1,3 +1,7 @@
+/*
+ * Group 06 SE1402
+ */
+
 package com.group6.noteapp.controller;
 
 import android.content.Intent;
@@ -18,7 +22,6 @@ import androidx.camera.core.Preview;
 import androidx.camera.lifecycle.ProcessCameraProvider;
 import androidx.camera.view.PreviewView;
 import androidx.core.content.ContextCompat;
-import androidx.lifecycle.LifecycleOwner;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.common.util.concurrent.ListenableFuture;
@@ -33,32 +36,38 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
+/**
+ * Activity for setting up camera and shooting picture
+ */
 public class CameraActivity extends AppCompatActivity {
 
-    private PreviewView previewView; // Camera preview view
-    private ListenableFuture<ProcessCameraProvider> cameraProviderFuture; // Camera provider
-    private FloatingActionButton fabTakeImage; // fab Take image
-    private ImageCapture imageCapture; // Image Capture use case
-    private Executor executor = Executors.newSingleThreadExecutor(); // Executor
-    private FirebaseAuth mAuth; // Firebase auth
-    private FirebaseUser user; // firebase current user
+    private PreviewView previewView;                                        // Camera preview view
+    private ListenableFuture<ProcessCameraProvider> cameraProviderFuture;   // Camera provider
+    private ImageCapture imageCapture;                                      // Image Capture use case
+    private Executor executor;                                              // Executor
+    private FirebaseUser user;                                              // firebase current user
 
     /**
      * Set up camera and button onclick action
-     * @param savedInstanceState
+     * @param savedInstanceState saved instance state
      */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_camera);
 
+        // Set executor
+        executor = Executors.newSingleThreadExecutor();
+
         // Get auth instance and current user
-        mAuth = FirebaseAuth.getInstance();
+        // Firebase auth
+        FirebaseAuth mAuth = FirebaseAuth.getInstance();
         user = mAuth.getCurrentUser();
 
         // Get view components
-        previewView = (PreviewView) findViewById(R.id.cameraPreview);
-        fabTakeImage = findViewById(R.id.fabTakeImage);
+        previewView = findViewById(R.id.cameraPreview);
+        // fab Take image
+        FloatingActionButton fabTakeImage = findViewById(R.id.fabTakeImage);
         cameraProviderFuture = ProcessCameraProvider.getInstance(this);
 
         // Add camera provideer
@@ -89,7 +98,7 @@ public class CameraActivity extends AppCompatActivity {
 
     /**
      * Bind camera use case to camera provider
-     * @param cameraProvider
+     * @param cameraProvider camera provider
      */
     private void bindImageAnalysis(@NonNull ProcessCameraProvider cameraProvider) {
 
@@ -122,7 +131,7 @@ public class CameraActivity extends AppCompatActivity {
 
         // bind use case to camera provider
         cameraProvider
-                .bindToLifecycle((LifecycleOwner) this, cameraSelector, imageCapture, imageAnalysis,
+                .bindToLifecycle(this, cameraSelector, imageCapture, imageAnalysis,
                         preview);
     }
 
@@ -145,7 +154,7 @@ public class CameraActivity extends AppCompatActivity {
 
                     /**
                      * Image save success then toast success and to ViewCaptureImageActivity
-                     * @param outputFileResults
+                     * @param outputFileResults output file results
                      */
                     @Override public void onImageSaved(
                             @NonNull @NotNull ImageCapture.OutputFileResults outputFileResults) {
@@ -171,12 +180,12 @@ public class CameraActivity extends AppCompatActivity {
 
     /**
      * get local directory name
-     * @return
+     * @return directory name
      */
     public String getBatchDirectoryName() {
-        String imagePath = "";
-        imagePath = Environment.getExternalStorageDirectory().toString() + "/images/";
+        String imagePath = Environment.getExternalStorageDirectory().toString() + "/images/";
         File dir = new File(imagePath);
+
         if (!dir.exists() && !dir.mkdirs()) {
 
         }
