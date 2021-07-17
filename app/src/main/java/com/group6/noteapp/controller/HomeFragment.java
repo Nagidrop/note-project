@@ -4,6 +4,9 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
@@ -50,15 +53,69 @@ public class HomeFragment extends Fragment {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        setHasOptionsMenu(true);
         super.onCreate(savedInstanceState);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater menuInflater) {
+        menuInflater.inflate(R.menu.menu_main, menu);
+
+        super.onCreateOptionsMenu(menu, menuInflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.nav_menu_main:
+//                ActionMenuItemView menuItem = getActivity().findViewById(R.id.nav_menu_main);
+//
+//                menuItem.setOnClickListener(new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View v) {
+//                        switch (v.getId()) {
+//
+//                        }
+//                    }
+//                });
+
+                break;
+
+            case R.id.sortByTitleAscItem:
+                Toast.makeText(getActivity(), "title asc", Toast.LENGTH_SHORT).show();
+
+                break;
+
+            case R.id.sortByTitleDescItem:
+                Toast.makeText(getActivity(), "title desc", Toast.LENGTH_SHORT).show();
+
+                break;
+
+            case R.id.sortByCreatedDateItem:
+                Toast.makeText(getActivity(), "created date", Toast.LENGTH_SHORT).show();
+
+                break;
+
+            case R.id.sortByUpdatedDateItem:
+                Toast.makeText(getActivity(), "updated date", Toast.LENGTH_SHORT).show();
+
+                break;
+
+            default:
+
+                break;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
         // Inflate the layout for this fragment
         View inflatedView = inflater.inflate(R.layout.fragment_home, container, false);
-
+        setHasOptionsMenu(true);
         /* Set up progress dialog to tell user to wait */
         NoteAppProgressDialog progressDialog = new NoteAppProgressDialog(getActivity());
         progressDialog.setUpDialog("Just a moment...",
@@ -76,8 +133,9 @@ public class HomeFragment extends Fragment {
 
     /**
      * Setup recycler view to display notes
-     * @param inflatedView      the inflated view
-     * @param progressDialog    Note App progress dialog
+     *
+     * @param inflatedView   the inflated view
+     * @param progressDialog Note App progress dialog
      */
     private void setupRecyclerView(View inflatedView, NoteAppProgressDialog progressDialog) {
         /* Firebase instances */
@@ -206,12 +264,14 @@ public class HomeFragment extends Fragment {
 
     /**
      * Delete Note
-     * @param db firestore database
-     * @param viewHolder Recycler View view holder
-     * @param firebaseUser Current firebase user
+     *
+     * @param db             firestore database
+     * @param viewHolder     Recycler View view holder
+     * @param firebaseUser   Current firebase user
      * @param progressDialog progress dialog
      */
-    private void deleteNote(FirebaseFirestore db, RecyclerView.ViewHolder viewHolder, FirebaseUser firebaseUser,NoteAppProgressDialog progressDialog) { ;
+    private void deleteNote(FirebaseFirestore db, RecyclerView.ViewHolder viewHolder, FirebaseUser firebaseUser, NoteAppProgressDialog progressDialog) {
+        ;
         // Get note from its position in Firestore adapter
         Note deleteNote = adapter.getItem(viewHolder.getAdapterPosition());
         deleteNote.setDeleted(true);

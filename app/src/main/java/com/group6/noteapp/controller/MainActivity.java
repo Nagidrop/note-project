@@ -112,6 +112,8 @@ public class MainActivity extends AppCompatActivity {
         MaterialTextView txtNavEmail = navHeader.findViewById(R.id.txtNavEmail);
         ShapeableImageView imgProfilePicture = navHeader.findViewById(R.id.imgProfilePicture);
 
+        setSupportActionBar(topAppBar);
+
         FirebaseStorage storage = FirebaseStorage.getInstance();
         StorageReference profileRef = storage.getReference()
                 .child(firebaseUser.getUid() + "/images/profilePicture.png");
@@ -192,7 +194,7 @@ public class MainActivity extends AppCompatActivity {
                                 .commit();
 
                         // close fab menu
-                        if(clicked) {
+                        if (clicked) {
                             fabMenuOnClick();
                         }
                         return true;
@@ -255,7 +257,6 @@ public class MainActivity extends AppCompatActivity {
 //                    "Welcome", Toast.LENGTH_LONG).show();
 //        }
     }
-
 
     private void enableCamera() {
         Intent intent = new Intent(this, CameraActivity.class);

@@ -127,13 +127,13 @@ public class ViewEditNoteActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.nav_menu:
+            case R.id.nav_menu_note:
                 // Creating the instance of PopupMenu
-                PopupMenu popup = new PopupMenu(ViewEditNoteActivity.this, findViewById(R.id.nav_menu));
+                PopupMenu popup = new PopupMenu(ViewEditNoteActivity.this, findViewById(R.id.nav_menu_note));
 
                 // Inflating the Popup using xml file
                 popup.getMenuInflater()
-                        .inflate(R.menu.note_popup_menu, popup.getMenu());
+                        .inflate(R.menu.menu_popup_note, popup.getMenu());
 
                 // Registering popup with OnMenuItemClickListener
                 popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {

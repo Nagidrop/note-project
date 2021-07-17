@@ -1,5 +1,5 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
     <item
         android:id="@+id/deleteNoteItem"
-        android:title="Delete Note"/>
+        android:title="@string/delete_note"/>
 </menu>
