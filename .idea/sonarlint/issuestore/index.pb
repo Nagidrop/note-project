@@ -30,11 +30,21 @@ P
  app/src/main/AndroidManifest.xml,8\c\8c55c3ccc257e5907959013f99656e4c8ec3903e
 <
 build.gradle,f\0\f07866736216be0ee2aba49e392191aeae700a35
-p
-@app/src/main/java/com/group6/noteapp/view/AudioListFragment.java,3\c\3c5159f40f651745321337afb9053f28a15e3317
 t
 Dapp/src/main/java/com/group6/noteapp/view/NoteAppProgressDialog.java,b\5\b5e5c1ef06604b1a88bf259fa4b15b7831bb8d0d
 @
 app/build.gradle,f\4\f4a01d6a4fcb971362ec00a83903fd3902f52164
 l
 <app/src/main/java/com/group6/noteapp/view/NoteAppDialog.java,f\d\fda2d7d0e77fce8c97195593b379af84890807ff
+s
+Capp/src/main/java/com/group6/noteapp/controller/CameraActivity.java,6\3\638e68466573718ebe8db06559a40577842b3487
+s
+Capp/src/main/java/com/group6/noteapp/controller/RecordActivity.java,d\9\d99406e669b37bf5f0e9f0b23c2ee66ebd4c138f
+d
+4app/src/main/java/com/group6/noteapp/model/Note.java,b\e\be825367b8ad6a16ab4f30ba8d598ca5ea81e478
+}
+Mapp/src/main/java/com/group6/noteapp/controller/ForgotPasswordFragment01.java,5\e\5ed305edb32159dc4aa9e2114a3303b08b50aedc
+r
+Bapp/src/main/java/com/group6/noteapp/controller/LoginActivity.java,a\f\afbcec810a6927b20bfeaa7856ca50663595e781
+m
+=app/src/main/java/com/group6/noteapp/view/NoteViewHolder.java,1\a\1ac2a0a9bf62167955f63a98de227fd8b19de86f
