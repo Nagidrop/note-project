@@ -4,7 +4,7 @@
     android:id="@+id/menu_view_note">
     <item
         android:id="@+id/nav_menu_main"
-        android:icon="@drawable/ic_ascending_sort_20"
+        android:icon="@drawable/ic_sort_24"
         android:title="@string/sort"
         app:showAsAction="ifRoom">
         <menu>
