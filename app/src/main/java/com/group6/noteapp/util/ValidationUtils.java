@@ -32,7 +32,7 @@ public final class ValidationUtils {
      * Validate if email input is valid
      * @param email email string to validate
      * @return  0 if valid
-     *          1 if isn't empty
+     *          1 if empty
      *          2 if doesn't match regex
      */
     public static int validateEmail(String email){
@@ -70,7 +70,7 @@ public final class ValidationUtils {
      * Validate if password input is valid
      * @param password password string to validate
      * @return  0 if valid
-     *          1 if password is empty
+     *          1 if empty
      */
     public static int validatePasswordLog(String password){
         if (TextUtils.isEmpty(password)) {
