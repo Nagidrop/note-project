@@ -145,7 +145,7 @@ public class HomeFragment extends Fragment {
 
                                         // Set up delete confirmation dialog
                                         NoteAppDialog dialog = new NoteAppDialog(getActivity());
-                                        dialog.setupConfirmationDialog("Delete Confirmation",
+                                        dialog.setupConfirmationDialog("Move Confirmation",
                                                 "Do you want to move this note to trash?");
                                         dialog.setPositiveButton("Yes",
                                                 new DialogInterface.OnClickListener() {
@@ -219,8 +219,7 @@ public class HomeFragment extends Fragment {
         db.collection("users").document(firebaseUser.getUid())
                 .collection("notebooks").document(deleteNote.getNotebook().getId()).collection("notes")
                 .document(deleteNote.getId())
-                .update("deleted", deleteNote.isDeleted(),
-                        "updatedDate", Timestamp.now())
+                .update("deleted", deleteNote.isDeleted())
                 // If delete note successful
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override

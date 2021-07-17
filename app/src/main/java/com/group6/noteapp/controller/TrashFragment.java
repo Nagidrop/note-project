@@ -279,8 +279,7 @@ public class TrashFragment extends Fragment {
         db.collection("users").document(firebaseUser.getUid())
                 .collection("notebooks").document(restoreNote.getNotebook().getId()).collection("notes")
                 .document(restoreNote.getId())
-                .update("deleted", restoreNote.isDeleted(),
-                        "updatedDate", Timestamp.now())
+                .update("deleted", restoreNote.isDeleted())
                 // If delete note successful
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
