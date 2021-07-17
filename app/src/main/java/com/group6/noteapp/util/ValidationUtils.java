@@ -9,7 +9,7 @@ import android.text.TextUtils;
 /**
  * Utils for validating input fields
  */
-public final class ValidationUtils {
+public class ValidationUtils {
     private static final String passwordRegex = "^[A-Za-z\\d$&+,:;=?@#|'<>.^*()%!-]{8,}$";  // minimum 8 characters
     private static final String fullNameRegex = "^([a-zA-Zàáãạảăắằẳẵặâấầẩẫậèéẹẻẽêềếểễệđìíĩỉị" +
             "òóõọỏôốồổỗộơớờởỡợùúũụủưứừửữựỳỵỷỹýÀÁÃẠẢĂẮẰẲẴẶÂẤẦẨẪẬÈÉẸẺẼÊỀẾỂỄỆĐÌÍĨỈỊÒÓÕỌỎÔỐỒỔỖỘƠỚỜỞỠỢ" +
