@@ -1,5 +1,5 @@
 /**
- * Quan Duc Loc CE140037
+ * Quan Duc Loc CE140037 SE1402
  */
 package com.group6.noteapp.controller;
 
@@ -12,6 +12,8 @@ import androidx.fragment.app.DialogFragment;
 
 import com.google.android.material.textfield.TextInputEditText;
 import com.group6.noteapp.R;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Calendar;
 
@@ -31,6 +33,7 @@ public class DatePickerFragment extends DialogFragment
         this.inputRegBirthdateEditText = inputRegBirthdateEditText;
     }
 
+    @NotNull
     @Override
     /**
      * Create Date Picker dialog
@@ -54,12 +57,12 @@ public class DatePickerFragment extends DialogFragment
 
     /**
      * When the date is set, the birthdate input is also set with dd/MM/yyyy format
-     * @param view
-     * @param year
-     * @param month
-     * @param day
+     * @param view  DatePicker view
+     * @param year  selected year
+     * @param month selected month
+     * @param day   selected day
      */
     public void onDateSet(DatePicker view, int year, int month, int day) {
-        inputRegBirthdateEditText.setText(day + "/" + (month + 1) + "/" + year);
+        inputRegBirthdateEditText.setText(getString(R.string.birthdate_input, day, month + 1, year));
     }
 }

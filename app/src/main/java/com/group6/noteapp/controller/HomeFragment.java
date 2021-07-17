@@ -293,7 +293,6 @@ public class HomeFragment extends Fragment {
                                                 });
                                         dialog.create().show();
                                     }
-
                                 }).attachToRecyclerView(rvNote);    // Attach item call back to recycler view
 
                         progressDialog.dismiss();

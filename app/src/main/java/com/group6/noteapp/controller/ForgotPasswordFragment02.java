@@ -27,6 +27,10 @@ public class ForgotPasswordFragment02 extends Fragment {
         // Required empty public constructor
     }
 
+    /**
+     * Initial creation of fragment
+     * @param savedInstanceState    saved instance state
+     */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,6 +41,13 @@ public class ForgotPasswordFragment02 extends Fragment {
         }
     }
 
+    /**
+     * Called to have the fragment instantiate its view
+     * @param inflater              Layout Inflater
+     * @param container             ViewGroup container
+     * @param savedInstanceState    saved instance state
+     * @return the created View
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {

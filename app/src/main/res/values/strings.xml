@@ -1,9 +1,14 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <resources>
     <string name="address">Address</string>
+    <string name="initial_timer">00:00</string>
+    <string name="time">Time</string>
+    <string name="play">Play</string>
+    <string name="replay">Replay</string>
     <string name="all_notes">All Notes</string>
     <string name="app_name">Note App</string>
     <string name="birthdate">Birthdate</string>
+    <string name="birthdate_input">%1$d/%2$d/%3$d</string>
     <string name="change">Change</string>
     <string name="delete_note">Delete note</string>
     <string name="email">Email</string>

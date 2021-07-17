@@ -339,7 +339,6 @@ public class TrashFragment extends Fragment {
 
                                         dialog.create().show();
                                     }
-
                                 }).attachToRecyclerView(rvNote);    // Attach item call back to recycler view
 
                         progressDialog.dismiss();

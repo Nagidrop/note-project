@@ -1,5 +1,5 @@
 /**
- * Quan Duc Loc CE140037
+ * Quan Duc Loc CE140037 SE1402
  */
 package com.group6.noteapp.view;
 
