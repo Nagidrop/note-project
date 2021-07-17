@@ -64,7 +64,7 @@ public class RecordActivity extends AppCompatActivity implements View.OnClickLis
     private ProgressDialog progressDialog, progressDialog2; //Progress Dialog
     private TextInputLayout recordName;              //Text input record name
     private SeekBar seekBar;                         //Seekbar
-    private Handler threadHandler = new Handler();   //Handler
+    private final Handler threadHandler = new Handler();   //Handler
 
     /* Firebase instances */
     private FirebaseAuth firebaseAuth;  //Firebase Auth

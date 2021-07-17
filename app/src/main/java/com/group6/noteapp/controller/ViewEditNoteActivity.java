@@ -43,7 +43,7 @@ public class ViewEditNoteActivity extends AppCompatActivity {
     private String savedNoteContent;                // Saved note title (to check if note content not saved)
     private TextInputLayout txtInputNoteTitle;      // Note Title Text Input Layout
     private TextInputLayout txtInputNoteContent;    // Note Content Text Input Layout
-    private Note savedNote;                              // Note object with data to add or update
+    private Note savedNote;                         // Note object with data to add or update
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -121,6 +121,12 @@ public class ViewEditNoteActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Create options menu for View Note activity
+     * @param menu  menu to create
+     * @return  true if successful
+     *          false if failed
+     */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_view_note, menu);
@@ -128,64 +134,68 @@ public class ViewEditNoteActivity extends AppCompatActivity {
         return super.onCreateOptionsMenu(menu);
     }
 
+    /**
+     * Triggers when menu item is selected
+     * @param item  the selected item
+     * @return  status of consumption
+     *          true if handle selection here
+     *          false if not
+     */
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.nav_menu_note:
-                // Creating the instance of PopupMenu
-                PopupMenu popup = new PopupMenu(ViewEditNoteActivity.this, findViewById(R.id.nav_menu_note));
+        // Creating the instance of PopupMenu
+        PopupMenu popup = new PopupMenu(ViewEditNoteActivity.this, findViewById(R.id.nav_menu_note));
 
-                // Inflating the Popup using xml file
-                popup.getMenuInflater()
-                        .inflate(R.menu.menu_popup_note, popup.getMenu());
+        // Inflating the Popup using xml file
+        popup.getMenuInflater()
+                .inflate(R.menu.menu_popup_note, popup.getMenu());
 
-                // Registering popup with OnMenuItemClickListener
-                popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                    public boolean onMenuItemClick(MenuItem item) {
-                        // Check if note has been saved (created)
-                        if (savedNote.getId() == null){
-                            // Show dialog to notify user
-                            NoteAppDialog dialog = new NoteAppDialog(ViewEditNoteActivity.this);
-                            dialog.setupOKDialog("Cannot Delete",
-                                    "Note hasn't been created yet.");
-                            dialog.create().show();
+        // Registering popup with OnMenuItemClickListener
+        popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            public boolean onMenuItemClick(MenuItem item) {
+                // Check if note has been saved (created)
+                if (savedNote.getId() == null) {
+                    // Show dialog to notify user
+                    NoteAppDialog dialog = new NoteAppDialog(ViewEditNoteActivity.this);
+                    dialog.setupOKDialog("Cannot Delete",
+                            "Note hasn't been created yet.");
+                    dialog.create().show();
 
-                            return true;
-                        }
+                    return true;
+                }
 
-                        // Create new confirmation dialog
-                        NoteAppDialog dialog = new NoteAppDialog(ViewEditNoteActivity.this);
-                        dialog.setupConfirmationDialog("Delete Confirmation",
-                                "Do you want to delete this note?");
-                        dialog.setPositiveButton("Yes",
-                                new DialogInterface.OnClickListener() {
-                                    /**
-                                     * Log the current user out
-                                     * @param dialog
-                                     * @param which
-                                     */
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        // Show progress dialog
-                                        NoteAppProgressDialog progressDialog = new NoteAppProgressDialog(ViewEditNoteActivity.this);
-                                        progressDialog.setUpDialog("Just a moment...",
-                                                "Please wait while we deleting your note.");
-                                        progressDialog.show();
+                // Create new confirmation dialog
+                NoteAppDialog dialog = new NoteAppDialog(ViewEditNoteActivity.this);
+                dialog.setupConfirmationDialog("Delete Confirmation",
+                        "Do you want to delete this note?");
+                dialog.setPositiveButton("Yes",
+                        new DialogInterface.OnClickListener() {
+                            /**
+                             * Log the current user out
+                             * @param dialog    dialog
+                             * @param which     which button is clicked
+                             */
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                // Show progress dialog
+                                NoteAppProgressDialog progressDialog = new NoteAppProgressDialog(ViewEditNoteActivity.this);
+                                progressDialog.setUpDialog("Just a moment...",
+                                        "Please wait while we deleting your note.");
+                                progressDialog.show();
 
-                                        // Delete note
-                                        deleteNote(progressDialog);
-                                    }
-                                });
-                        dialog.create().show();
+                                // Delete note
+                                deleteNote(progressDialog);
+                            }
+                        });
+                dialog.create().show();
 
-                        return true;
-                    }
-                });
+                return true;
+            }
+        });
 
-                // Show popup menu
-                popup.show();
-                break;
-        }
+        // Show popup menu
+        popup.show();
+
         return super.onOptionsItemSelected(item);
     }
 
@@ -194,16 +204,12 @@ public class ViewEditNoteActivity extends AppCompatActivity {
      *
      * @param noteTitle   note title
      * @param noteContent note content
-     * @return  true if note is unsaved
-     *          false if note is already saved
+     * @return true if note is unsaved
+     * false if note is already saved
      */
     private boolean isUnsaved(String noteTitle, String noteContent) {
-        // If note title or content differs from saved note
-        if (!noteTitle.equals(savedNoteTitle) || !noteContent.equals(savedNoteContent)) {
-            return true;
-        }
-
-        return false;
+        // If note title or content differs from saved note, return true
+        return !noteTitle.equals(savedNoteTitle) || !noteContent.equals(savedNoteContent);
     }
 
     /**
@@ -444,8 +450,8 @@ public class ViewEditNoteActivity extends AppCompatActivity {
                     new DialogInterface.OnClickListener() {
                         /**
                          * Log the current user out
-                         * @param dialog
-                         * @param which
+                         * @param dialog    dialog
+                         * @param which     which button has been selected
                          */
                         @Override
                         public void onClick(DialogInterface dialog, int which) {

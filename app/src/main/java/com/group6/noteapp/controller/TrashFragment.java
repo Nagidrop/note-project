@@ -258,8 +258,8 @@ public class TrashFragment extends Fragment {
                                                     new DialogInterface.OnClickListener() {
                                                         /**
                                                          * Delete user note on confirmation
-                                                         * @param dialog
-                                                         * @param which
+                                                         * @param dialog    dialog
+                                                         * @param which     which button is clicked
                                                          */
                                                         @Override
                                                         public void onClick(DialogInterface dialog,
@@ -282,8 +282,8 @@ public class TrashFragment extends Fragment {
                                                     new DialogInterface.OnClickListener() {
                                                         /**
                                                          * Refresh recycler view
-                                                         * @param dialog
-                                                         * @param which
+                                                         * @param dialog    dialog
+                                                         * @param which     which button is clicked
                                                          */
                                                         @Override
                                                         public void onClick(DialogInterface dialog,
@@ -300,8 +300,8 @@ public class TrashFragment extends Fragment {
                                                         /**
                                                          * Delete user note on confirmation
                                                          *
-                                                         * @param dialog
-                                                         * @param which
+                                                         * @param dialog    dialog
+                                                         * @param which     which button is clicked
                                                          */
                                                         @Override
                                                         public void onClick(DialogInterface dialog,
@@ -326,8 +326,8 @@ public class TrashFragment extends Fragment {
                                                         /**
                                                          * Refresh recycler view
                                                          *
-                                                         * @param dialog
-                                                         * @param which
+                                                         * @param dialog    dialog
+                                                         * @param which     which button is clicked
                                                          */
                                                         @Override
                                                         public void onClick(DialogInterface dialog,
