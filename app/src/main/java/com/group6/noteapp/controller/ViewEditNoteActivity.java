@@ -45,6 +45,10 @@ public class ViewEditNoteActivity extends AppCompatActivity {
     private TextInputLayout txtInputNoteContent;    // Note Content Text Input Layout
     private Note savedNote;                         // Note object with data to add or update
 
+    /**
+     * Setup data to display
+     * @param savedInstanceState    saved instance state
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
