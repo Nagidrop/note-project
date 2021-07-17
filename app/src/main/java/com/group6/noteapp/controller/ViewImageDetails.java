@@ -43,46 +43,56 @@ import java.io.IOException;
 public class ViewImageDetails extends AppCompatActivity {
     private static final String TAG = "ViewImageDetails"; // Tag for logging
 
-    private FirebaseStorage storage;
-    private FirebaseAuth mAuth;
-    private FirebaseUser user;
-    private FirebaseFirestore db;
-    private MaterialButton btnChangeName;
-    private ShapeableImageView viewImage;
-    private TextInputLayout imageName;
-    private NoteAppProgressDialog progressDialog;
+    private FirebaseStorage storage; // Firebase storage
+    private FirebaseAuth mAuth; // Firebase auth
+    private FirebaseUser user; // Firebase user
+    private FirebaseFirestore db; // Firbase firestore
+    private MaterialButton btnChangeName; // button change name
+    private ShapeableImageView viewImage; // Image view
+    private TextInputLayout imageName; // Image name edit text
+    private NoteAppProgressDialog progressDialog; // Progress dialog
 
+    /**
+     * Initialize activity
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_image_details);
 
+        // Get Firebase instance
         db = FirebaseFirestore.getInstance();
         mAuth = FirebaseAuth.getInstance();
         user = mAuth.getCurrentUser();
-
         storage = FirebaseStorage.getInstance();
+
+        // Get components from view
         viewImage = (ShapeableImageView) findViewById(R.id.imgView);
         btnChangeName = (MaterialButton) findViewById(R.id.btnChangeImageName);
         imageName = findViewById(R.id.textInputChangeImageName);
-
-        Note note = (Note) getIntent().getParcelableExtra("note");
-
         btnChangeName = findViewById(R.id.btnChangeImageName);
 
+        // Get Note from intent extra
+        Note note = (Note) getIntent().getParcelableExtra("note");
+
+        // Handle button change name on click
         btnChangeName.setOnClickListener(new View.OnClickListener() {
             @Override public void onClick(View v) {
                 changeImageName(note);
             }
         });
 
+        // Show progress dialog for loading image
         progressDialog = new NoteAppProgressDialog(ViewImageDetails.this);
         progressDialog.setUpDialog("Just a moment...",
                 "Please wait while we loading your image.");
         progressDialog.show();
 
+        // load image
         loadImage(note);
 
+        // set Image name to edit text
         imageName.getEditText().setText(note.getTitle());
 
     }
@@ -91,13 +101,16 @@ public class ViewImageDetails extends AppCompatActivity {
      * Change current image name and save to database
      */
     private void changeImageName(Note note) {
+        // Get image name from edit text
         String name = imageName.getEditText().getText().toString();
 
+        // validate image name
         if(ValidationUtils.validateFileName(name) == 1){
+            // Show error on edit text
             imageName.setErrorEnabled(true);
             imageName.setError("Please enter Image Name!");
         }else{
-
+            // Update date note title( Image Name)
             note.setTitle(name);
 
             DocumentReference noteRef = db.collection("users").document(user.getUid())
@@ -106,13 +119,21 @@ public class ViewImageDetails extends AppCompatActivity {
 
             noteRef.update("title", note.getTitle(),
                     "updatedDate", Timestamp.now());
+
+            // To main activity
             Intent intent = new Intent(ViewImageDetails.this, LoginActivity.class);
             intent.setFlags(intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(intent);
         }
     }
 
+    /**
+     * Load image from storage and firebase
+     * @param note
+     */
     private void loadImage(Note note) {
+
+        // get notebook reference
         DocumentReference notebookDocRef = db.collection("users").document(user.getUid())
                 .collection("notebooks").document(note.getNotebook().getId()).collection("notes")
                 .document(note.getId());
@@ -123,6 +144,8 @@ public class ViewImageDetails extends AppCompatActivity {
                             @NonNull @NotNull Task<DocumentSnapshot> task) {
                         if (task.isSuccessful()) {
                             DocumentSnapshot document = task.getResult();
+                            // if document exists
+                            // load image to image view
                             if (document.exists()) {
                                 Note note = document.toObject(Note.class);
                                 StorageReference storageRef = storage.getReference();
@@ -137,6 +160,7 @@ public class ViewImageDetails extends AppCompatActivity {
                                                         FileDownloadTask.TaskSnapshot taskSnapshot) {
                                                     int angle = 0;
                                                     try {
+                                                        // get angle from image's exif
                                                         ExifInterface ei = new ExifInterface(
                                                                 tempImage.getPath());
                                                         int orientation = ei.getAttributeInt(
@@ -158,6 +182,7 @@ public class ViewImageDetails extends AppCompatActivity {
                                                         e.printStackTrace();
                                                     }
 
+                                                    // Rotate image and set to image view
                                                     Bitmap bitmap = BitmapFactory.decodeFile(
                                                             tempImage.getAbsolutePath());
                                                     viewImage.setImageBitmap(
@@ -165,6 +190,10 @@ public class ViewImageDetails extends AppCompatActivity {
                                                     progressDialog.dismiss();
                                                 }
                                             }).addOnFailureListener(new OnFailureListener() {
+                                        /**
+                                         * on failure show error dialog
+                                         * @param exception
+                                         */
                                         @Override
                                         public void onFailure(@NonNull Exception exception) {
                                             // Handle any errors
@@ -189,6 +218,12 @@ public class ViewImageDetails extends AppCompatActivity {
     }
 
 
+    /**
+     * Rotate bitmap base on angle
+     * @param source bitmap source
+     * @param angle  angle
+     * @return rotated bitmap
+     */
     public static Bitmap RotateBitmap(Bitmap source, float angle) {
         Matrix matrix = new Matrix();
         matrix.postRotate(angle);
