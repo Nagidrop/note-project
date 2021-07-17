@@ -6,5 +6,5 @@
         android:id="@+id/nav_menu_note"
         android:title="@string/menu"
         app:showAsAction="ifRoom"
-        android:icon="@drawable/ic_menu_24"/>
+        android:icon="@drawable/ic_three_dot_menu_24"/>
 </menu>

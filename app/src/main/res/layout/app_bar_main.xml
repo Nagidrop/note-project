@@ -74,6 +74,6 @@
         android:visibility="invisible"
         android:clickable="true"
         android:contentDescription="@string/fab_content_desc"
-        app:srcCompat="@drawable/ic_writing_24" />
+        app:srcCompat="@drawable/ic_note_24_" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
