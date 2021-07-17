@@ -168,35 +168,59 @@ public class ViewEditNoteActivity extends AppCompatActivity {
                     dialog.setupOKDialog("Cannot Delete",
                             "Note hasn't been created yet.");
                     dialog.create().show();
+                } else if (!savedNote.isDeleted()) {
+                    // Create new confirmation dialog
+                    NoteAppDialog dialog = new NoteAppDialog(ViewEditNoteActivity.this);
+                    dialog.setupConfirmationDialog("Delete Confirmation",
+                            "Do you want to delete this note?");
+                    dialog.setPositiveButton("Yes",
+                            new DialogInterface.OnClickListener() {
+                                /**
+                                 * Log the current user out
+                                 *
+                                 * @param dialog dialog
+                                 * @param which  which button is clicked
+                                 */
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    // Show progress dialog
+                                    NoteAppProgressDialog progressDialog = new NoteAppProgressDialog(ViewEditNoteActivity.this);
+                                    progressDialog.setUpDialog("Just a moment...",
+                                            "Please wait while we deleting your note.");
+                                    progressDialog.show();
 
-                    return true;
+                                    // Delete note
+                                    deleteNote(progressDialog);
+                                }
+                            });
+                    dialog.create().show();
+                } else if (savedNote.isDeleted()){
+                    // Create new confirmation dialog
+                    NoteAppDialog dialog = new NoteAppDialog(ViewEditNoteActivity.this);
+                    dialog.setupConfirmationDialog("Delete Confirmation",
+                            "Are you sure to permanently delete this note?");
+                    dialog.setPositiveButton("Yes",
+                            new DialogInterface.OnClickListener() {
+                                /**
+                                 * Log the current user out
+                                 *
+                                 * @param dialog dialog
+                                 * @param which  which button is clicked
+                                 */
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    // Show progress dialog
+                                    NoteAppProgressDialog progressDialog = new NoteAppProgressDialog(ViewEditNoteActivity.this);
+                                    progressDialog.setUpDialog("Just a moment...",
+                                            "Please wait while we deleting your note.");
+                                    progressDialog.show();
+
+                                    // Delete note
+                                    deleteNote(progressDialog);
+                                }
+                            });
+                    dialog.create().show();
                 }
-
-                // Create new confirmation dialog
-                NoteAppDialog dialog = new NoteAppDialog(ViewEditNoteActivity.this);
-                dialog.setupConfirmationDialog("Delete Confirmation",
-                        "Do you want to delete this note?");
-                dialog.setPositiveButton("Yes",
-                        new DialogInterface.OnClickListener() {
-                            /**
-                             * Log the current user out
-                             * @param dialog    dialog
-                             * @param which     which button is clicked
-                             */
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                // Show progress dialog
-                                NoteAppProgressDialog progressDialog = new NoteAppProgressDialog(ViewEditNoteActivity.this);
-                                progressDialog.setUpDialog("Just a moment...",
-                                        "Please wait while we deleting your note.");
-                                progressDialog.show();
-
-                                // Delete note
-                                deleteNote(progressDialog);
-                            }
-                        });
-                dialog.create().show();
-
                 return true;
             }
         });
@@ -403,39 +427,76 @@ public class ViewEditNoteActivity extends AppCompatActivity {
         FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
-        // Delete note
-        db.collection("users").document(firebaseUser.getUid())
-                .collection("notebooks").document(savedNote.getNotebook().getId())
-                .collection("notes").document(savedNote.getId())
-                .update("deleted", true)
-                // If delete successful
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        Log.d("delete note", "onSuccess: Removed list item");
-                        progressDialog.dismiss();
 
-                        // Show dialog to notify user
-                        NoteAppDialog dialog = new NoteAppDialog(ViewEditNoteActivity.this);
-                        dialog.setUpReturnOKDialog("Delete Successful",
-                                "Note has been deleted.", ViewEditNoteActivity.this);
-                        dialog.create().show();
-                    }
-                })
-                // If delete failed
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.d("delete note", "onFailure: " + e.getLocalizedMessage());
-                        progressDialog.dismiss();
+        if (!savedNote.isDeleted()) {
+            // Delete note (move to trash)
+            db.collection("users").document(firebaseUser.getUid())
+                    .collection("notebooks").document(savedNote.getNotebook().getId())
+                    .collection("notes").document(savedNote.getId())
+                    .update("deleted", true)
+                    // If delete successful
+                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            Log.d("delete note", "onSuccess: Removed list item");
+                            progressDialog.dismiss();
 
-                        // Show dialog to notify user
-                        NoteAppDialog dialog = new NoteAppDialog(ViewEditNoteActivity.this);
-                        dialog.setupOKDialog("Delete Failed",
-                                "Something went wrong while we delete your note. Please try again!");
-                        dialog.create().show();
-                    }
-                });
+                            // Show dialog to notify user
+                            NoteAppDialog dialog = new NoteAppDialog(ViewEditNoteActivity.this);
+                            dialog.setUpReturnOKDialog("Delete Successful",
+                                    "Note has been deleted.", ViewEditNoteActivity.this);
+                            dialog.create().show();
+                        }
+                    })
+                    // If delete failed
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Log.d("delete note", "onFailure: " + e.getLocalizedMessage());
+                            progressDialog.dismiss();
+
+                            // Show dialog to notify user
+                            NoteAppDialog dialog = new NoteAppDialog(ViewEditNoteActivity.this);
+                            dialog.setupOKDialog("Delete Failed",
+                                    "Something went wrong while we delete your note. Please try again!");
+                            dialog.create().show();
+                        }
+                    });
+        } else {
+            // Delete note (move to trash)
+            db.collection("users").document(firebaseUser.getUid())
+                    .collection("notebooks").document(savedNote.getNotebook().getId())
+                    .collection("notes").document(savedNote.getId())
+                    .delete()
+                    // If delete successful
+                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            Log.d("delete note", "onSuccess: Removed list item");
+                            progressDialog.dismiss();
+
+                            // Show dialog to notify user
+                            NoteAppDialog dialog = new NoteAppDialog(ViewEditNoteActivity.this);
+                            dialog.setUpReturnOKDialog("Delete Successful",
+                                    "Note has been permanently deleted.", ViewEditNoteActivity.this);
+                            dialog.create().show();
+                        }
+                    })
+                    // If delete failed
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Log.d("delete note", "onFailure: " + e.getLocalizedMessage());
+                            progressDialog.dismiss();
+
+                            // Show dialog to notify user
+                            NoteAppDialog dialog = new NoteAppDialog(ViewEditNoteActivity.this);
+                            dialog.setupOKDialog("Delete Failed",
+                                    "Something went wrong while we delete your note. Please try again!");
+                            dialog.create().show();
+                        }
+                    });
+        }
     }
 
     /**

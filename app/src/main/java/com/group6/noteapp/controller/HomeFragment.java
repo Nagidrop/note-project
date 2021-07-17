@@ -261,8 +261,8 @@ public class HomeFragment extends Fragment {
 
                                         // Set up delete confirmation dialog
                                         NoteAppDialog dialog = new NoteAppDialog(getActivity());
-                                        dialog.setupConfirmationDialog("Move Confirmation",
-                                                "Do you want to move this note to trash?");
+                                        dialog.setupConfirmationDialog("Delete Confirmation",
+                                                "Do you want to delete this note?");
                                         dialog.setPositiveButton("Yes",
                                                 new DialogInterface.OnClickListener() {
                                                     /**
@@ -275,7 +275,7 @@ public class HomeFragment extends Fragment {
                                                         // Show progress dialog
                                                         NoteAppProgressDialog progressDialog = new NoteAppProgressDialog(getActivity());
                                                         progressDialog.setUpDialog("Just a moment...",
-                                                                "Please wait while we moving your note.");
+                                                                "Please wait while we delete your note.");
                                                         progressDialog.show();
 
                                                         // Delete note

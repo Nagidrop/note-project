@@ -259,7 +259,7 @@ public class TrashFragment extends Fragment {
                                         NoteAppDialog dialog = new NoteAppDialog(getActivity());
                                         if (direction == ItemTouchHelper.RIGHT) {
                                             dialog.setupConfirmationDialog("Delete Confirmation",
-                                                    "Do you want to delete this note?");
+                                                    "Do you want to permanently delete this note?");
                                             dialog.setPositiveButton("Yes",
                                                     new DialogInterface.OnClickListener() {
                                                         /**
@@ -276,7 +276,7 @@ public class TrashFragment extends Fragment {
                                                                             getActivity());
                                                             progressDialog
                                                                     .setUpDialog("Just a moment...",
-                                                                            "Please wait while we deleting your note.");
+                                                                            "Please wait while we delete your note.");
                                                             progressDialog.show();
 
                                                             // Delete note
@@ -318,7 +318,7 @@ public class TrashFragment extends Fragment {
                                                                             getActivity());
                                                             progressDialog
                                                                     .setUpDialog("Just a moment...",
-                                                                            "Please wait while we restoring your note.");
+                                                                            "Please wait while we restore your note.");
                                                             progressDialog.show();
 
                                                             // Delete note
@@ -436,7 +436,7 @@ public class TrashFragment extends Fragment {
                     @Override
                     public void onSuccess(Void aVoid) {
                         // Show toast message to notify user
-                        Toast.makeText(getActivity(), "Delete note successful.", Toast.LENGTH_SHORT)
+                        Toast.makeText(getActivity(), "Note has been permanently deleted.", Toast.LENGTH_SHORT)
                                 .show();
                         Log.d(TAG, "onSuccess: Removed list item");
                         progressDialog.dismiss();
