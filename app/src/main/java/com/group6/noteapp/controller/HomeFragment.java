@@ -20,7 +20,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
@@ -43,6 +42,11 @@ public class HomeFragment extends Fragment {
 
     private static final String TAG = "HomeFragment";   // Log tag
     private NoteAdapter adapter;                        // Firestore adapter
+    private Notebook notebook;                          // User's notebook
+
+    /* Firebase instances */
+    private FirebaseUser firebaseUser;                  // Firebase User
+    private FirebaseFirestore db;                       // Firebase Firestore
 
     /**
      * Constructor
@@ -57,7 +61,7 @@ public class HomeFragment extends Fragment {
     }
 
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater menuInflater) {
+    public void onCreateOptionsMenu(@NotNull Menu menu, MenuInflater menuInflater) {
         menuInflater.inflate(R.menu.menu_main, menu);
 
         super.onCreateOptionsMenu(menu, menuInflater);
@@ -65,24 +69,81 @@ public class HomeFragment extends Fragment {
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        // "notes" collection reference
+        CollectionReference noteColRef = db.collection("users").document(firebaseUser.getUid())
+                .collection("notebooks").document(firebaseUser.getUid())
+                .collection("notes");
+
+        Query query;
+        FirestoreRecyclerOptions<Note> options;
+        RecyclerView rvNote = getActivity().findViewById(R.id.recyclerView);
+
         switch (item.getItemId()) {
             case R.id.sortByTitleAscItem:
-                Toast.makeText(getActivity(), "title asc", Toast.LENGTH_SHORT).show();
+                // Query for Firestore adapter to listen to
+                query = noteColRef.whereEqualTo("deleted", false)
+                        .orderBy("title", Query.Direction.ASCENDING);
+
+                // Options to configure the FirestoreRecyclerAdapter
+                options = new FirestoreRecyclerOptions.Builder<Note>()
+                        .setQuery(query, Note.class)
+                        .setLifecycleOwner(getActivity())
+                        .build();
+
+                // Instantiate and set new adapter
+                adapter = new NoteAdapter(options, getActivity(), notebook);
+                rvNote.setAdapter(adapter);
 
                 break;
 
             case R.id.sortByTitleDescItem:
-                Toast.makeText(getActivity(), "title desc", Toast.LENGTH_SHORT).show();
+                // Query for Firestore adapter to listen to
+                query = noteColRef.whereEqualTo("deleted", false)
+                        .orderBy("title", Query.Direction.DESCENDING);
+
+                // Options to configure the FirestoreRecyclerAdapter
+                options = new FirestoreRecyclerOptions.Builder<Note>()
+                                .setQuery(query, Note.class)
+                                .setLifecycleOwner(getActivity())
+                                .build();
+
+                // Instantiate and set new adapter
+                adapter = new NoteAdapter(options, getActivity(), notebook);
+                rvNote.setAdapter(adapter);
 
                 break;
 
             case R.id.sortByCreatedDateItem:
-                Toast.makeText(getActivity(), "created date", Toast.LENGTH_SHORT).show();
+                // Query for Firestore adapter to listen to
+                query = noteColRef.whereEqualTo("deleted", false)
+                        .orderBy("createdDate", Query.Direction.DESCENDING);
+
+                // Options to configure the FirestoreRecyclerAdapter
+                options = new FirestoreRecyclerOptions.Builder<Note>()
+                        .setQuery(query, Note.class)
+                        .setLifecycleOwner(getActivity())
+                        .build();
+
+                // Instantiate and set new adapter
+                adapter = new NoteAdapter(options, getActivity(), notebook);
+                rvNote.setAdapter(adapter);
 
                 break;
 
             case R.id.sortByUpdatedDateItem:
-                Toast.makeText(getActivity(), "updated date", Toast.LENGTH_SHORT).show();
+                // Query for Firestore adapter to listen to
+                query = noteColRef.whereEqualTo("deleted", false)
+                        .orderBy("updatedDate", Query.Direction.DESCENDING);
+
+                // Options to configure the FirestoreRecyclerAdapter
+                options = new FirestoreRecyclerOptions.Builder<Note>()
+                        .setQuery(query, Note.class)
+                        .setLifecycleOwner(getActivity())
+                        .build();
+
+                // Instantiate and set new adapter
+                adapter = new NoteAdapter(options, getActivity(), notebook);
+                rvNote.setAdapter(adapter);
 
                 break;
 
@@ -124,10 +185,9 @@ public class HomeFragment extends Fragment {
      * @param progressDialog Note App progress dialog
      */
     private void setupRecyclerView(View inflatedView, NoteAppProgressDialog progressDialog) {
-        /* Firebase instances */
-        FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
-        FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        /* Firebase instances init */
+        firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+        db = FirebaseFirestore.getInstance();
 
         // Notebook collection reference
         CollectionReference notebookColRef = db.collection("users").document(firebaseUser.getUid())
@@ -140,14 +200,15 @@ public class HomeFragment extends Fragment {
                     @Override
                     public void onSuccess(DocumentSnapshot documentSnapshot) {
                         // Parse notebook document to object
-                        Notebook notebook = documentSnapshot.toObject(Notebook.class);
+                        notebook = documentSnapshot.toObject(Notebook.class);
 
                         // "notes" collection reference
                         CollectionReference noteColRef = documentSnapshot.getReference()
                                 .collection("notes");   // "notebooks" collection reference
 
                         // Query for Firestore adapter to listen to
-                        Query query = noteColRef.whereEqualTo("deleted", false).orderBy("updatedDate", Query.Direction.DESCENDING);
+                        Query query = noteColRef.whereEqualTo("deleted", false)
+                                .orderBy("updatedDate", Query.Direction.DESCENDING);
 
                         // Options to configure the FirestoreRecyclerAdapter
                         FirestoreRecyclerOptions<Note> options =
@@ -257,7 +318,6 @@ public class HomeFragment extends Fragment {
      * @param progressDialog progress dialog
      */
     private void deleteNote(FirebaseFirestore db, RecyclerView.ViewHolder viewHolder, FirebaseUser firebaseUser, NoteAppProgressDialog progressDialog) {
-        ;
         // Get note from its position in Firestore adapter
         Note deleteNote = adapter.getItem(viewHolder.getAdapterPosition());
         deleteNote.setDeleted(true);
