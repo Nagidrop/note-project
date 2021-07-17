@@ -41,7 +41,7 @@ import org.jetbrains.annotations.NotNull;
 public class HomeFragment extends Fragment {
 
     private static final String TAG = "HomeFragment";   // Log tag
-    private NoteAdapter adapter;                        // Firestore adapter
+    private NoteAdapter adapter;                        // Firestore recycler adapter
     private Notebook notebook;                          // User's notebook
 
     /* Firebase instances */
@@ -74,8 +74,11 @@ public class HomeFragment extends Fragment {
                 .collection("notebooks").document(firebaseUser.getUid())
                 .collection("notes");
 
+        /* Query, options to configure FirestoreRecyclerAdapter*/
         Query query;
         FirestoreRecyclerOptions<Note> options;
+
+        // Recycler View
         RecyclerView rvNote = getActivity().findViewById(R.id.recyclerView);
 
         switch (item.getItemId()) {
@@ -162,7 +165,10 @@ public class HomeFragment extends Fragment {
 
         // Inflate the layout for this fragment
         View inflatedView = inflater.inflate(R.layout.fragment_home, container, false);
+
+        // Enable Menu for this fragment
         setHasOptionsMenu(true);
+
         /* Set up progress dialog to tell user to wait */
         NoteAppProgressDialog progressDialog = new NoteAppProgressDialog(getActivity());
         progressDialog.setUpDialog("Just a moment...",
@@ -217,7 +223,7 @@ public class HomeFragment extends Fragment {
                                         .setLifecycleOwner(getActivity())
                                         .build();
 
-                        // instantiate new adapter
+                        // Instantiate new adapter
                         adapter = new NoteAdapter(options, getActivity(), notebook);
 
                         /* Set up Recycler View */
@@ -226,6 +232,7 @@ public class HomeFragment extends Fragment {
                         rvNote.setAdapter(adapter);     // set adapter
                         rvNote.setLayoutManager(new LinearLayoutManager(getActivity()));    // set layout
 
+                        // Create Item Touch Helper to attach to Recycler View
                         new ItemTouchHelper(
                                 new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT) {
                                     @Override
@@ -233,8 +240,8 @@ public class HomeFragment extends Fragment {
                                                           @NonNull
                                                                   RecyclerView.ViewHolder viewHolder,
                                                           @NonNull RecyclerView.ViewHolder target) {
-                                        // this method is called
-                                        // when the item is moved.
+                                        // Do nothing when item is moved
+
                                         return false;
                                     }
 
@@ -287,7 +294,7 @@ public class HomeFragment extends Fragment {
                                         dialog.create().show();
                                     }
 
-                                }).attachToRecyclerView(rvNote);    // attach item call back to recycler view
+                                }).attachToRecyclerView(rvNote);    // Attach item call back to recycler view
 
                         progressDialog.dismiss();
                     }
@@ -307,7 +314,6 @@ public class HomeFragment extends Fragment {
                     }
                 });
     }
-
 
     /**
      * Delete Note
@@ -331,7 +337,7 @@ public class HomeFragment extends Fragment {
                     @Override
                     public void onSuccess(Void aVoid) {
                         // Show toast message to notify user
-                        Toast.makeText(getActivity(), "Move note to trash successful.", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(), "Delete note successful.", Toast.LENGTH_SHORT).show();
                         Log.d(TAG, "onSuccess: Removed list item");
                         progressDialog.dismiss();
                     }
@@ -344,8 +350,8 @@ public class HomeFragment extends Fragment {
 
                         // Show dialog to notify user of error
                         NoteAppDialog dialog = new NoteAppDialog(getActivity());
-                        dialog.setupOKDialog("Move To Trash Failed",
-                                "Something went wrong while we move your note. Please try again!");
+                        dialog.setupOKDialog("Delete Failed",
+                                "Something went wrong while we delete your note. Please try again!");
                         dialog.create().show();
 
                         Log.d(TAG, "onFailure: " + e.getLocalizedMessage());
