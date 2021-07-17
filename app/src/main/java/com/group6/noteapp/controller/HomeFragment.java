@@ -326,18 +326,17 @@ public class HomeFragment extends Fragment {
     private void deleteNote(FirebaseFirestore db, RecyclerView.ViewHolder viewHolder, FirebaseUser firebaseUser, NoteAppProgressDialog progressDialog) {
         // Get note from its position in Firestore adapter
         Note deleteNote = adapter.getItem(viewHolder.getAdapterPosition());
-        deleteNote.setDeleted(true);
 
         db.collection("users").document(firebaseUser.getUid())
                 .collection("notebooks").document(deleteNote.getNotebook().getId()).collection("notes")
                 .document(deleteNote.getId())
-                .update("deleted", deleteNote.isDeleted())
+                .update("deleted", true)
                 // If delete note successful
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
                         // Show toast message to notify user
-                        Toast.makeText(getActivity(), "Delete note successful.", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(), "Note has been deleted.", Toast.LENGTH_SHORT).show();
                         Log.d(TAG, "onSuccess: Removed list item");
                         progressDialog.dismiss();
                     }

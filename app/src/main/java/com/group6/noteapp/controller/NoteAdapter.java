@@ -59,6 +59,14 @@ public class NoteAdapter extends FirestoreRecyclerAdapter<Note, NoteViewHolder> 
     }
 
     /**
+     * Get notebook to pass to add new note
+     * @return  notebook
+     */
+    public Notebook getNotebook() {
+        return notebook;
+    }
+
+    /**
      * Get note item view type to display
      * @param position  note position in adapter
      * @return  1 if note is text note

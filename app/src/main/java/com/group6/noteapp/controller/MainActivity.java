@@ -1,15 +1,11 @@
 package com.group6.noteapp.controller;
 
 import android.Manifest;
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.net.ConnectivityManager;
-import android.net.NetworkCapabilities;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.text.Html;
 import android.text.TextUtils;
@@ -25,6 +21,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.facebook.login.LoginManager;
@@ -54,8 +51,6 @@ public class MainActivity extends AppCompatActivity {
             Manifest.permission.READ_EXTERNAL_STORAGE
     };
 
-    private BroadcastReceiver MyReceiver = null;
-
     private MenuItem previousItem; // Menu previous clicked itemm
     private Animation rotateClose; //Rotate close animation
     private Animation rotateOpen; // Rotate open animation
@@ -66,7 +61,6 @@ public class MainActivity extends AppCompatActivity {
     private FloatingActionButton fabRecord; // Fab record button
     private FloatingActionButton fabCapture; // Fab capture button
     private boolean clicked; // fabMenu clicked state
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -165,6 +159,7 @@ public class MainActivity extends AppCompatActivity {
                         if (previousItem != null) {
                             previousItem.setChecked(false);
                         }
+
                         item.setChecked(true);
                         previousItem = item;
                         topAppBar.setTitle(item.getTitle());
@@ -179,11 +174,14 @@ public class MainActivity extends AppCompatActivity {
                             case R.id.menu_all_notes:
                                 fragment = new HomeFragment();
                                 break;
+
                             case R.id.menu_trash:
                                 fragment = new TrashFragment();
                                 break;
+
                             default:
                                 fragment = new HomeFragment();
+                                break;
                         }
 
                         fragmentManager.beginTransaction()
@@ -208,6 +206,13 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent createNoteIntent = new Intent(MainActivity.this, ViewEditNoteActivity.class);
+
+                /* Get recyclerview and its adapter */
+                RecyclerView rvNote = findViewById(R.id.recyclerView);
+                NoteAdapter adapter = (NoteAdapter) rvNote.getAdapter();
+
+                // Put notebook to adapter which is used to create new note
+                createNoteIntent.putExtra("notebook", adapter.getNotebook());
 
                 startActivity(createNoteIntent);
             }
@@ -242,24 +247,19 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
-
-//        if (!isNetworkAvailable()) {
-//            new AlertDialog.Builder(this)
-//                    .setIcon(android.R.drawable.ic_dialog_alert)
-//                    .setTitle("Internet Connection Alert")
-//                    .setMessage("Please Check Your Internet Connection")
-//                    .setPositiveButton("Close", (dialogInterface, i) -> finish()).show();
-//        } else if (isNetworkAvailable()) {
-//            Toast.makeText(MainActivity.this,
-//                    "Welcome", Toast.LENGTH_LONG).show();
-//        }
     }
 
+    /**
+     * Navigate to camera activity
+     */
     private void enableCamera() {
         Intent intent = new Intent(this, CameraActivity.class);
         startActivity(intent);
     }
 
+    /**
+     * Navigate to record activity
+     */
     private void enableRecord() {
         Intent intent = new Intent(this, RecordActivity.class);
         startActivity(intent);
@@ -285,27 +285,6 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
-
-    public boolean isNetworkAvailable() {
-        ConnectivityManager connectivityManager =
-                (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        if (connectivityManager != null) {
-            if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                NetworkCapabilities capabilities = connectivityManager
-                        .getNetworkCapabilities(connectivityManager.getActiveNetwork());
-                if (capabilities != null) {
-                    if (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) ||
-                            capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) ||
-                            capabilities.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET)) {
-                        return true;
-                    }
-                }
-            }
-        }
-
-        return false;
-    }
-
     /**
      * Log out confirmation
      */
@@ -318,8 +297,8 @@ public class MainActivity extends AppCompatActivity {
                 new DialogInterface.OnClickListener() {
                     /**
                      * Log the current user out
-                     * @param dialog
-                     * @param which
+                     * @param dialog dialog
+                     * @param which  which button has been clicked
                      */
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -361,7 +340,7 @@ public class MainActivity extends AppCompatActivity {
     /**
      * Set visibility of fabRecord, fabNote, fabCapture
      *
-     * @param clicked
+     * @param clicked   status of click
      */
     private void setVisibility(boolean clicked) {
         if (!clicked) {
@@ -375,6 +354,9 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Override on back and show dialog for confirmation
+     */
     @Override
     public void onBackPressed() {
         NoteAppDialog dialog = new NoteAppDialog(this);
@@ -384,8 +366,8 @@ public class MainActivity extends AppCompatActivity {
                 new DialogInterface.OnClickListener() {
                     /**
                      * Log the current user out
-                     * @param dialog
-                     * @param which
+                     * @param dialog    dialog
+                     * @param which     which button has been clicked
                      */
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -396,9 +378,13 @@ public class MainActivity extends AppCompatActivity {
         dialog.create().show();
     }
 
+    /**
+     * Log the user out
+     */
     private void logOut() {
         FirebaseAuth.getInstance().signOut();
         LoginManager.getInstance().logOut();
+
         Intent intent = new Intent(MainActivity.this, LoginActivity.class);
         intent.setFlags(
                 intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);

@@ -61,9 +61,10 @@ public class ViewEditNoteActivity extends AppCompatActivity {
 
         // Check if user add new note and then add new notebook
         if (note.getNotebook() == null) {
-            // Set notebook title as first notebook
-            Notebook notebook = new Notebook();
-            notebook.setTitle("My First Notebook");
+            // Get notebook from intent
+            Notebook notebook = getIntent().getParcelableExtra("notebook");
+
+            // Set notebook for new note
             note.setNotebook(notebook);
         }
 
@@ -374,7 +375,7 @@ public class ViewEditNoteActivity extends AppCompatActivity {
         db.collection("users").document(firebaseUser.getUid())
                 .collection("notebooks").document(note.getNotebook().getId())
                 .collection("notes").document(note.getId())
-                .delete()
+                .update("deleted", true)
                 // If delete successful
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
