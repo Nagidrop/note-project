@@ -6,6 +6,7 @@ package com.group6.noteapp.controller;
 
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.text.InputType;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
@@ -93,6 +94,15 @@ public class ViewEditNoteActivity extends AppCompatActivity {
         txtInputNoteTitle.getEditText().setText(savedNoteTitle);
         txtInputNoteContent.getEditText().setText(savedNoteContent);
         txtNotebook.setText(savedNote.getNotebook().getTitle());
+
+        // If note is deleted then disable editing on title and content, hide save button
+        if (savedNote.isDeleted()){
+            txtInputNoteTitle.getEditText().setEnabled(false);
+            txtInputNoteTitle.getEditText().setInputType(InputType.TYPE_NULL);
+            txtInputNoteContent.getEditText().setEnabled(false);
+            txtInputNoteContent.getEditText().setInputType(InputType.TYPE_NULL);
+            fabSave.setVisibility(View.INVISIBLE);
+        }
 
         /* Get Toolbar and set Action Bar as the Toolbar */
         MaterialToolbar toolbar = findViewById(R.id.noteToolbar);
