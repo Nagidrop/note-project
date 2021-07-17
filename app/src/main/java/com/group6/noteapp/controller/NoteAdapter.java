@@ -59,6 +59,14 @@ public class NoteAdapter extends FirestoreRecyclerAdapter<Note, NoteViewHolder> 
     }
 
     /**
+     * Get notebook to pass to add new note
+     * @return  notebook
+     */
+    public Notebook getNotebook() {
+        return notebook;
+    }
+
+    /**
      * Get note item view type to display
      * @param position  note position in adapter
      * @return  1 if note is text note
@@ -136,6 +144,8 @@ public class NoteAdapter extends FirestoreRecyclerAdapter<Note, NoteViewHolder> 
                 // Set note's updated date
                 updatedDate = dateFormat.format(model.getUpdatedDate().toDate());
                 holder.getNoteUpdatedDate().setText(updatedDate);
+
+                // Set note's notebook
                 model.setNotebook(notebook);
 
                 // Card view's On Click Listener
@@ -152,22 +162,24 @@ public class NoteAdapter extends FirestoreRecyclerAdapter<Note, NoteViewHolder> 
 
             case 3:
                 // Set note's title
-                holder.getNoteTitle().setText(model.getTitle());             // set note title
+                holder.getNoteTitle().setText(model.getTitle());
 
                 // Set note's updated date
                 updatedDate = dateFormat.format(model.getUpdatedDate().toDate());
-                holder.getNoteUpdatedDate().setText(updatedDate);           // set note updated date
+                holder.getNoteUpdatedDate().setText(updatedDate);
+
+                // Set note's notebook
                 model.setNotebook(notebook);
 
                 // Card view's On Click Listener
                 holder.getNoteCardView().setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Intent viewImageDetailsIntent = new Intent(context, ViewImageDetails.class);
+                        Intent viewRecordIntent = new Intent(context, RecordActivity.class);
 
-                        viewImageDetailsIntent.putExtra("note", model);
+                        viewRecordIntent.putExtra("note", model);
 
-                        context.startActivity(viewImageDetailsIntent);
+                        context.startActivity(viewRecordIntent);
                     }
                 });
 

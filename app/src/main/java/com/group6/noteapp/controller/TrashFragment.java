@@ -2,6 +2,14 @@ package com.group6.noteapp.controller;
 
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -9,16 +17,9 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Toast;
-
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
@@ -37,9 +38,13 @@ import org.jetbrains.annotations.NotNull;
 
 public class TrashFragment extends Fragment {
 
-
     private static final String TAG = "HomeFragment";   // Log tag
-    private NoteAdapter adapter;                        // Firestore adapter
+    private NoteAdapter adapter;                        // Firestore recycler adapter
+    private Notebook notebook;                          // User's notebook
+
+    /* Firebase instances */
+    private FirebaseUser firebaseUser;                  // Firebase User
+    private FirebaseFirestore db;                       // Firebase Firestore
 
     /**
      * Constructor
@@ -51,6 +56,105 @@ public class TrashFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(@NotNull Menu menu, MenuInflater menuInflater) {
+        menuInflater.inflate(R.menu.menu_main, menu);
+
+        super.onCreateOptionsMenu(menu, menuInflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        // "notes" collection reference
+        CollectionReference noteColRef = db.collection("users").document(firebaseUser.getUid())
+                .collection("notebooks").document(firebaseUser.getUid())
+                .collection("notes");
+
+        /* Query, options to configure FirestoreRecyclerAdapter*/
+        Query query;
+        FirestoreRecyclerOptions<Note> options;
+
+        // Recycler View
+        RecyclerView rvNote = getActivity().findViewById(R.id.recyclerView);
+
+        switch (item.getItemId()) {
+            case R.id.sortByTitleAscItem:
+                // Query for Firestore adapter to listen to
+                query = noteColRef.whereEqualTo("deleted", false)
+                        .orderBy("title", Query.Direction.ASCENDING);
+
+                // Options to configure the FirestoreRecyclerAdapter
+                options = new FirestoreRecyclerOptions.Builder<Note>()
+                        .setQuery(query, Note.class)
+                        .setLifecycleOwner(getActivity())
+                        .build();
+
+                // Instantiate and set new adapter
+                adapter = new NoteAdapter(options, getActivity(), notebook);
+                rvNote.setAdapter(adapter);
+
+                break;
+
+            case R.id.sortByTitleDescItem:
+                // Query for Firestore adapter to listen to
+                query = noteColRef.whereEqualTo("deleted", false)
+                        .orderBy("title", Query.Direction.DESCENDING);
+
+                // Options to configure the FirestoreRecyclerAdapter
+                options = new FirestoreRecyclerOptions.Builder<Note>()
+                        .setQuery(query, Note.class)
+                        .setLifecycleOwner(getActivity())
+                        .build();
+
+                // Instantiate and set new adapter
+                adapter = new NoteAdapter(options, getActivity(), notebook);
+                rvNote.setAdapter(adapter);
+
+                break;
+
+            case R.id.sortByCreatedDateItem:
+                // Query for Firestore adapter to listen to
+                query = noteColRef.whereEqualTo("deleted", false)
+                        .orderBy("createdDate", Query.Direction.DESCENDING);
+
+                // Options to configure the FirestoreRecyclerAdapter
+                options = new FirestoreRecyclerOptions.Builder<Note>()
+                        .setQuery(query, Note.class)
+                        .setLifecycleOwner(getActivity())
+                        .build();
+
+                // Instantiate and set new adapter
+                adapter = new NoteAdapter(options, getActivity(), notebook);
+                rvNote.setAdapter(adapter);
+
+                break;
+
+            case R.id.sortByUpdatedDateItem:
+                // Query for Firestore adapter to listen to
+                query = noteColRef.whereEqualTo("deleted", false)
+                        .orderBy("updatedDate", Query.Direction.DESCENDING);
+
+                // Options to configure the FirestoreRecyclerAdapter
+                options = new FirestoreRecyclerOptions.Builder<Note>()
+                        .setQuery(query, Note.class)
+                        .setLifecycleOwner(getActivity())
+                        .build();
+
+                // Instantiate and set new adapter
+                adapter = new NoteAdapter(options, getActivity(), notebook);
+                rvNote.setAdapter(adapter);
+
+                break;
+
+            default:
+                // Do nothing
+
+                break;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -81,10 +185,9 @@ public class TrashFragment extends Fragment {
      * @param progressDialog Note App progress dialog
      */
     private void setupRecyclerView(View inflatedView, NoteAppProgressDialog progressDialog) {
-        /* Firebase instances */
-        FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
-        FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        /* Firebase instances init */
+        firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+        db = FirebaseFirestore.getInstance();
 
         // Notebook collection reference
         CollectionReference notebookColRef = db.collection("users").document(firebaseUser.getUid())
@@ -97,7 +200,7 @@ public class TrashFragment extends Fragment {
                     @Override
                     public void onSuccess(DocumentSnapshot documentSnapshot) {
                         // Parse notebook document to object
-                        Notebook notebook = documentSnapshot.toObject(Notebook.class);
+                        notebook = documentSnapshot.toObject(Notebook.class);
 
                         // "notes" collection reference
                         CollectionReference noteColRef = documentSnapshot.getReference()
@@ -114,17 +217,16 @@ public class TrashFragment extends Fragment {
                                         .setLifecycleOwner(getActivity())
                                         .build();
 
-                        // instantiate new adapter
+                        // Instantiate new adapter
                         adapter = new NoteAdapter(options, getActivity(), notebook);
 
                         /* Set up Recycler View */
                         RecyclerView rvNote = inflatedView.findViewById(R.id.recyclerViewTrash);
-                        rvNote.setHasFixedSize(
-                                true);   // notify recycler view that all items have same size
+                        rvNote.setHasFixedSize(true);   // notify recycler view that all items have same size
                         rvNote.setAdapter(adapter);     // set adapter
-                        rvNote.setLayoutManager(
-                                new LinearLayoutManager(getActivity()));    // set layout
+                        rvNote.setLayoutManager(new LinearLayoutManager(getActivity()));    // set layout
 
+                        // Create Item Touch Helper to attach to Recycler View
                         new ItemTouchHelper(
                                 new ItemTouchHelper.SimpleCallback(0,
                                         ItemTouchHelper.RIGHT | ItemTouchHelper.LEFT) {
@@ -133,8 +235,8 @@ public class TrashFragment extends Fragment {
                                                           @NonNull
                                                                   RecyclerView.ViewHolder viewHolder,
                                                           @NonNull RecyclerView.ViewHolder target) {
-                                        // this method is called
-                                        // when the item is moved.
+                                        // Do nothing when item is moved
+
                                         return false;
                                     }
 
@@ -156,8 +258,8 @@ public class TrashFragment extends Fragment {
                                                     new DialogInterface.OnClickListener() {
                                                         /**
                                                          * Delete user note on confirmation
-                                                         * @param dialog
-                                                         * @param which
+                                                         * @param dialog    dialog
+                                                         * @param which     which button is clicked
                                                          */
                                                         @Override
                                                         public void onClick(DialogInterface dialog,
@@ -180,8 +282,8 @@ public class TrashFragment extends Fragment {
                                                     new DialogInterface.OnClickListener() {
                                                         /**
                                                          * Refresh recycler view
-                                                         * @param dialog
-                                                         * @param which
+                                                         * @param dialog    dialog
+                                                         * @param which     which button is clicked
                                                          */
                                                         @Override
                                                         public void onClick(DialogInterface dialog,
@@ -191,7 +293,6 @@ public class TrashFragment extends Fragment {
                                                     });
 
                                         } else if (direction == ItemTouchHelper.LEFT) {
-
                                             dialog.setupConfirmationDialog("Restore Confirmation",
                                                     "Do you want to restore this note?");
                                             dialog.setPositiveButton("Yes",
@@ -199,8 +300,8 @@ public class TrashFragment extends Fragment {
                                                         /**
                                                          * Delete user note on confirmation
                                                          *
-                                                         * @param dialog
-                                                         * @param which
+                                                         * @param dialog    dialog
+                                                         * @param which     which button is clicked
                                                          */
                                                         @Override
                                                         public void onClick(DialogInterface dialog,
@@ -225,8 +326,8 @@ public class TrashFragment extends Fragment {
                                                         /**
                                                          * Refresh recycler view
                                                          *
-                                                         * @param dialog
-                                                         * @param which
+                                                         * @param dialog    dialog
+                                                         * @param which     which button is clicked
                                                          */
                                                         @Override
                                                         public void onClick(DialogInterface dialog,
@@ -239,8 +340,7 @@ public class TrashFragment extends Fragment {
                                         dialog.create().show();
                                     }
 
-                                }).attachToRecyclerView(
-                                rvNote);    // attach item call back to recycler view
+                                }).attachToRecyclerView(rvNote);    // Attach item call back to recycler view
 
                         progressDialog.dismiss();
                     }
