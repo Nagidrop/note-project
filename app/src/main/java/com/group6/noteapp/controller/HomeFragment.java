@@ -53,7 +53,6 @@ public class HomeFragment extends Fragment {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        setHasOptionsMenu(true);
         super.onCreate(savedInstanceState);
     }
 
@@ -67,20 +66,6 @@ public class HomeFragment extends Fragment {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.nav_menu_main:
-//                ActionMenuItemView menuItem = getActivity().findViewById(R.id.nav_menu_main);
-//
-//                menuItem.setOnClickListener(new View.OnClickListener() {
-//                    @Override
-//                    public void onClick(View v) {
-//                        switch (v.getId()) {
-//
-//                        }
-//                    }
-//                });
-
-                break;
-
             case R.id.sortByTitleAscItem:
                 Toast.makeText(getActivity(), "title asc", Toast.LENGTH_SHORT).show();
 
@@ -102,6 +87,7 @@ public class HomeFragment extends Fragment {
                 break;
 
             default:
+                // Do nothing
 
                 break;
         }
