@@ -48,3 +48,13 @@ r
 Bapp/src/main/java/com/group6/noteapp/controller/LoginActivity.java,a\f\afbcec810a6927b20bfeaa7856ca50663595e781
 m
 =app/src/main/java/com/group6/noteapp/view/NoteViewHolder.java,1\a\1ac2a0a9bf62167955f63a98de227fd8b19de86f
+u
+Eapp/src/main/java/com/group6/noteapp/controller/ViewImageDetails.java,5\f\5f4dea36d53c5d090288ba9014278f9455dff07b
+n
+>app/src/main/java/com/group6/noteapp/util/ValidationUtils.java,1\8\18084c4b8237838cc9128aefbd09d8bb28c4041c
+w
+Gapp/src/main/java/com/group6/noteapp/controller/RegisterFragment01.java,c\a\ca32a263d95c8fd47bf5413e5c179cba70832311
+w
+Gapp/src/main/java/com/group6/noteapp/controller/RegisterFragment02.java,e\f\ef31fe2e5e07075b434f4f6cec7f76c347abae86
+y
+Iapp/src/main/java/com/group6/noteapp/controller/ViewEditNoteActivity.java,3\2\323d0d22b88f270db9b185c95f10535bc8051884
