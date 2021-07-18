@@ -190,9 +190,7 @@ public class NoteAdapter extends FirestoreRecyclerAdapter<Note, NoteViewHolder> 
 
     }
 
-    @NonNull
-    @NotNull
-    @Override
+
     /**
      * Create new view (invoked by the layout manager)
      * @param parent   parent of view layout
