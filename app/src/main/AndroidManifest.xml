@@ -19,8 +19,8 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_note_app_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.MyApp">
-        <activity android:name=".controller.RecordPlayItem"></activity>
+        android:theme="@style/Theme.NoteApp">
+        <activity android:name=".controller.RecordPlayItem"/>
         <activity android:name=".controller.ViewImageDetails" />
         <activity android:name=".controller.ViewCaptureImageActivity" />
         <activity

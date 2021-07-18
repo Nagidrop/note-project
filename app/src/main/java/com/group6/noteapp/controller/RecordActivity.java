@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.SystemClock;
@@ -22,6 +23,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -192,6 +194,7 @@ public class RecordActivity extends AppCompatActivity implements View.OnClickLis
                 btnStop.setEnabled(true);
                 btnRecording.setEnabled(false);
                 break;
+
         }
     }
 
@@ -245,7 +248,7 @@ public class RecordActivity extends AppCompatActivity implements View.OnClickLis
         //Get ID user
         String userID = firebaseAuth.getUid();
         //Get Storage Reference
-        StorageReference filepath = storageReference.child(userID).child("Record").child("recording_" + formatter.format(now) + ".3gp");
+        StorageReference filepath = storageReference.child(userID).child("Record").child(uri.getLastPathSegment());
         // Create upload Task
         UploadTask uploadTask = filepath.putFile(uri);
         // Register observers to listen for when the download is done or if it fails
@@ -309,6 +312,8 @@ public class RecordActivity extends AppCompatActivity implements View.OnClickLis
 
                                                 }
                                             });
+
+
                                         }
                                     }
                                 } else {
