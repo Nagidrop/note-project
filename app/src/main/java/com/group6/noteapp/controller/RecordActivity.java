@@ -59,7 +59,6 @@ import java.util.concurrent.TimeUnit;
  * Activity for recording audio
  */
 public class RecordActivity extends AppCompatActivity implements View.OnClickListener {
-    private String fileName = null;
 
     /* Text Input Layouts and Button */
     private String fileName = null;                  // File name path
