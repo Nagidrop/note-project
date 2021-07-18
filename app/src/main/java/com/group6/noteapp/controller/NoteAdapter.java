@@ -1,6 +1,7 @@
-/**
- * Quan Duc Loc CE140037
+/*
+ * Group 06 SE1402
  */
+
 package com.group6.noteapp.controller;
 
 import android.content.Context;
@@ -34,14 +35,14 @@ import org.jetbrains.annotations.NotNull;
 import java.text.SimpleDateFormat;
 
 /**
- * Note Adapter to store list of notes
+ * Note Adapter to store list of notes and display
  */
 public class NoteAdapter extends FirestoreRecyclerAdapter<Note, NoteViewHolder> {
 
     private final Context context;              // activity's context
     private final Notebook notebook;            // notebook in which the notes in adapter are in
-    private FirebaseUser firebaseUser;          // Firebase user
-    private FirebaseStorage firebaseStorage;    // Firebase storage
+    private final FirebaseUser firebaseUser;          // Firebase user
+    private final FirebaseStorage firebaseStorage;    // Firebase storage
 
     /**
      * Create a new RecyclerView adapter that listens to a Firestore Query.  See {@link
