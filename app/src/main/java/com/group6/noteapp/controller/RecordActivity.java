@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.SystemClock;
@@ -22,6 +23,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -57,6 +59,7 @@ import java.util.concurrent.TimeUnit;
  * Activity for recording audio
  */
 public class RecordActivity extends AppCompatActivity implements View.OnClickListener {
+    private String fileName = null;
 
     /* Text Input Layouts and Button */
     private String fileName = null;                  // File name path
@@ -192,6 +195,7 @@ public class RecordActivity extends AppCompatActivity implements View.OnClickLis
                 btnStop.setEnabled(true);
                 btnRecording.setEnabled(false);
                 break;
+
         }
     }
 
