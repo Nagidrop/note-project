@@ -69,7 +69,7 @@
         <item name="toolbarStyle">@style/Widget.MaterialComponents.Toolbar.PrimarySurface</item>
         <item name="buttonStyle">@style/Widget.MyTheme.Button</item>
     </style>
-    <style name="Base.Theme.MaterialThemeBuilder" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+    <style name="Base.Theme.MaterialThemeBuilder" parent="Theme.MaterialComponents.Light.NoActionBar">
         <!-- Font family -->
         <item name="android:fontFamily">@font/inter_font_family</item>
         <item name="fontFamily">@font/inter_font_family</item>
