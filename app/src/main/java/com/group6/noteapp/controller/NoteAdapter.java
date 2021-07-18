@@ -1,6 +1,7 @@
-/**
- * Quan Duc Loc CE140037
+/*
+ * Group 06 SE1402
  */
+
 package com.group6.noteapp.controller;
 
 import android.content.Context;
@@ -34,14 +35,14 @@ import org.jetbrains.annotations.NotNull;
 import java.text.SimpleDateFormat;
 
 /**
- * Note Adapter to store list of notes
+ * Note Adapter to store list of notes and display
  */
 public class NoteAdapter extends FirestoreRecyclerAdapter<Note, NoteViewHolder> {
 
     private final Context context;              // activity's context
     private final Notebook notebook;            // notebook in which the notes in adapter are in
-    private FirebaseUser firebaseUser;          // Firebase user
-    private FirebaseStorage firebaseStorage;    // Firebase storage
+    private final FirebaseUser firebaseUser;          // Firebase user
+    private final FirebaseStorage firebaseStorage;    // Firebase storage
 
     /**
      * Create a new RecyclerView adapter that listens to a Firestore Query.  See {@link
@@ -56,6 +57,14 @@ public class NoteAdapter extends FirestoreRecyclerAdapter<Note, NoteViewHolder> 
         this.notebook = notebook;
         this.firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         this.firebaseStorage = FirebaseStorage.getInstance();
+    }
+
+    /**
+     * Get notebook to pass to add new note
+     * @return  notebook
+     */
+    public Notebook getNotebook() {
+        return notebook;
     }
 
     /**
@@ -82,6 +91,7 @@ public class NoteAdapter extends FirestoreRecyclerAdapter<Note, NoteViewHolder> 
     @Override
     protected void onBindViewHolder(@NonNull @NotNull NoteViewHolder holder, int position,
                                     @NonNull @NotNull Note model) {
+        // Date formatter and note's updated date
         SimpleDateFormat dateFormat = new SimpleDateFormat("E, dd MMM yyyy h:mm aa");
         String updatedDate;
 
@@ -136,6 +146,8 @@ public class NoteAdapter extends FirestoreRecyclerAdapter<Note, NoteViewHolder> 
                 // Set note's updated date
                 updatedDate = dateFormat.format(model.getUpdatedDate().toDate());
                 holder.getNoteUpdatedDate().setText(updatedDate);
+
+                // Set note's notebook
                 model.setNotebook(notebook);
 
                 // Card view's On Click Listener
@@ -150,20 +162,23 @@ public class NoteAdapter extends FirestoreRecyclerAdapter<Note, NoteViewHolder> 
                     }
                 });
 
+                break;
             case 3:
                 // Set note's title
-                holder.getNoteTitle().setText(model.getTitle());             // set note title
+                holder.getNoteTitle().setText(model.getTitle());
 
                 // Set note's updated date
                 updatedDate = dateFormat.format(model.getUpdatedDate().toDate());
-                holder.getNoteUpdatedDate().setText(updatedDate);           // set note updated date
+                holder.getNoteUpdatedDate().setText(updatedDate);
+
+                // Set note's notebook
                 model.setNotebook(notebook);
 
                 // Card view's On Click Listener
                 holder.getNoteCardView().setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Intent viewRecordIntent = new Intent(context, RecordPlayItem.class);
+                        Intent viewRecordIntent = new Intent(context, RecordActivity.class);
 
                         viewRecordIntent.putExtra("note", model);
 
@@ -176,15 +191,15 @@ public class NoteAdapter extends FirestoreRecyclerAdapter<Note, NoteViewHolder> 
 
     }
 
-    @NonNull
-    @NotNull
-    @Override
     /**
      * Create new view (invoked by the layout manager)
      * @param parent   parent of view layout
      * @param viewType type of view
      * @return note view holder
      */
+    @NonNull
+    @NotNull
+    @Override
     public NoteViewHolder onCreateViewHolder(@NonNull @NotNull ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(context);
         View noteView = null;

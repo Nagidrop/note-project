@@ -1,3 +1,7 @@
+/*
+ * Group 06 SE1402
+ */
+
 package com.group6.noteapp.controller;
 
 import android.os.Bundle;
@@ -30,10 +34,20 @@ public class ForgotPasswordFragment01 extends Fragment {
 
     NoteAppProgressDialog progressDialog;   // Note App progress dialog
 
+    /**
+     * Constructor
+     */
     public ForgotPasswordFragment01() {
         // Required empty public constructor
     }
 
+    /**
+     * Called to have the fragment instantiate its view
+     * @param inflater              Layout Inflater
+     * @param container             ViewGroup container
+     * @param savedInstanceState    saved instance state
+     * @return the created View
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -123,18 +137,12 @@ public class ForgotPasswordFragment01 extends Fragment {
                         // Show dialog dependent on error
                         NoteAppDialog dialog = new NoteAppDialog(getActivity());
 
-                        switch (((FirebaseAuthException) e).getErrorCode()) {
-                            case "ERROR_USER_NOT_FOUND":
-                                dialog.setupOKDialog("Email Not Sent",
-                                        "There is no account associated with this email address.");
-
-                                break;
-
-                            default:
-                                dialog.setupOKDialog("Email Not Sent",
-                                        "An error occurred while we try to send you instructions. Please try again!");
-
-                                break;
+                        if (((FirebaseAuthException) e).getErrorCode().equals("ERROR_USER_NOT_FOUND")) {
+                            dialog.setupOKDialog("Email Not Sent",
+                                    "There is no account associated with this email address.");
+                        } else {
+                            dialog.setupOKDialog("Email Not Sent",
+                                    "An error occurred while we try to send you instructions. Please try again!");
                         }
 
                         dialog.create().show();

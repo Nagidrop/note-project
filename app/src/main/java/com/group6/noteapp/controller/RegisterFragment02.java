@@ -1,3 +1,7 @@
+/*
+ * Group 06 SE1402
+ */
+
 package com.group6.noteapp.controller;
 
 import android.content.ContentResolver;

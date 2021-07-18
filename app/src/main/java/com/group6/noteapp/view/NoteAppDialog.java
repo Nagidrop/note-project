@@ -1,6 +1,7 @@
-/**
- * Quan Duc Loc CE140037
+/*
+ * Group 06 SE1402
  */
+
 package com.group6.noteapp.view;
 
 import android.app.Activity;
@@ -131,12 +132,12 @@ public class NoteAppDialog extends MaterialAlertDialogBuilder {
         this.type = "ReturnConfirmationDialog";   // set the dialog type for use with create
     }
 
-    @NonNull
-    @NotNull
-    @Override
     /**
      * Create a dialog from builder
      */
+    @NonNull
+    @NotNull
+    @Override
     public AlertDialog create() {
         AlertDialog alertDialog = super.create();
         alertDialog.setCanceledOnTouchOutside(false);   // avoid the dialog from being cancelled on outside touch

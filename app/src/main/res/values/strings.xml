@@ -1,10 +1,16 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <resources>
     <string name="address">Address</string>
+    <string name="initial_timer">00:00</string>
+    <string name="time">Time</string>
+    <string name="play">Play</string>
+    <string name="replay">Replay</string>
     <string name="all_notes">All Notes</string>
     <string name="app_name">Note App</string>
     <string name="birthdate">Birthdate</string>
+    <string name="birthdate_input">%1$d/%2$d/%3$d</string>
     <string name="change">Change</string>
+    <string name="delete_note">Delete note</string>
     <string name="email">Email</string>
     <string name="email_sent_forgot_pass">Please check your inbox at &lt;br/&gt;&lt;b&gt;%1$s&lt;/b&gt; and follow instructions to reset password.</string>
     <string name="email_sent_reg">Almost done. &lt;br/&gt;Please check your inbox at &lt;b&gt;%1$s&lt;/b&gt; to confirm registration. </string>
@@ -12,6 +18,11 @@
     <string name="enter_email">Please enter your email address.</string>
     <string name="fab_content_desc">fab button</string>
     <string name="facebook_app_id">506452847140505</string>
+    <string name="sort">Sort</string>
+    <string name="sort_by_title_asc">Sort by title (asc.)</string>
+    <string name="sort_by_title_desc">Sort by title (desc.)</string>
+    <string name="sort_by_created_date">Sort by created date</string>
+    <string name="sort_by_updated_date">Sort by updated date</string>
     <string name="forgot_pass">Forgot password?</string>
     <string name="forgot_pass_title">Forgot Password</string>
     <string name="full_name">Full Name (Required)</string>

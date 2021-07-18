@@ -14,10 +14,6 @@
                     android:icon="@drawable/ic_notes_24"
                     android:title="@string/all_notes" />
                 <item
-                    android:id="@+id/menu_notebooks"
-                    android:icon="@drawable/ic_notebook_24"
-                    android:title="@string/notebooks" />
-                <item
                     android:id="@+id/menu_trash"
                     android:icon="@drawable/ic_trash_can_24"
                     android:title="@string/trash" />

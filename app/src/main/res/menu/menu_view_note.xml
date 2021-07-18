@@ -3,8 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/menu_view_note">
     <item
-        android:id="@+id/nav_menu"
+        android:id="@+id/nav_menu_note"
         android:title="@string/menu"
         app:showAsAction="ifRoom"
-        android:icon="@drawable/ic_menu_24"/>
+        android:icon="@drawable/ic_three_dot_menu_24"/>
 </menu>

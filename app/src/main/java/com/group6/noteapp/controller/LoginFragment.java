@@ -1,3 +1,7 @@
+/*
+ * Group 06 SE1402
+ */
+
 package com.group6.noteapp.controller;
 
 import android.content.ContentResolver;
@@ -65,7 +69,6 @@ public class LoginFragment extends Fragment {
     private static final String TAG = "LoginFragment";  // Tag for logging
 
     /* Text Input Layouts and Button */
-    private MaterialButton btnLogin;                    // Email and password login button
     private TextInputLayout inputLogEmail;              // inputted email
     private TextInputLayout inputLogPassword;           // inputted password
     private LoginButton loginButton;                    // login button for Facebook sign in
@@ -84,7 +87,7 @@ public class LoginFragment extends Fragment {
 
     /**
      * Initialize database and login instance
-     * @param savedInstanceState
+     * @param savedInstanceState saved instance state
      */
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -108,10 +111,10 @@ public class LoginFragment extends Fragment {
 
     /**
      * Initialize login function
-     * @param inflater
-     * @param container
-     * @param savedInstanceState
-     * @return
+     * @param inflater              inflater
+     * @param container             container
+     * @param savedInstanceState    saved instance state
+     * @return View
      */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -161,7 +164,8 @@ public class LoginFragment extends Fragment {
         inputLogPassword = inflatedView.findViewById(R.id.txtInputLoginPassword);
 
         //Get login button
-        btnLogin = inflatedView.findViewById(R.id.btnLogin);
+        // Email and password login button
+        MaterialButton btnLogin = inflatedView.findViewById(R.id.btnLogin);
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -173,7 +177,7 @@ public class LoginFragment extends Fragment {
 //        progressDialog = new ProgressDialog(getActivity());
         callbackManager = CallbackManager.Factory.create();
 
-        loginButton = (LoginButton) inflatedView.findViewById(R.id.login_button);
+        loginButton = inflatedView.findViewById(R.id.login_button);
         loginButton.setReadPermissions("email");
         loginButton.setFragment(this);
 
@@ -181,7 +185,7 @@ public class LoginFragment extends Fragment {
         loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
             /**
              * on facebook login success
-             * @param loginResult
+             * @param loginResult login result
              */
             @Override
             public void onSuccess(LoginResult loginResult) {
@@ -201,7 +205,7 @@ public class LoginFragment extends Fragment {
 
             /**
              * On facebook login error
-             * @param exception
+             * @param exception exception
              */
             @Override
             public void onError(FacebookException exception) {
@@ -358,9 +362,9 @@ public class LoginFragment extends Fragment {
 
     /**
      * handle activity result for login facebook and google
-     * @param requestCode
-     * @param resultCode
-     * @param data
+     * @param requestCode   request code
+     * @param resultCode    result code
+     * @param data          data
      */
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -410,7 +414,7 @@ public class LoginFragment extends Fragment {
 
                     /**
                      * Handle login complete check user exist in database
-                     * @param task
+                     * @param task task
                      */
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
@@ -455,7 +459,7 @@ public class LoginFragment extends Fragment {
 
     /**
      * Handle firebase login with google
-     * @param idToken
+     * @param idToken token id
      */
     private void firebaseAuthWithGoogle(String idToken) {
 
@@ -467,7 +471,7 @@ public class LoginFragment extends Fragment {
                 .addOnCompleteListener(getActivity(), new OnCompleteListener<AuthResult>() {
                     /**
                      * Handle login complete check user exist in database
-                     * @param task
+                     * @param task task
                      */
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
@@ -518,6 +522,7 @@ public class LoginFragment extends Fragment {
     private void signIn() {
         Intent signInIntent = mGoogleSignInClient.getSignInIntent();
         startActivityForResult(signInIntent, RC_SIGN_IN);
+        progressDialog.dismiss();
     }
 
     /**
@@ -540,7 +545,7 @@ public class LoginFragment extends Fragment {
                     @Override
                     public void onSuccess(Void unused) {
                         // Add welcome note
-                        addWelcomeNote(userDefNotebookDoc, firebaseUser);
+                        addWelcomeNote(userDefNotebookDoc);
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
@@ -563,9 +568,8 @@ public class LoginFragment extends Fragment {
     /**
      * Add welcome note for user
      * @param userDefNotebookDoc    user default notebook document
-     * @param firebaseUser          Firebase user
      */
-    private void addWelcomeNote(DocumentReference userDefNotebookDoc, FirebaseUser firebaseUser) {
+    private void addWelcomeNote(DocumentReference userDefNotebookDoc) {
         /* Create new notes and set title and content */
         Note welcomeNote = new Note();
         welcomeNote.setType(1);
@@ -612,8 +616,8 @@ public class LoginFragment extends Fragment {
 
     /**
      * Set up new user info
-     * @param firebaseUser
-     * @param userInfoDoc
+     * @param firebaseUser  Firebase user
+     * @param userInfoDoc   user info document
      */
     private void setUpUserInfo(FirebaseUser firebaseUser, DocumentReference userInfoDoc) {
         /* Get storage and storage reference */

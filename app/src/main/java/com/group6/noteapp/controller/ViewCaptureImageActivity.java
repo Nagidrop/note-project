@@ -1,3 +1,7 @@
+/*
+ * Group 06 SE1402
+ */
+
 package com.group6.noteapp.controller;
 
 import android.content.Intent;
@@ -7,7 +11,6 @@ import android.graphics.Matrix;
 import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
@@ -36,6 +39,7 @@ import com.group6.noteapp.R;
 import com.group6.noteapp.model.Note;
 import com.group6.noteapp.model.Notebook;
 import com.group6.noteapp.util.Constants;
+import com.group6.noteapp.util.ValidationUtils;
 import com.group6.noteapp.view.NoteAppDialog;
 import com.group6.noteapp.view.NoteAppProgressDialog;
 
@@ -44,6 +48,9 @@ import org.jetbrains.annotations.NotNull;
 import java.io.File;
 import java.io.IOException;
 
+/**
+ * Activity for viewing captured image
+ */
 public class ViewCaptureImageActivity extends AppCompatActivity {
 
     private static final String TAG = "ViewCaptureImage"; // Tag for logging
@@ -114,7 +121,7 @@ public class ViewCaptureImageActivity extends AppCompatActivity {
                     String name = imageName.getEditText().getText().toString();
 
                     // Check if name is empty
-                    if(TextUtils.isEmpty(name)){
+                    if(ValidationUtils.validateFileName(name) == 1){
                         // Set error to edit text
                         imageName.setErrorEnabled(true);
                         imageName.setError("Please enter Image Name!");

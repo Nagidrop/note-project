@@ -1,14 +1,15 @@
-/**
- * Quan Duc Loc CE140037
+/*
+ * Group 06 SE1402
  */
+
 package com.group6.noteapp.util;
 
 import android.text.TextUtils;
 
 /**
- * Validate input fields
+ * Utils for validating input fields
  */
-public final class ValidationUtils {
+public class ValidationUtils {
     private static final String passwordRegex = "^[A-Za-z\\d$&+,:;=?@#|'<>.^*()%!-]{8,}$";  // minimum 8 characters
     private static final String fullNameRegex = "^([a-zA-Zàáãạảăắằẳẵặâấầẩẫậèéẹẻẽêềếểễệđìíĩỉị" +
             "òóõọỏôốồổỗộơớờởỡợùúũụủưứừửữựỳỵỷỹýÀÁÃẠẢĂẮẰẲẴẶÂẤẦẨẪẬÈÉẸẺẼÊỀẾỂỄỆĐÌÍĨỈỊÒÓÕỌỎÔỐỒỔỖỘƠỚỜỞỠỢ" +
@@ -31,7 +32,7 @@ public final class ValidationUtils {
      * Validate if email input is valid
      * @param email email string to validate
      * @return  0 if valid
-     *          1 if isn't empty
+     *          1 if empty
      *          2 if doesn't match regex
      */
     public static int validateEmail(String email){
@@ -69,7 +70,7 @@ public final class ValidationUtils {
      * Validate if password input is valid
      * @param password password string to validate
      * @return  0 if valid
-     *          1 if password is empty
+     *          1 if empty
      */
     public static int validatePasswordLog(String password){
         if (TextUtils.isEmpty(password)) {
@@ -119,7 +120,7 @@ public final class ValidationUtils {
     public static int validateFileName(String fileName){
         fileName = fileName.trim();
 
-        if (fileName.isEmpty()){
+        if (TextUtils.isEmpty(fileName)){
             return 1;
         }
 
