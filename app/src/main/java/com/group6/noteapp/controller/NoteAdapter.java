@@ -162,6 +162,7 @@ public class NoteAdapter extends FirestoreRecyclerAdapter<Note, NoteViewHolder> 
                     }
                 });
 
+                break;
             case 3:
                 // Set note's title
                 holder.getNoteTitle().setText(model.getTitle());
