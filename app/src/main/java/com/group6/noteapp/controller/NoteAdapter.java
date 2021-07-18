@@ -1,7 +1,6 @@
-/*
- * Group 06 SE1402
+/**
+ * Quan Duc Loc CE140037
  */
-
 package com.group6.noteapp.controller;
 
 import android.content.Context;
@@ -35,14 +34,14 @@ import org.jetbrains.annotations.NotNull;
 import java.text.SimpleDateFormat;
 
 /**
- * Note Adapter to store list of notes and display
+ * Note Adapter to store list of notes
  */
 public class NoteAdapter extends FirestoreRecyclerAdapter<Note, NoteViewHolder> {
 
     private final Context context;              // activity's context
     private final Notebook notebook;            // notebook in which the notes in adapter are in
-    private final FirebaseUser firebaseUser;          // Firebase user
-    private final FirebaseStorage firebaseStorage;    // Firebase storage
+    private FirebaseUser firebaseUser;          // Firebase user
+    private FirebaseStorage firebaseStorage;    // Firebase storage
 
     /**
      * Create a new RecyclerView adapter that listens to a Firestore Query.  See {@link
@@ -178,7 +177,7 @@ public class NoteAdapter extends FirestoreRecyclerAdapter<Note, NoteViewHolder> 
                 holder.getNoteCardView().setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Intent viewRecordIntent = new Intent(context, RecordActivity.class);
+                        Intent viewRecordIntent = new Intent(context, RecordPlayItem.class);
 
                         viewRecordIntent.putExtra("note", model);
 
@@ -191,6 +190,9 @@ public class NoteAdapter extends FirestoreRecyclerAdapter<Note, NoteViewHolder> 
 
     }
 
+    @NonNull
+    @NotNull
+    @Override
     /**
      * Create new view (invoked by the layout manager)
      * @param parent   parent of view layout

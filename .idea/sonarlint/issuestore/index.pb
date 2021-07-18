@@ -26,8 +26,6 @@ h
 8app/src/main/java/com/group6/noteapp/model/Notebook.java,d\2\d27f68a306a13c4c646224d913f651414bacaf70
 d
 4app/src/main/java/com/group6/noteapp/model/User.java,e\2\e233909562b7eaf5636b22623bcf5e6f049b2bfe
-P
- app/src/main/AndroidManifest.xml,8\c\8c55c3ccc257e5907959013f99656e4c8ec3903e
 t
 Dapp/src/main/java/com/group6/noteapp/view/NoteAppProgressDialog.java,b\5\b5e5c1ef06604b1a88bf259fa4b15b7831bb8d0d
 l
@@ -50,3 +48,11 @@ x
 Happ/src/androidTest/java/com/group6/noteapp/ExampleInstrumentedTest.java,8\e\8e1fa5581320adbec5c00b376f439d67443e0b97
 i
 9app/src/test/java/com/group6/noteapp/ExampleUnitTest.java,f\e\fe6bbb0ede3bad2ab7b5e364bf336fbeb57da735
+w
+Gapp/src/main/java/com/group6/noteapp/controller/RegisterFragment03.java,c\a\ca9322d61060c57f082e9ac1798fd463a1cc7db2
+w
+Gapp/src/main/java/com/group6/noteapp/controller/RegisterFragment02.java,e\f\ef31fe2e5e07075b434f4f6cec7f76c347abae86
+q
+Aapp/src/main/java/com/group6/noteapp/controller/HomeFragment.java,7\6\76245912de1e89ae20be64d68262cd415ad4a605
+r
+Bapp/src/main/java/com/group6/noteapp/controller/TrashFragment.java,c\4\c42999bfc2759ac5e343afafcc8974d124929627
