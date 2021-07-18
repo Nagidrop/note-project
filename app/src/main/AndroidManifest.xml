@@ -20,11 +20,12 @@
         android:roundIcon="@mipmap/ic_note_app_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.MyApp">
-        <activity android:name=".controller.ViewImageDetails"></activity>
+        <activity android:name=".controller.RecordPlayItem"></activity>
+        <activity android:name=".controller.ViewImageDetails" />
         <activity android:name=".controller.ViewCaptureImageActivity" />
         <activity
             android:name=".controller.ViewEditNoteActivity"
-            android:label=""></activity>
+            android:label="" />
         <activity android:name=".controller.CameraActivity" />
         <activity android:name=".controller.RecordActivity" />
         <activity android:name=".controller.MainActivity" />
@@ -37,9 +38,9 @@
         </activity>
 
         <meta-data
-            tools:replace="android:value"
             android:name="com.facebook.sdk.ApplicationId"
-            android:value="@string/facebook_app_id" />
+            android:value="@string/facebook_app_id"
+            tools:replace="android:value" />
     </application>
 
 </manifest>

@@ -217,7 +217,7 @@ public class RecordActivity extends AppCompatActivity implements View.OnClickLis
         progressDialog.show();
 
         String userID=firebaseAuth.getUid();
-        StorageReference filepath = storageReference.child(userID).child("Record").child("recording_" + formatter.format(now) + ".3gp");
+        StorageReference filepath = storageReference.child(userID).child("Record").child(uri.getLastPathSegment());
         UploadTask uploadTask =filepath.putFile(uri);
         uploadTask.addOnFailureListener(new OnFailureListener() {
             @Override

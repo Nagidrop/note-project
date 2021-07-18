@@ -163,11 +163,11 @@ public class NoteAdapter extends FirestoreRecyclerAdapter<Note, NoteViewHolder> 
                 holder.getNoteCardView().setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Intent viewImageDetailsIntent = new Intent(context, ViewImageDetails.class);
+                        Intent viewRecordIntent = new Intent(context, RecordPlayItem.class);
 
-                        viewImageDetailsIntent.putExtra("note", model);
+                        viewRecordIntent.putExtra("note", model);
 
-                        context.startActivity(viewImageDetailsIntent);
+                        context.startActivity(viewRecordIntent);
                     }
                 });
 
