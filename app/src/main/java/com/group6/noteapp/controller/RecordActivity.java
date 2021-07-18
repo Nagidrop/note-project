@@ -245,7 +245,7 @@ public class RecordActivity extends AppCompatActivity implements View.OnClickLis
         //Get ID user
         String userID = firebaseAuth.getUid();
         //Get Storage Reference
-        StorageReference filepath = storageReference.child(userID).child("Record").child("recording_" + formatter.format(now) + ".3gp");
+        StorageReference filepath = storageReference.child(userID).child("Record").child(uri.getLastPathSegment());
         // Create upload Task
         UploadTask uploadTask = filepath.putFile(uri);
         // Register observers to listen for when the download is done or if it fails
@@ -309,6 +309,8 @@ public class RecordActivity extends AppCompatActivity implements View.OnClickLis
 
                                                 }
                                             });
+
+
                                         }
                                     }
                                 } else {
