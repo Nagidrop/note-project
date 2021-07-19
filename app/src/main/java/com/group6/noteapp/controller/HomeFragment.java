@@ -24,6 +24,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
@@ -184,6 +185,10 @@ public class HomeFragment extends Fragment {
 
         // Dismiss dialog after setup
         progressDialog.dismiss();
+
+        /* Set visibility for fab menu button */
+        FloatingActionButton fabMenu = getActivity().findViewById(R.id.fabMenu);
+        fabMenu.setVisibility(View.VISIBLE);
 
         return inflatedView;
     }
