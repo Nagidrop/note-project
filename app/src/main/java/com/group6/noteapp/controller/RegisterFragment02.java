@@ -181,7 +181,7 @@ public class RegisterFragment02 extends Fragment {
                                     NoteAppDialog dialog = new NoteAppDialog(getActivity());    // Instantiate new dialog
 
                                     // Set dialog title and message based on exception
-                                    if ("ERROR_EMAIL_ALREADY_IN_USE".equals(((FirebaseAuthException) e).getErrorCode())) {
+                                    if (((FirebaseAuthException) e).getErrorCode().equals("ERROR_EMAIL_ALREADY_IN_USE")) {
                                         dialog.setupOKDialog("Registration Failed",
                                                 "Email address is already in use by another account. Please use a different one.");
                                     } else {
