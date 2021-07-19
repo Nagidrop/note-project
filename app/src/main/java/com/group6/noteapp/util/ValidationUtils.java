@@ -10,7 +10,7 @@ import android.text.TextUtils;
  * Utils for validating input fields
  */
 public class ValidationUtils {
-    private static final String passwordRegex = "^[A-Za-z\\d$&+,:;=?@#|'<>.^*()%!-]{8,}$";  // minimum 8 characters
+    private static final String passwordRegex = "^[A-Za-z\\d\\s$&+,:;=?@#|'<>.^*()%!-]{8,}$";  // minimum 8 characters
     private static final String fullNameRegex = "^([a-zA-Zàáãạảăắằẳẵặâấầẩẫậèéẹẻẽêềếểễệđìíĩỉị" +
             "òóõọỏôốồổỗộơớờởỡợùúũụủưứừửữựỳỵỷỹýÀÁÃẠẢĂẮẰẲẴẶÂẤẦẨẪẬÈÉẸẺẼÊỀẾỂỄỆĐÌÍĨỈỊÒÓÕỌỎÔỐỒỔỖỘƠỚỜỞỠỢ" +
             "ÙÚŨỤỦƯỨỪỬỮỰỲỴỶỸÝ]+)" +   // match a single Vietnamese word
