@@ -39,14 +39,13 @@ import java.text.SimpleDateFormat;
  */
 public class NoteAdapter extends FirestoreRecyclerAdapter<Note, NoteViewHolder> {
 
-    private final Context context;              // activity's context
-    private final Notebook notebook;            // notebook in which the notes in adapter are in
-    private final FirebaseUser firebaseUser;          // Firebase user
-    private final FirebaseStorage firebaseStorage;    // Firebase storage
+    private final Context context;                      // activity's context
+    private final Notebook notebook;                    // notebook in which the notes in adapter are in
+    private final FirebaseUser firebaseUser;            // Firebase user
+    private final FirebaseStorage firebaseStorage;      // Firebase storage
 
     /**
-     * Create a new RecyclerView adapter that listens to a Firestore Query.  See {@link
-     * FirestoreRecyclerOptions} for configuration options.
+     * Create a new RecyclerView adapter that listens to a Firestore Query
      *
      * @param options Firestore Recycler Options
      */

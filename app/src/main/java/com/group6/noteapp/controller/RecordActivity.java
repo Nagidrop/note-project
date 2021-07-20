@@ -66,7 +66,7 @@ public class RecordActivity extends AppCompatActivity implements View.OnClickLis
     private TextView textTimeRecord;                    // Textview Time
     private Button btnRecording, btnPlaying, btnSaveRecord, btnStop, btnReset; // Button Record, Play , Save, Reset
     private StorageReference storageReference;          // Storage Reference
-    private NoteAppProgressDialog progressDialog, progressDialog2;  // Progress Dialog
+    private NoteAppProgressDialog progressDialog;  // Progress Dialog
     private TextInputLayout recordName;                 // Text input record name
     private SeekBar seekBar;                            // Seekbar
     private final Handler threadHandler = new Handler();            // Handler
@@ -239,7 +239,8 @@ public class RecordActivity extends AppCompatActivity implements View.OnClickLis
      */
     private void uploadAudio(Uri uri) {
         //Show dialog uploading record
-        progressDialog.setMessage("Uploading Record ...");
+        progressDialog.setUpDialog("Just a moment...",
+                "Please wait while we upload your record ...");
         progressDialog.show();
         //Get ID user
         String userID = firebaseAuth.getUid();

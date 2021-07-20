@@ -6,12 +6,14 @@ import android.graphics.LightingColorFilter;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.SystemClock;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -41,13 +43,14 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
 public class PlayRecordActivity extends AppCompatActivity {
 
     private static final String TAG = "ViewRecord"; // Tag for loggin
 
-    private Handler handler = new Handler();    //Handler
+    private final Handler handler = new Handler();    //Handler
     private MediaPlayer mediaPlayer;            //MediaPlayer
     //Declare variable
     private boolean isPlaying = false;
@@ -63,36 +66,37 @@ public class PlayRecordActivity extends AppCompatActivity {
     Button btnSaveNote;                         //Button save
 
     Note note;                                  //Note object
-    private String filename=null;               //File  path
+    private String filename = null;             //File  path
 
     /* Firebase instances */
     private FirebaseStorage storage;          //Firebase Storage
-    private FirebaseAuth mAuth;               //Firebase Auth
     private FirebaseUser user;                //Firebase User
-    private FirebaseFirestore db;              //Firebase Firestore
+    private FirebaseFirestore db;             //Firebase Firestore
 
     private NoteAppProgressDialog progressDialog;  //ProgressDialog
+    private long lastClickTime; // User's last click time (to prevent multiple clicks)
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_record_play_item);
         // Get view component
-        fileNameTxtView=findViewById(R.id.file_name_text_view);
-        fileLengthTxtView=findViewById(R.id.file_length_text_view);
-        fileCurrentProgress=findViewById(R.id.current_progress_text_view);
-        btnSaveNote=findViewById(R.id.btnSave);
-        recordNameChange=findViewById(R.id.textInputRecordName);
+        fileNameTxtView = findViewById(R.id.file_name_text_view);
+        fileLengthTxtView = findViewById(R.id.file_length_text_view);
+        fileCurrentProgress = findViewById(R.id.current_progress_text_view);
+        btnSaveNote = findViewById(R.id.btnSave);
+        recordNameChange = findViewById(R.id.textInputRecordName);
 
-        seekBar=findViewById(R.id.seekbar);
-        floatingActionButton=findViewById(R.id.fab_play);
+        seekBar = findViewById(R.id.seekbar);
+        floatingActionButton = findViewById(R.id.fab_play);
         // Get database, auth, current user instance
         db = FirebaseFirestore.getInstance();
-        mAuth = FirebaseAuth.getInstance();
+        //Firebase Auth
+        FirebaseAuth mAuth = FirebaseAuth.getInstance();
         user = mAuth.getCurrentUser();
         storage = FirebaseStorage.getInstance();
         //Get note Intent
-        note=getIntent().getParcelableExtra("note");
+        note = getIntent().getParcelableExtra("note");
         //Get dialog
         progressDialog = new NoteAppProgressDialog(PlayRecordActivity.this);
         progressDialog.setUpDialog("Just a moment...",
@@ -101,7 +105,7 @@ public class PlayRecordActivity extends AppCompatActivity {
         //Load record
         loadRecord(note);
         //Get file path
-        filename=getExternalCacheDir().getAbsolutePath();
+        filename = getExternalCacheDir().getAbsolutePath();
         //Set file name to textview
         fileNameTxtView.setText(note.getTitle());
         recordNameChange.getEditText().setText(note.getTitle());
@@ -110,6 +114,18 @@ public class PlayRecordActivity extends AppCompatActivity {
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                // Multiple click prevention, using threshold of 1000 ms
+                if (SystemClock.elapsedRealtime() - lastClickTime < 1000){
+                    // Show message to notify user of fast clicks
+                    Toast.makeText(PlayRecordActivity.this,
+                            "You are tapping too fast. Please wait.", Toast.LENGTH_SHORT).show();
+
+                    return;
+                }
+
+                // Update last click time
+                lastClickTime = SystemClock.elapsedRealtime();
+
                 try {
                     onPlay(isPlaying);
 
@@ -123,20 +139,30 @@ public class PlayRecordActivity extends AppCompatActivity {
         btnSaveNote.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                // Multiple click prevention, using threshold of 1000 ms
+                if (SystemClock.elapsedRealtime() - lastClickTime < 1000){
+                    // Show message to notify user of fast clicks
+                    Toast.makeText(PlayRecordActivity.this, "You are tapping too fast. Please wait.", Toast.LENGTH_SHORT).show();
+
+                    return;
+                }
+
+                // Update last click time
+                lastClickTime = SystemClock.elapsedRealtime();
+
                 changeName();
             }
         });
 
 
-
     }
+
     // On play
     private void onPlay(boolean isPlaying) throws IOException {
-        if(!isPlaying)
-        {
-            if(mediaPlayer == null) {
+        if (!isPlaying) {
+            if (mediaPlayer == null) {
                 startPlaying();
-            }else {
+            } else {
                 floatingActionButton.setImageResource(R.drawable.ic_media_pause);
                 mediaPlayer.seekTo(mediaPlayer.getCurrentPosition());
                 mediaPlayer.start();
@@ -144,19 +170,18 @@ public class PlayRecordActivity extends AppCompatActivity {
                 updateSeekbar();
 
             }
-        }
-        else
-        {
+        } else {
             pausePlaying();
         }
     }
+
     //Pause record
-    private void pausePlaying()
-    {
+    private void pausePlaying() {
         floatingActionButton.setImageResource(R.drawable.ic_media_play);
         handler.removeCallbacks(mRunnable);
         mediaPlayer.pause();
     }
+
     //Star record
     private void startPlaying() throws IOException {
         floatingActionButton.setImageResource(R.drawable.ic_media_pause);
@@ -169,7 +194,7 @@ public class PlayRecordActivity extends AppCompatActivity {
         //Set time length record
         minutes = TimeUnit.MILLISECONDS.toMinutes(mediaPlayer.getDuration());
         seconds = TimeUnit.MILLISECONDS.toSeconds(mediaPlayer.getDuration()) - TimeUnit.MINUTES.toSeconds(minutes);
-        fileLengthTxtView.setText(String.format("%02d:%02d",minutes,seconds));
+        fileLengthTxtView.setText(String.format(Locale.getDefault(),"%02d:%02d", minutes, seconds));
         //Action button
         mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
             @Override
@@ -189,9 +214,9 @@ public class PlayRecordActivity extends AppCompatActivity {
         PlayRecordActivity.this.getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
     }
+
     //Set Seekbar Values
-    private void setSeekbarValues()
-    {
+    private void setSeekbarValues() {
         ColorFilter colorFilter = new LightingColorFilter(getResources().getColor(R.color.purple_500),
                 getResources().getColor(R.color.purple_500));
 
@@ -201,8 +226,7 @@ public class PlayRecordActivity extends AppCompatActivity {
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                if(mediaPlayer!=null && fromUser)
-                {
+                if (mediaPlayer != null && fromUser) {
                     mediaPlayer.seekTo(progress);
                     handler.removeCallbacks(mRunnable);
 
@@ -210,12 +234,10 @@ public class PlayRecordActivity extends AppCompatActivity {
                     long seconds = TimeUnit.MILLISECONDS.toSeconds(mediaPlayer.getCurrentPosition())
                             - TimeUnit.MINUTES.toSeconds(minutes);
 
-                    fileCurrentProgress.setText(String.format("%02d:%02d",minutes,seconds));
+                    fileCurrentProgress.setText(String.format(Locale.getDefault(),"%02d:%02d", minutes, seconds));
                     updateSeekbar();
 
-                }
-                else if(mediaPlayer == null && fromUser)
-                {
+                } else if (mediaPlayer == null && fromUser) {
                     try {
                         prepareMediaPlayerFromPoint(progress);
                     } catch (IOException e) {
@@ -237,6 +259,7 @@ public class PlayRecordActivity extends AppCompatActivity {
             }
         });
     }
+
     //Prepare MediaPlayer From Point
     private void prepareMediaPlayerFromPoint(int progress) throws IOException {
         //Setup mediaPlayer
@@ -253,9 +276,9 @@ public class PlayRecordActivity extends AppCompatActivity {
             }
         });
     }
+
     //Stop record
-    private void stopPlaying()
-    {
+    private void stopPlaying() {
         //Setup mediaPlayer
         floatingActionButton.setImageResource(R.drawable.ic_media_play);
         handler.removeCallbacks(mRunnable);
@@ -271,30 +294,30 @@ public class PlayRecordActivity extends AppCompatActivity {
     }
 
     //Runnable
-    private Runnable mRunnable = new Runnable() {
+    private final Runnable mRunnable = new Runnable() {
         @Override
         public void run() {
-            if(mediaPlayer!=null)
-            {
+            if (mediaPlayer != null) {
                 int mCurrentPosition = mediaPlayer.getCurrentPosition();
                 seekBar.setProgress(mCurrentPosition);
                 long minutes = TimeUnit.MILLISECONDS.toMinutes(mCurrentPosition);
                 long seconds = TimeUnit.MILLISECONDS.toSeconds(mCurrentPosition)
                         - TimeUnit.MINUTES.toSeconds(minutes);
 
-                fileCurrentProgress.setText(String.format("%02d:%02d",minutes,seconds));
+                fileCurrentProgress.setText(String.format(Locale.getDefault(),"%02d:%02d", minutes, seconds));
                 updateSeekbar();
 
             }
         }
     };
+
     // Create a thread to update position of SeekBar.
-    private void updateSeekbar()
-    {
-        handler.postDelayed(mRunnable,1000);
+    private void updateSeekbar() {
+        handler.postDelayed(mRunnable, 1000);
     }
+
     //Load record
-    private void loadRecord (Note note){
+    private void loadRecord(Note note) {
         // Get user document from database
         DocumentReference notebookDocRef = db.collection("users").document(user.getUid())
                 .collection("notebooks").document(note.getNotebook().getId()).collection("notes")
@@ -302,15 +325,15 @@ public class PlayRecordActivity extends AppCompatActivity {
         notebookDocRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull @NotNull Task<DocumentSnapshot> task) {
-                if(task.isSuccessful()){
+                if (task.isSuccessful()) {
 
                     DocumentSnapshot document = task.getResult();
                     // if document exist
-                    if(document.exists()){
+                    if (document.exists()) {
                         Note note = document.toObject(Note.class);
                         StorageReference storageRef = storage.getReference();
                         StorageReference pathReference = storageRef
-                                .child(user.getUid() + "/Record/" +note.getContent());
+                                .child(user.getUid() + "/Record/" + note.getContent());
                         try {
                             //Create file
                             File tempRecord = File.createTempFile("record", ".3gp");
@@ -319,7 +342,7 @@ public class PlayRecordActivity extends AppCompatActivity {
                                 public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
                                     progressDialog.dismiss();
                                     //Set path file to filename
-                                    filename=tempRecord.getAbsolutePath();
+                                    filename = tempRecord.getAbsolutePath();
                                 }
                             }).addOnFailureListener(new OnFailureListener() {
                                 @Override
@@ -335,7 +358,7 @@ public class PlayRecordActivity extends AppCompatActivity {
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
-                    }else {
+                    } else {
                         Log.d(TAG, "get failed with ", task.getException());
                     }
                 }
@@ -343,21 +366,19 @@ public class PlayRecordActivity extends AppCompatActivity {
         });
     }
 
-    private void changeName(){
+    private void changeName() {
 
         /* Firebase instances */
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-        FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
-        FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
         // Get image name from edit text
         String name = recordNameChange.getEditText().getText().toString();
 
         // validate image name
-        if(ValidationUtils.validateFileName(name) == 1){
+        if (ValidationUtils.validateFileName(name) == 1) {
             // Show error on edit text
             recordNameChange.setErrorEnabled(true);
             recordNameChange.setError("Please enter record Name!");
-        }else{
+        } else {
             // Update date note title(record Name)
             note.setTitle(name);
 
@@ -370,7 +391,7 @@ public class PlayRecordActivity extends AppCompatActivity {
 
             // To main activity
             Intent intent = new Intent(PlayRecordActivity.this, MainActivity.class);
-            intent.setFlags(intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(intent);
         }
     }

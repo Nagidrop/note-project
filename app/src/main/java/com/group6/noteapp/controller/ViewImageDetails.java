@@ -52,10 +52,8 @@ public class ViewImageDetails extends AppCompatActivity {
     private static final String TAG = "ViewImageDetails"; // Tag for logging
 
     private FirebaseStorage storage; // Firebase storage
-    private FirebaseAuth mAuth; // Firebase auth
     private FirebaseUser user; // Firebase user
-    private FirebaseFirestore db; // Firbase firestore
-    private MaterialButton btnChangeName; // button change name
+    private FirebaseFirestore db; // Firebase Firestore
     private ShapeableImageView viewImage; // Image view
     private TextInputLayout imageName; // Image name edit text
     private NoteAppProgressDialog progressDialog; // Progress dialog
@@ -63,7 +61,7 @@ public class ViewImageDetails extends AppCompatActivity {
 
     /**
      * Initialize activity
-     * @param savedInstanceState
+     * @param savedInstanceState saved instance state
      */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,18 +70,20 @@ public class ViewImageDetails extends AppCompatActivity {
 
         // Get Firebase instance
         db = FirebaseFirestore.getInstance();
-        mAuth = FirebaseAuth.getInstance();
+        // Firebase auth
+        FirebaseAuth mAuth = FirebaseAuth.getInstance();
         user = mAuth.getCurrentUser();
         storage = FirebaseStorage.getInstance();
 
         // Get components from view
-        viewImage = (ShapeableImageView) findViewById(R.id.imgView);
-        btnChangeName = (MaterialButton) findViewById(R.id.btnChangeImageName);
+        viewImage = findViewById(R.id.imgView);
+        // button change name
+        MaterialButton btnChangeName = findViewById(R.id.btnChangeImageName);
         imageName = findViewById(R.id.textInputChangeImageName);
-        btnChangeName = findViewById(R.id.btnChangeImageName);
+
 
         // Get Note from intent extra
-        Note note = (Note) getIntent().getParcelableExtra("note");
+        Note note = getIntent().getParcelableExtra("note");
 
         // Handle button change name on click
         btnChangeName.setOnClickListener(new View.OnClickListener() {
@@ -143,14 +143,14 @@ public class ViewImageDetails extends AppCompatActivity {
 
             // To main activity
             Intent intent = new Intent(ViewImageDetails.this, MainActivity.class);
-            intent.setFlags(intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(intent);
         }
     }
 
     /**
      * Load image from storage and firebase
-     * @param note
+     * @param note note
      */
     private void loadImage(Note note) {
 
@@ -213,7 +213,7 @@ public class ViewImageDetails extends AppCompatActivity {
                                             }).addOnFailureListener(new OnFailureListener() {
                                         /**
                                          * on failure show error dialog
-                                         * @param exception
+                                         * @param exception exception
                                          */
                                         @Override
                                         public void onFailure(@NonNull Exception exception) {
