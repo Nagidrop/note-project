@@ -4,7 +4,6 @@
 
 package com.group6.noteapp.controller;
 
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;
@@ -43,6 +42,7 @@ import com.group6.noteapp.model.Note;
 import com.group6.noteapp.model.Notebook;
 import com.group6.noteapp.util.Constants;
 import com.group6.noteapp.util.ValidationUtils;
+import com.group6.noteapp.view.NoteAppProgressDialog;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -66,10 +66,10 @@ public class RecordActivity extends AppCompatActivity implements View.OnClickLis
     private TextView textTimeRecord;                    // Textview Time
     private Button btnRecording, btnPlaying, btnSaveRecord, btnStop, btnReset; // Button Record, Play , Save, Reset
     private StorageReference storageReference;          // Storage Reference
-    private ProgressDialog progressDialog, progressDialog2; // Progress Dialog
+    private NoteAppProgressDialog progressDialog, progressDialog2;  // Progress Dialog
     private TextInputLayout recordName;                 // Text input record name
     private SeekBar seekBar;                            // Seekbar
-    private final Handler threadHandler = new Handler();    // Handler
+    private final Handler threadHandler = new Handler();            // Handler
     private long lastClickTime;                         // User's last click time (to prevent multiple clicks)
 
     /* Firebase instances */
@@ -91,8 +91,7 @@ public class RecordActivity extends AppCompatActivity implements View.OnClickLis
         timer = findViewById(R.id.record_timer);
         recordName = findViewById(R.id.textInputRecordName);
         textTimeRecord = findViewById(R.id.textTimeRecord);
-        progressDialog = new ProgressDialog(this);
-        progressDialog2 = new ProgressDialog(this);
+        progressDialog = new NoteAppProgressDialog(this);
         seekBar = findViewById(R.id.seekBar);
 
         // Get database, auth, current user instance
