@@ -71,7 +71,6 @@
         android:layout_marginEnd="26dp"
         app:tint="@color/white_87"
         app:fabCustomSize="50dp"
-        android:visibility="invisible"
         android:clickable="true"
         android:contentDescription="@string/fab_content_desc"
         app:srcCompat="@drawable/ic_note_24_" />

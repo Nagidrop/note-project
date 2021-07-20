@@ -184,7 +184,7 @@ public class TrashFragment extends Fragment {
 
         /* Set visibility for fab menu button */
         FloatingActionButton fabMenu = getActivity().findViewById(R.id.fabMenu);
-        fabMenu.setVisibility(View.GONE);
+        fabMenu.hide();
 
         return inflatedView;
     }
