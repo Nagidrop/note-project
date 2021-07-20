@@ -91,7 +91,8 @@ public class ViewImageDetails extends AppCompatActivity {
                 // Multiple click prevention, using threshold of 1000 ms
                 if (SystemClock.elapsedRealtime() - lastClickTime < 1000){
                     // Show message to notify user of fast clicks
-                    Toast.makeText(ViewImageDetails.this, "You are tapping too fast. Please wait.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(ViewImageDetails.this,
+                            "You are tapping too fast. Please wait.", Toast.LENGTH_SHORT).show();
 
                     return;
                 }

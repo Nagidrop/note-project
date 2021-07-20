@@ -11,6 +11,7 @@ import android.graphics.Matrix;
 import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
@@ -60,6 +61,8 @@ public class ViewCaptureImageActivity extends AppCompatActivity {
     private FirebaseFirestore db;                   // Firestore
     private TextInputLayout imageName;              // Image name
     private NoteAppProgressDialog progressDialog;   // Progress dialog
+    private long lastClickTime;                     // User's last click time (to prevent multiple clicks)
+
 
     /**
      * Handle on Activity create to show capture image
@@ -117,6 +120,18 @@ public class ViewCaptureImageActivity extends AppCompatActivity {
             // Handle button save to save picture to database and storage
             btnSave.setOnClickListener(new View.OnClickListener() {
                 @Override public void onClick(View v) {
+                    // Multiple click prevention, using threshold of 1000 ms
+                    if (SystemClock.elapsedRealtime() - lastClickTime < 1000){
+                        // Show message to notify user of fast clicks
+                        Toast.makeText(ViewCaptureImageActivity.this,
+                                "You are tapping too fast. Please wait.", Toast.LENGTH_SHORT).show();
+
+                        return;
+                    }
+
+                    // Update last click time
+                    lastClickTime = SystemClock.elapsedRealtime();
+
                     // Get image name
                     String name = imageName.getEditText().getText().toString();
 

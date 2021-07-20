@@ -117,7 +117,8 @@ public class RegisterFragment02 extends Fragment {
                 // Multiple click prevention, using threshold of 1000 ms
                 if (SystemClock.elapsedRealtime() - lastClickTime < 1000){
                     // Show message to notify user of fast clicks
-                    Toast.makeText(getActivity(), "You are tapping too fast. Please wait.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(),
+                            "You are tapping too fast. Please wait.", Toast.LENGTH_SHORT).show();
 
                     return;
                 }
