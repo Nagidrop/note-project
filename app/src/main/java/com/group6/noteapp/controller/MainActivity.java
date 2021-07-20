@@ -11,6 +11,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.text.Html;
 import android.text.TextUtils;
 import android.util.Log;
@@ -18,6 +19,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -68,6 +70,7 @@ public class MainActivity extends AppCompatActivity {
     private FloatingActionButton fabRecord; // Fab record button
     private FloatingActionButton fabCapture; // Fab capture button
     private boolean clicked; // fabMenu clicked state
+    private long lastClickTime; // User's last click time (to prevent multiple clicks)
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -155,6 +158,17 @@ public class MainActivity extends AppCompatActivity {
                 new NavigationView.OnNavigationItemSelectedListener() {
                     @Override
                     public boolean onNavigationItemSelected(@NonNull @NotNull MenuItem item) {
+                        // Multiple click prevention, using threshold of 1000 ms
+                        if (SystemClock.elapsedRealtime() - lastClickTime < 1000){
+                            // Show message to notify user of fast clicks
+                            Toast.makeText(MainActivity.this, "You are tapping too fast. Please wait.", Toast.LENGTH_SHORT).show();
+
+                            return false;
+                        }
+
+                        // Update last click time
+                        lastClickTime = SystemClock.elapsedRealtime();
+
                         drawerLayout.close();
 
                         if (item.getItemId() == R.id.menu_logout) {
@@ -212,6 +226,17 @@ public class MainActivity extends AppCompatActivity {
         fabNote.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                // Multiple click prevention, using threshold of 1000 ms
+                if (SystemClock.elapsedRealtime() - lastClickTime < 1000){
+                    // Show message to notify user of fast clicks
+                    Toast.makeText(MainActivity.this, "You are tapping too fast. Please wait.", Toast.LENGTH_SHORT).show();
+
+                    return;
+                }
+
+                // Update last click time
+                lastClickTime = SystemClock.elapsedRealtime();
+
                 Intent createNoteIntent = new Intent(MainActivity.this, ViewEditNoteActivity.class);
 
                 /* Get recyclerview and its adapter */
@@ -231,6 +256,17 @@ public class MainActivity extends AppCompatActivity {
         fabCapture.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                // Multiple click prevention, using threshold of 1000 ms
+                if (SystemClock.elapsedRealtime() - lastClickTime < 1000){
+                    // Show message to notify user of fast clicks
+                    Toast.makeText(MainActivity.this, "You are tapping too fast. Please wait.", Toast.LENGTH_SHORT).show();
+
+                    return;
+                }
+
+                // Update last click time
+                lastClickTime = SystemClock.elapsedRealtime();
+
                 if (hasPermissions(MainActivity.this, PERMISSIONS)) {
                     fabMenuOnClick();
                     enableCamera();
@@ -246,6 +282,17 @@ public class MainActivity extends AppCompatActivity {
         fabRecord.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                // Multiple click prevention, using threshold of 1000 ms
+                if (SystemClock.elapsedRealtime() - lastClickTime < 1000){
+                    // Show message to notify user of fast clicks
+                    Toast.makeText(MainActivity.this, "You are tapping too fast. Please wait.", Toast.LENGTH_SHORT).show();
+
+                    return;
+                }
+
+                // Update last click time
+                lastClickTime = SystemClock.elapsedRealtime();
+
                 if (hasPermissions(MainActivity.this, PERMISSIONS)) {
                     fabMenuOnClick();
                     enableRecord();

@@ -8,6 +8,7 @@ import android.content.ContentResolver;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -80,6 +81,7 @@ public class LoginFragment extends Fragment {
     private CallbackManager callbackManager;            // Callback Manager for Login Button
     private NoteAppProgressDialog progressDialog;       // Note App progress dialog
     private GoogleSignInClient mGoogleSignInClient;     // Signed In Google Client Obj
+    private long lastClickTime;                         // User's last click time (to prevent multiple clicks)
 
     public LoginFragment() {
         // Required empty public constructor
@@ -148,6 +150,17 @@ public class LoginFragment extends Fragment {
         btnLoginFacebook.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                // Multiple click prevention, using threshold of 1000 ms
+                if (SystemClock.elapsedRealtime() - lastClickTime < 1000){
+                    // Show message to notify user of fast clicks
+                    Toast.makeText(getActivity(), "You are tapping too fast. Please wait.", Toast.LENGTH_SHORT).show();
+
+                    return;
+                }
+
+                // Update last click time
+                lastClickTime = SystemClock.elapsedRealtime();
+
                 // Show progress dialog
                 progressDialog = new NoteAppProgressDialog(getActivity());
                 progressDialog.setUpDialog("Just a moment...",
@@ -169,6 +182,17 @@ public class LoginFragment extends Fragment {
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                // Multiple click prevention, using threshold of 1000 ms
+                if (SystemClock.elapsedRealtime() - lastClickTime < 1000){
+                    // Show message to notify user of fast clicks
+                    Toast.makeText(getActivity(), "You are tapping too fast. Please wait.", Toast.LENGTH_SHORT).show();
+
+                    return;
+                }
+
+                // Update last click time
+                lastClickTime = SystemClock.elapsedRealtime();
+
                 // Check login credentials
                 checkCredentials();
             }
@@ -224,6 +248,16 @@ public class LoginFragment extends Fragment {
         btnGoogleLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                // Multiple click prevention, using threshold of 1000 ms
+                if (SystemClock.elapsedRealtime() - lastClickTime < 1000){
+                    // Show message to notify user of fast clicks
+                    Toast.makeText(getActivity(), "You are tapping too fast. Please wait.", Toast.LENGTH_SHORT).show();
+
+                    return;
+                }
+
+                // Update last click time
+                lastClickTime = SystemClock.elapsedRealtime();
 
                 progressDialog = new NoteAppProgressDialog(getActivity());
                 progressDialog.setUpDialog("Just a moment...",
@@ -395,7 +429,7 @@ public class LoginFragment extends Fragment {
      */
     private void goToMainActivity() {
         Intent intent = new Intent(getActivity(), MainActivity.class);
-        intent.setFlags(intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
     }
 

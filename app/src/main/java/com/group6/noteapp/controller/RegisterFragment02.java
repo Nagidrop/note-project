@@ -7,11 +7,13 @@ package com.group6.noteapp.controller;
 import android.content.ContentResolver;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.text.InputType;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.DialogFragment;
@@ -55,6 +57,7 @@ public class RegisterFragment02 extends Fragment {
     private NoteAppProgressDialog progressDialog;   // Progress dialog
     private String regEmail;                        // Register email    (from register step 1 of 2)
     private String regPassword;                     // Register password (from register step 1 of 2)
+    private long lastClickTime;                     // User's last click time (to prevent multiple clicks)
 
     /**
      * Constructor
@@ -111,6 +114,17 @@ public class RegisterFragment02 extends Fragment {
         btnRegister.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                // Multiple click prevention, using threshold of 1000 ms
+                if (SystemClock.elapsedRealtime() - lastClickTime < 1000){
+                    // Show message to notify user of fast clicks
+                    Toast.makeText(getActivity(), "You are tapping too fast. Please wait.", Toast.LENGTH_SHORT).show();
+
+                    return;
+                }
+
+                // Update last click time
+                lastClickTime = SystemClock.elapsedRealtime();
+
                 /* Create local variables to store the Inputs' current values */
                 String regFullname = inputRegFullName.getEditText().getText().toString();
                 String regBirthdate = inputRegBirthdate.getEditText().getText().toString();

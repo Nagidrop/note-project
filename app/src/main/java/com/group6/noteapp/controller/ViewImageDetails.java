@@ -10,8 +10,10 @@ import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.media.ExifInterface;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -57,6 +59,7 @@ public class ViewImageDetails extends AppCompatActivity {
     private ShapeableImageView viewImage; // Image view
     private TextInputLayout imageName; // Image name edit text
     private NoteAppProgressDialog progressDialog; // Progress dialog
+    private long lastClickTime; // User's last click time (to prevent multiple clicks)
 
     /**
      * Initialize activity
@@ -85,6 +88,17 @@ public class ViewImageDetails extends AppCompatActivity {
         // Handle button change name on click
         btnChangeName.setOnClickListener(new View.OnClickListener() {
             @Override public void onClick(View v) {
+                // Multiple click prevention, using threshold of 1000 ms
+                if (SystemClock.elapsedRealtime() - lastClickTime < 1000){
+                    // Show message to notify user of fast clicks
+                    Toast.makeText(ViewImageDetails.this, "You are tapping too fast. Please wait.", Toast.LENGTH_SHORT).show();
+
+                    return;
+                }
+
+                // Update last click time
+                lastClickTime = SystemClock.elapsedRealtime();
+
                 changeImageName(note);
             }
         });

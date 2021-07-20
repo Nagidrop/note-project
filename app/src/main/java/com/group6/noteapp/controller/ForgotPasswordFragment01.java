@@ -5,10 +5,12 @@
 package com.group6.noteapp.controller;
 
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -33,6 +35,7 @@ import org.jetbrains.annotations.NotNull;
 public class ForgotPasswordFragment01 extends Fragment {
 
     NoteAppProgressDialog progressDialog;   // Note App progress dialog
+    private long lastClickTime;             // User's last click time (to prevent multiple clicks)
 
     /**
      * Constructor
@@ -59,6 +62,17 @@ public class ForgotPasswordFragment01 extends Fragment {
         btnSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                // Multiple click prevention, using threshold of 1000 ms
+                if (SystemClock.elapsedRealtime() - lastClickTime < 1000){
+                    // Show message to notify user of fast clicks
+                    Toast.makeText(getActivity(), "You are tapping too fast. Please wait.", Toast.LENGTH_SHORT).show();
+
+                    return;
+                }
+
+                // Update last click time
+                lastClickTime = SystemClock.elapsedRealtime();
+
                 /* Get TextInputLayout */
                 TextInputLayout inputResetPassEmail = inflatedView.findViewById(R.id.textInputForgotEmail);
                 String resetPassEmail = inputResetPassEmail.getEditText().getText().toString();

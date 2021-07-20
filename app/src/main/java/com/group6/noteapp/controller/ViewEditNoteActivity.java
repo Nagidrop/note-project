@@ -6,6 +6,7 @@ package com.group6.noteapp.controller;
 
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.text.InputType;
 import android.text.TextUtils;
 import android.util.Log;
@@ -49,6 +50,7 @@ public class ViewEditNoteActivity extends AppCompatActivity {
     private TextInputLayout txtInputNoteTitle;      // Note Title Text Input Layout
     private TextInputLayout txtInputNoteContent;    // Note Content Text Input Layout
     private Note savedNote;                         // Note object with data to add or update
+    private long lastClickTime;                     // User's last click time (to prevent multiple clicks)
 
     /**
      * Setup data to display
@@ -171,6 +173,17 @@ public class ViewEditNoteActivity extends AppCompatActivity {
         // Registering popup with OnMenuItemClickListener
         popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
             public boolean onMenuItemClick(MenuItem item) {
+                // Multiple click prevention, using threshold of 1000 ms
+                if (SystemClock.elapsedRealtime() - lastClickTime < 1000){
+                    // Show message to notify user of fast clicks
+                    Toast.makeText(ViewEditNoteActivity.this, "You are tapping too fast. Please wait.", Toast.LENGTH_SHORT).show();
+
+                    return false;
+                }
+
+                // Update last click time
+                lastClickTime = SystemClock.elapsedRealtime();
+
                 // Check if note has been saved (created)
                 if (savedNote.getId() == null) {
                     // Show dialog to notify user

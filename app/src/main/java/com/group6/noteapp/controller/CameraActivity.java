@@ -7,6 +7,7 @@ package com.group6.noteapp.controller;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.SystemClock;
 import android.util.Size;
 import android.view.View;
 import android.widget.Toast;
@@ -46,6 +47,7 @@ public class CameraActivity extends AppCompatActivity {
     private ImageCapture imageCapture;                                      // Image Capture use case
     private Executor executor;                                              // Executor
     private FirebaseUser user;                                              // firebase current user
+    private long lastClickTime;                                             // User's last click time (to prevent multiple clicks)
 
     /**
      * Set up camera and button onclick action
@@ -91,6 +93,18 @@ public class CameraActivity extends AppCompatActivity {
         // set take Image onclick listener
         fabTakeImage.setOnClickListener(new View.OnClickListener() {
             @Override public void onClick(View v) {
+                // Multiple click prevention, using threshold of 1000 ms
+                if (SystemClock.elapsedRealtime() - lastClickTime < 1000){
+                    // Show message to notify user of fast clicks
+                    Toast.makeText(CameraActivity.this, "You are tapping too fast. Please wait.", Toast.LENGTH_SHORT).show();
+
+                    return;
+                }
+
+                // Update last click time
+                lastClickTime = SystemClock.elapsedRealtime();
+
+
                 captureImage(); // Capture image
             }
         });

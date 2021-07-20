@@ -9,11 +9,9 @@ import android.content.Intent;
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.SystemClock;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -23,7 +21,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -45,6 +42,7 @@ import com.group6.noteapp.R;
 import com.group6.noteapp.model.Note;
 import com.group6.noteapp.model.Notebook;
 import com.group6.noteapp.util.Constants;
+import com.group6.noteapp.util.ValidationUtils;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -61,17 +59,18 @@ import java.util.concurrent.TimeUnit;
 public class RecordActivity extends AppCompatActivity implements View.OnClickListener {
 
     /* Text Input Layouts and Button */
-    private String fileName = null;                  // File name path
+    private String fileName = null;                     // File name path
     private final String LOG_TAG = "Record_log";
-    private MediaRecorder recorder;                 // Media Recorder
-    private MediaPlayer player = null;               // Media player
-    private TextView textTimeRecord;                 // Textview Time
+    private MediaRecorder recorder;                     // Media Recorder
+    private MediaPlayer player = null;                  // Media player
+    private TextView textTimeRecord;                    // Textview Time
     private Button btnRecording, btnPlaying, btnSaveRecord, btnStop, btnReset; // Button Record, Play , Save, Reset
-    private StorageReference storageReference;       // Storage Reference
+    private StorageReference storageReference;          // Storage Reference
     private ProgressDialog progressDialog, progressDialog2; // Progress Dialog
-    private TextInputLayout recordName;              // Text input record name
-    private SeekBar seekBar;                         // Seekbar
-    private final Handler threadHandler = new Handler();   // Handler
+    private TextInputLayout recordName;                 // Text input record name
+    private SeekBar seekBar;                            // Seekbar
+    private final Handler threadHandler = new Handler();    // Handler
+    private long lastClickTime;                         // User's last click time (to prevent multiple clicks)
 
     /* Firebase instances */
     private FirebaseAuth firebaseAuth;  // Firebase Auth
@@ -143,6 +142,17 @@ public class RecordActivity extends AppCompatActivity implements View.OnClickLis
      */
     @Override
     public void onClick(View v) {
+        // Multiple click prevention, using threshold of 1000 ms
+        if (SystemClock.elapsedRealtime() - lastClickTime < 1000){
+            // Show message to notify user of fast clicks
+            Toast.makeText(this, "You are tapping too fast. Please wait.", Toast.LENGTH_SHORT).show();
+
+            return;
+        }
+
+        // Update last click time
+        lastClickTime = SystemClock.elapsedRealtime();
+
         switch (v.getId()) {
             case R.id.btnPlay://Button Play
 
@@ -176,20 +186,6 @@ public class RecordActivity extends AppCompatActivity implements View.OnClickLis
                 break;
 
             case R.id.btnRecording: //Button Record
-                progressDialog2.setMessage("Record start ...");
-                progressDialog2.show();
-                //Set time dialog close
-                new Thread(new Runnable() {
-                    public void run() {
-                        try {
-                            Thread.sleep(1000);
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                        progressDialog2.dismiss();
-                    }
-                }).start();
-
                 startRecording();
                 btnStop.setEnabled(true);
                 btnRecording.setEnabled(false);
@@ -280,7 +276,7 @@ public class RecordActivity extends AppCompatActivity implements View.OnClickLis
                                         DocumentReference userDefNotebookDoc = userInfoDoc.collection("notebooks")
                                                 .document(user.getUid());
                                         String name = recordName.getEditText().getText().toString();
-                                        if (TextUtils.isEmpty(name)) {
+                                        if (ValidationUtils.validateFileName(name) == 1) {
                                             recordName.setErrorEnabled(true);
                                             recordName.setError("Please enter Record Name!");
                                         } else {
