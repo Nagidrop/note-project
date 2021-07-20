@@ -1,10 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <resources>
     <string name="address">Address</string>
-    <string name="initial_timer">00:00</string>
-    <string name="time">Time</string>
-    <string name="play">Play</string>
-    <string name="replay">Replay</string>
     <string name="all_notes">All Notes</string>
     <string name="app_name">Note App</string>
     <string name="birthdate">Birthdate</string>
@@ -14,15 +10,10 @@
     <string name="email">Email</string>
     <string name="email_sent_forgot_pass">Please check your inbox at &lt;br/&gt;&lt;b&gt;%1$s&lt;/b&gt; and follow instructions to reset password.</string>
     <string name="email_sent_reg">Almost done. &lt;br/&gt;Please check your inbox at &lt;b&gt;%1$s&lt;/b&gt; to confirm registration. </string>
-    <string name="empty_string" />
+    <string name="empty_string"/>
     <string name="enter_email">Please enter your email address.</string>
     <string name="fab_content_desc">fab button</string>
     <string name="facebook_app_id">506452847140505</string>
-    <string name="sort">Sort</string>
-    <string name="sort_by_title_asc">Sort by title (asc.)</string>
-    <string name="sort_by_title_desc">Sort by title (desc.)</string>
-    <string name="sort_by_created_date">Sort by created date</string>
-    <string name="sort_by_updated_date">Sort by updated date</string>
     <string name="forgot_pass">Forgot password?</string>
     <string name="forgot_pass_title">Forgot Password</string>
     <string name="full_name">Full Name (Required)</string>
@@ -30,6 +21,7 @@
     <string name="header_title">%1$s</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="image_name">Image Name (Required)</string>
+    <string name="initial_timer">00:00</string>
     <string name="login">Login</string>
     <string name="login_title">LOGIN</string>
     <string name="login_with">Login with</string>
@@ -43,17 +35,25 @@
     <string name="notebooks">Notebooks</string>
     <string name="or">OR</string>
     <string name="password">Password</string>
+    <string name="play">Play</string>
     <string name="re_password">Re-enter Password</string>
     <string name="record_name">Record Name</string>
     <string name="redo">Redo</string>
     <string name="register">Register</string>
     <string name="register_guide">Basic information</string>
+    <string name="replay">Replay</string>
     <string name="reset_pass">Reset Password</string>
     <string name="save">Save</string>
+    <string name="sort">Sort</string>
+    <string name="sort_by_created_date">Sort by created date</string>
+    <string name="sort_by_title_asc">Sort by title (asc.)</string>
+    <string name="sort_by_title_desc">Sort by title (desc.)</string>
+    <string name="sort_by_updated_date">Sort by updated date</string>
     <string name="step_one_of_two">1/2</string>
     <string name="step_two_of_two">2/2</string>
     <string name="submit">Submit</string>
     <string name="system">System</string>
+    <string name="time">Time</string>
     <string name="trash">Trash</string>
     <string name="undo">Undo</string>
     <string name="user_email">%1$s</string>
