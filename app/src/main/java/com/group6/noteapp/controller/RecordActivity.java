@@ -64,13 +64,15 @@ public class RecordActivity extends AppCompatActivity implements View.OnClickLis
     private MediaRecorder recorder;                     // Media Recorder
     private MediaPlayer player = null;                  // Media player
     private TextView textTimeRecord;                    // Textview Time
-    private Button btnRecording, btnPlaying, btnSaveRecord, btnStop, btnReset; // Button Record, Play , Save, Reset
+    private Button btnRecording, btnPlaying, btnSaveRecord, btnStop, btnReset;
+            // Button Record, Play , Save, Reset
     private StorageReference storageReference;          // Storage Reference
     private NoteAppProgressDialog progressDialog;  // Progress Dialog
     private TextInputLayout recordName;                 // Text input record name
     private SeekBar seekBar;                            // Seekbar
     private final Handler threadHandler = new Handler();            // Handler
-    private long lastClickTime;                         // User's last click time (to prevent multiple clicks)
+    private long lastClickTime;
+            // User's last click time (to prevent multiple clicks)
 
     /* Firebase instances */
     private FirebaseAuth firebaseAuth;  // Firebase Auth
@@ -121,6 +123,7 @@ public class RecordActivity extends AppCompatActivity implements View.OnClickLis
 
     /**
      * Set status button default
+     *
      * @return status
      */
     public boolean statusButtonDefault() {
@@ -137,12 +140,13 @@ public class RecordActivity extends AppCompatActivity implements View.OnClickLis
 
     /**
      * Action click button
+     *
      * @param v view
      */
     @Override
     public void onClick(View v) {
         // Multiple click prevention, using threshold of 1000 ms
-        if (SystemClock.elapsedRealtime() - lastClickTime < 1000){
+        if (SystemClock.elapsedRealtime() - lastClickTime < 1000) {
             // Show message to notify user of fast clicks
             Toast.makeText(this,
                     "You are tapping too fast. Please wait.", Toast.LENGTH_SHORT).show();
@@ -167,7 +171,13 @@ public class RecordActivity extends AppCompatActivity implements View.OnClickLis
                 break;
 
             case R.id.btnSaveRecord://Button save
-                uploadAudio(Uri.fromFile(new File(fileName)));
+                String name = recordName.getEditText().getText().toString();
+                if (ValidationUtils.validateFileName(name) == 1) {
+                    recordName.setErrorEnabled(true);
+                    recordName.setError("Please enter Record Name!");
+                }else {
+                    uploadAudio(Uri.fromFile(new File(fileName)));
+                }
                 break;
 
             case R.id.btnStop:  //Button Stop
@@ -235,6 +245,7 @@ public class RecordActivity extends AppCompatActivity implements View.OnClickLis
 
     /**
      * Update record to storage
+     *
      * @param uri audio URI
      */
     private void uploadAudio(Uri uri) {
@@ -245,7 +256,8 @@ public class RecordActivity extends AppCompatActivity implements View.OnClickLis
         //Get ID user
         String userID = firebaseAuth.getUid();
         //Get Storage Reference
-        StorageReference filepath = storageReference.child(userID).child("Record").child(uri.getLastPathSegment());
+        StorageReference filepath =
+                storageReference.child(userID).child("Record").child(uri.getLastPathSegment());
         // Create upload Task
         UploadTask uploadTask = filepath.putFile(uri);
         // Register observers to listen for when the download is done or if it fails
@@ -253,7 +265,8 @@ public class RecordActivity extends AppCompatActivity implements View.OnClickLis
             @Override
             public void onFailure(@NonNull @NotNull Exception e) {
                 progressDialog.dismiss();
-                Toast.makeText(RecordActivity.this, "Record Upload Unsuccessful!!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(RecordActivity.this, "Record Upload Unsuccessful!!",
+                        Toast.LENGTH_SHORT).show();
             }
         }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
@@ -274,44 +287,45 @@ public class RecordActivity extends AppCompatActivity implements View.OnClickLis
                                         Notebook defaultNotebook = new Notebook();
                                         defaultNotebook.setTitle(Constants.FIRST_NOTEBOOK_NAME);
                                         // Add new note to collection
-                                        DocumentReference userDefNotebookDoc = userInfoDoc.collection("notebooks")
-                                                .document(user.getUid());
+                                        DocumentReference userDefNotebookDoc =
+                                                userInfoDoc.collection("notebooks")
+                                                        .document(user.getUid());
                                         String name = recordName.getEditText().getText().toString();
-                                        if (ValidationUtils.validateFileName(name) == 1) {
-                                            recordName.setErrorEnabled(true);
-                                            recordName.setError("Please enter Record Name!");
-                                        } else {
-                                            Note recordNote = new Note();
-                                            recordNote.setType(3);
-                                            recordNote.setTitle(name);
-                                            recordNote.setContent(uri.getLastPathSegment());
-                                            recordNote.setUpdatedDate(Timestamp.now());
-                                            CollectionReference userDefNoteCollection = userDefNotebookDoc.collection("notes");
-                                            userDefNoteCollection.add(recordNote).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                                                /**
-                                                 * Add success then go to main activity
-                                                 * @param documentReference document reference
-                                                 */
-                                                @Override
-                                                public void onSuccess(DocumentReference documentReference) {
-                                                    Toast.makeText(RecordActivity.this, "Record Upload Successful!!", Toast.LENGTH_SHORT).show();
-                                                    toMainActivity();
-                                                }
-                                            }).addOnFailureListener(new OnFailureListener() {
-                                                /**
-                                                 * On failure display a error dialog
-                                                 * @param e exception
-                                                 */
-                                                @Override
-                                                public void onFailure(@NonNull @NotNull Exception e) {
-                                                    progressDialog.dismiss();
-                                                    Log.e("ViewRecord", "Error adding new note", e);
+                                        Note recordNote = new Note();
+                                        recordNote.setType(3);
+                                        recordNote.setTitle(name);
+                                        recordNote.setContent(uri.getLastPathSegment());
+                                        recordNote.setUpdatedDate(Timestamp.now());
+                                        CollectionReference userDefNoteCollection =
+                                                userDefNotebookDoc.collection("notes");
+                                        userDefNoteCollection.add(recordNote).addOnSuccessListener(
+                                                new OnSuccessListener<DocumentReference>() {
+                                                    /**
+                                                     * Add success then go to main activity
+                                                     * @param documentReference document reference
+                                                     */
+                                                    @Override
+                                                    public void onSuccess(
+                                                            DocumentReference documentReference) {
+                                                        Toast.makeText(RecordActivity.this,
+                                                                "Record Upload Successful!!",
+                                                                Toast.LENGTH_SHORT).show();
+                                                        toMainActivity();
+                                                    }
+                                                }).addOnFailureListener(new OnFailureListener() {
+                                            /**
+                                             * On failure display a error dialog
+                                             * @param e exception
+                                             */
+                                            @Override
+                                            public void onFailure(@NonNull @NotNull Exception e) {
+                                                progressDialog.dismiss();
+                                                Log.e("ViewRecord", "Error adding new note", e);
 
-                                                }
-                                            });
+                                            }
+                                        });
 
 
-                                        }
                                     }
                                 } else {
                                     Log.e(LOG_TAG, "get failed with ", task.getException());
@@ -354,6 +368,7 @@ public class RecordActivity extends AppCompatActivity implements View.OnClickLis
 
     /**
      * Milliseconds To String
+     *
      * @param milliseconds milliseconds
      * @return string presentation of milliseconds
      */

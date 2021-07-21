@@ -9,6 +9,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.media.ExifInterface;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.util.Log;
@@ -18,6 +19,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -61,6 +63,7 @@ public class ViewImageDetails extends AppCompatActivity {
 
     /**
      * Initialize activity
+     *
      * @param savedInstanceState saved instance state
      */
     @Override
@@ -89,7 +92,7 @@ public class ViewImageDetails extends AppCompatActivity {
         btnChangeName.setOnClickListener(new View.OnClickListener() {
             @Override public void onClick(View v) {
                 // Multiple click prevention, using threshold of 1000 ms
-                if (SystemClock.elapsedRealtime() - lastClickTime < 1000){
+                if (SystemClock.elapsedRealtime() - lastClickTime < 1000) {
                     // Show message to notify user of fast clicks
                     Toast.makeText(ViewImageDetails.this,
                             "You are tapping too fast. Please wait.", Toast.LENGTH_SHORT).show();
@@ -126,11 +129,11 @@ public class ViewImageDetails extends AppCompatActivity {
         String name = imageName.getEditText().getText().toString();
 
         // validate image name
-        if(ValidationUtils.validateFileName(name) == 1){
+        if (ValidationUtils.validateFileName(name) == 1) {
             // Show error on edit text
             imageName.setErrorEnabled(true);
             imageName.setError("Please enter Image Name!");
-        }else{
+        } else {
             // Update date note title( Image Name)
             note.setTitle(name);
 
@@ -150,6 +153,7 @@ public class ViewImageDetails extends AppCompatActivity {
 
     /**
      * Load image from storage and firebase
+     *
      * @param note note
      */
     private void loadImage(Note note) {
@@ -172,62 +176,26 @@ public class ViewImageDetails extends AppCompatActivity {
                                 StorageReference storageRef = storage.getReference();
                                 StorageReference pathReference = storageRef
                                         .child(user.getUid() + "/images/" + note.getContent());
-                                try {
-                                    File tempImage = File.createTempFile("image", "jpg");
-                                    pathReference.getFile(tempImage).addOnSuccessListener(
-                                            new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
-                                                @Override
-                                                public void onSuccess(
-                                                        FileDownloadTask.TaskSnapshot taskSnapshot) {
-                                                    int angle = 0;
-                                                    try {
-                                                        // get angle from image's exif
-                                                        ExifInterface ei = new ExifInterface(
-                                                                tempImage.getPath());
-                                                        int orientation = ei.getAttributeInt(
-                                                                ExifInterface.TAG_ORIENTATION,
-                                                                ExifInterface.ORIENTATION_NORMAL);
-
-                                                        switch (orientation) {
-                                                            case ExifInterface.ORIENTATION_ROTATE_90:
-                                                                angle = 90;
-                                                                break;
-                                                            case ExifInterface.ORIENTATION_ROTATE_180:
-                                                                angle = 180;
-                                                                break;
-                                                            case ExifInterface.ORIENTATION_ROTATE_270:
-                                                                angle = 270;
-                                                                break;
-                                                        }
-                                                    } catch (IOException e) {
-                                                        e.printStackTrace();
-                                                    }
-
-                                                    // Rotate image and set to image view
-                                                    Bitmap bitmap = BitmapFactory.decodeFile(
-                                                            tempImage.getAbsolutePath());
-                                                    viewImage.setImageBitmap(
-                                                            RotateBitmap(bitmap, angle));
-                                                    progressDialog.dismiss();
-                                                }
-                                            }).addOnFailureListener(new OnFailureListener() {
-                                        /**
-                                         * on failure show error dialog
-                                         * @param exception exception
-                                         */
-                                        @Override
-                                        public void onFailure(@NonNull Exception exception) {
-                                            // Handle any errors
-                                            progressDialog.dismiss();
-                                            NoteAppDialog dialog = new NoteAppDialog(ViewImageDetails.this);
-                                            dialog.setupOKDialog("Load Failed",
-                                                    "An error occurred when loading your image. Please try again!");
-                                            dialog.create().show();
-                                        }
-                                    });
-                                } catch (IOException e) {
-                                    e.printStackTrace();
-                                }
+                                // Set captured image in note
+                                pathReference.getDownloadUrl()
+                                        .addOnSuccessListener(new OnSuccessListener<Uri>() {
+                                            @Override
+                                            public void onSuccess(Uri uri) {
+                                                Glide.with(ViewImageDetails.this).load(uri)
+                                                        .into(viewImage);
+                                                progressDialog.dismiss();
+                                            }
+                                        })
+                                        .addOnFailureListener(new OnFailureListener() {
+                                            @Override
+                                            public void onFailure(@NonNull @NotNull Exception e) {
+                                                progressDialog.dismiss();
+                                                NoteAppDialog dialog = new NoteAppDialog(ViewImageDetails.this);
+                                                dialog.setupOKDialog("Load Failed",
+                                                        "An error occurred when loading your image. Please try again!");
+                                                dialog.create().show();
+                                            }
+                                        });
 
 
                             }
@@ -241,6 +209,7 @@ public class ViewImageDetails extends AppCompatActivity {
 
     /**
      * Rotate bitmap base on angle
+     *
      * @param source bitmap source
      * @param angle  angle
      * @return rotated bitmap

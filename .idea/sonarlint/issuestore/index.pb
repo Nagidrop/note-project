@@ -47,8 +47,6 @@ Happ/src/androidTest/java/com/group6/noteapp/ExampleInstrumentedTest.java,8\e\8
 i
 9app/src/test/java/com/group6/noteapp/ExampleUnitTest.java,f\e\fe6bbb0ede3bad2ab7b5e364bf336fbeb57da735
 w
-Gapp/src/main/java/com/group6/noteapp/controller/RegisterFragment03.java,c\a\ca9322d61060c57f082e9ac1798fd463a1cc7db2
-w
 Gapp/src/main/java/com/group6/noteapp/controller/RegisterFragment02.java,e\f\ef31fe2e5e07075b434f4f6cec7f76c347abae86
 @
 app/build.gradle,f\4\f4a01d6a4fcb971362ec00a83903fd3902f52164
