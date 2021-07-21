@@ -18,11 +18,11 @@ import com.group6.noteapp.R;
  * Recycler View's item view holder
  */
 public class NoteViewHolder extends RecyclerView.ViewHolder {
-    private final MaterialTextView noteTitle;           // note title
-    private final MaterialTextView noteContent;         // note content
-    private final MaterialTextView noteUpdatedDate;     // note updated date
-    private final MaterialCardView noteCardView;        // note card view
-    private final ShapeableImageView noteImage;         // note image view
+    private final MaterialTextView noteTitle;           // Note title
+    private final MaterialTextView noteContent;         // Note content
+    private final MaterialTextView noteUpdatedDate;     // Note updated date
+    private final MaterialCardView noteCardView;        // Note card view
+    private final ShapeableImageView noteImage;         // Note image view
 
     /**
      * Constructor
