@@ -50,7 +50,7 @@ public class PlayRecordActivity extends AppCompatActivity {
 
     private static final String TAG = "ViewRecord"; // Tag for loggin
 
-    private final Handler handler = new Handler();    //Handler
+    private final Handler handler = new Handler();  //Handler
     private MediaPlayer mediaPlayer;            //MediaPlayer
     //Declare variable
     private boolean isPlaying = false;
@@ -69,9 +69,9 @@ public class PlayRecordActivity extends AppCompatActivity {
     private String filename = null;             //File  path
 
     /* Firebase instances */
-    private FirebaseStorage storage;          //Firebase Storage
-    private FirebaseUser user;                //Firebase User
-    private FirebaseFirestore db;             //Firebase Firestore
+    private FirebaseStorage storage;            //Firebase Storage
+    private FirebaseUser user;                  //Firebase User
+    private FirebaseFirestore db;               //Firebase Firestore
 
     private NoteAppProgressDialog progressDialog;  //ProgressDialog
     private long lastClickTime; // User's last click time (to prevent multiple clicks)

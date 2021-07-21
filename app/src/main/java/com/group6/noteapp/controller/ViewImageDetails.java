@@ -6,9 +6,7 @@ package com.group6.noteapp.controller;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
-import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.SystemClock;
@@ -33,7 +31,6 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.group6.noteapp.R;
@@ -44,22 +41,19 @@ import com.group6.noteapp.view.NoteAppProgressDialog;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.io.File;
-import java.io.IOException;
-
 /**
  * Activity for viewing image details
  */
 public class ViewImageDetails extends AppCompatActivity {
     private static final String TAG = "ViewImageDetails"; // Tag for logging
 
-    private FirebaseStorage storage; // Firebase storage
-    private FirebaseUser user; // Firebase user
-    private FirebaseFirestore db; // Firebase Firestore
-    private ShapeableImageView viewImage; // Image view
-    private TextInputLayout imageName; // Image name edit text
-    private NoteAppProgressDialog progressDialog; // Progress dialog
-    private long lastClickTime; // User's last click time (to prevent multiple clicks)
+    private FirebaseStorage storage;                    // Firebase storage
+    private FirebaseUser user;                          // Firebase user
+    private FirebaseFirestore db;                       // Firebase Firestore
+    private ShapeableImageView viewImage;               // Image view
+    private TextInputLayout imageName;                  // Image name edit text
+    private NoteAppProgressDialog progressDialog;       // Progress dialog
+    private long lastClickTime;                         // User's last click time (to prevent multiple clicks)
 
     /**
      * Initialize activity

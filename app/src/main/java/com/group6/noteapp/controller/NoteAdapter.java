@@ -39,8 +39,8 @@ import java.text.SimpleDateFormat;
  */
 public class NoteAdapter extends FirestoreRecyclerAdapter<Note, NoteViewHolder> {
 
-    private final Context context;                      // activity's context
-    private final Notebook notebook;                    // notebook in which the notes in adapter are in
+    private final Context context;                      // Activity's context
+    private final Notebook notebook;                    // Notebook in which the notes in adapter are in
     private final FirebaseUser firebaseUser;            // Firebase user
     private final FirebaseStorage firebaseStorage;      // Firebase storage
 
