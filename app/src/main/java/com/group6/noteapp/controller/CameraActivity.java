@@ -186,7 +186,11 @@ public class CameraActivity extends AppCompatActivity {
 
                     @Override
                     public void onError(@NonNull @NotNull ImageCaptureException exception) {
-                        Toast.makeText(CameraActivity.this, "Some error occurred!!", Toast.LENGTH_SHORT).show();
+                        runOnUiThread(new Runnable() {
+                            public void run() {
+                                Toast.makeText(CameraActivity.this, "Some error occurred!!", Toast.LENGTH_SHORT).show();
+                            }
+                        });
                         exception.printStackTrace();
                     }
                 });

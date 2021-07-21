@@ -42,8 +42,6 @@ Mapp/src/main/java/com/group6/noteapp/controller/ForgotPasswordFragment02.java,
 build.gradle,f\0\f07866736216be0ee2aba49e392191aeae700a35
 w
 Gapp/src/main/java/com/group6/noteapp/controller/DatePickerFragment.java,4\a\4a18202bb2d03719cc1dd3555811066675d890f6
-s
-Capp/src/main/java/com/group6/noteapp/controller/CameraActivity.java,6\3\638e68466573718ebe8db06559a40577842b3487
 x
 Happ/src/androidTest/java/com/group6/noteapp/ExampleInstrumentedTest.java,8\e\8e1fa5581320adbec5c00b376f439d67443e0b97
 i
@@ -52,7 +50,5 @@ w
 Gapp/src/main/java/com/group6/noteapp/controller/RegisterFragment03.java,c\a\ca9322d61060c57f082e9ac1798fd463a1cc7db2
 w
 Gapp/src/main/java/com/group6/noteapp/controller/RegisterFragment02.java,e\f\ef31fe2e5e07075b434f4f6cec7f76c347abae86
-q
-Aapp/src/main/java/com/group6/noteapp/controller/HomeFragment.java,7\6\76245912de1e89ae20be64d68262cd415ad4a605
-r
-Bapp/src/main/java/com/group6/noteapp/controller/TrashFragment.java,c\4\c42999bfc2759ac5e343afafcc8974d124929627
+@
+app/build.gradle,f\4\f4a01d6a4fcb971362ec00a83903fd3902f52164

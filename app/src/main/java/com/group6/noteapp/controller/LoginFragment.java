@@ -489,6 +489,7 @@ public class LoginFragment extends Fragment {
                             Toast.makeText(getActivity(), "Authentication failed.",
                                     Toast.LENGTH_SHORT).show();
                             Log.e("error", task.getException().getMessage(), task.getException());
+                            progressDialog.dismiss();
                         }
                     }
                 });
@@ -539,6 +540,7 @@ public class LoginFragment extends Fragment {
                                                 }
                                             } else {
                                                 Log.d(TAG, "get failed with ", task.getException());
+                                                progressDialog.dismiss();
                                             }
                                         }
                                     });
@@ -547,6 +549,7 @@ public class LoginFragment extends Fragment {
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "signInWithCredential:failure", task.getException());
+                            progressDialog.dismiss();
                         }
                     }
                 });
