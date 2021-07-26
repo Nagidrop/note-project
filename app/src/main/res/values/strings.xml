@@ -30,7 +30,8 @@
     <string name="next">Next</string>
     <string name="no_account">No account? Register here</string>
     <string name="note">Note</string>
-    <string name="note_book_title">Note Title</string>
+    <string name="notebook_title">Notebook Title</string>
+    <string name="note_content">Note Content</string>
     <string name="note_title">Note Title</string>
     <string name="notebooks">Notebooks</string>
     <string name="or">OR</string>
@@ -58,4 +59,10 @@
     <string name="undo">Undo</string>
     <string name="user_email">%1$s</string>
     <string name="user_full_name">%1$s</string>
+    <string name="time">Time</string>
+    <string name="save">Save</string>
+    <string name="play">Play</string>
+    <string name="record">Record</string>
+    <string name="reset">Reset</string>
+    <string name="stop">Stop</string>
 </resources>

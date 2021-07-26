@@ -20,7 +20,7 @@ import org.jetbrains.annotations.NotNull;
  * Note App specific implementation of Alert Dialog Builder
  */
 public class NoteAppDialog extends MaterialAlertDialogBuilder {
-    private String type;  // type of dialog
+    private String type;  // Type of dialog
 
     /**
      * Constructor
