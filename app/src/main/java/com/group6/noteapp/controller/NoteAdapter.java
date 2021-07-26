@@ -206,7 +206,7 @@ public class NoteAdapter extends FirestoreRecyclerAdapter<Note, NoteViewHolder> 
 
         switch (viewType){
             case 1:
-                noteView = inflater.inflate(R.layout.recycler_text_note_item, parent, false);
+                noteView = inflater.inflate(R.layout.recycler_note_item, parent, false);
 
                 break;
 

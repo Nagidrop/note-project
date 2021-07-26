@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <font-family xmlns:android="http://schemas.android.com/apk/res/android">
-    <!-- regular -->
+    <!-- Regular -->
     <font
         android:fontStyle="normal"
         android:fontWeight="400"
         android:font="@font/inter_regular" />
-    <!-- medium -->
+    <!-- Medium -->
     <font
         android:fontStyle="normal"
         android:fontWeight="500"
         android:font="@font/inter_medium" />
-    <!-- bold -->
+    <!-- Bold -->
     <font
         android:fontStyle="normal"
         android:fontWeight="700"
